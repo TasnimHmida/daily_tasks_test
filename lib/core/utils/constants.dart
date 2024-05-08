@@ -1,3 +1,3 @@
-const BASE_URL = "https://www.savaneshop.com";
-// const BASE_URL = "https://savane.preprod.l-wa.com";
-// const BASE_URL = "https://www.pac.savane.laxmi.cloud";
+const supabaseUrl = 'https://dlbovctcjufiegzwrgei.supabase.co';
+const supabaseKey =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsYm92Y3RjanVmaWVnendyZ2VpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTUxNzczMTYsImV4cCI6MjAzMDc1MzMxNn0.AEP7Gq_AS-1bD01kUAyXf9Pqc9rdyuhulCkNNAzNTo0';

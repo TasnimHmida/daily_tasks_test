@@ -8,9 +8,11 @@ import '../../../../core/widgets/main_button.dart';
 import '../pages/register_page.dart';
 
 class LoginWidget extends StatefulWidget {
-  const LoginWidget({
-    super.key,
-  });
+  final bool isLoading;
+  final Function(String, String) loginFunction;
+
+  const LoginWidget(
+      {super.key, required this.isLoading, required this.loginFunction});
 
   @override
   State<LoginWidget> createState() => _LoginWidgetState();
@@ -91,12 +93,11 @@ class _LoginWidgetState extends State<LoginWidget> {
                   ),
                   SizedBox(height: 60.h),
                   MainButton(
-                    buttonFunction: () {
-                      validateCredentialsThenLoginUser(context);
-                    },
-                    text: "Log In",
-                    // isLoading: widget.isLoading
-                  ),
+                      buttonFunction: () {
+                        validateCredentialsThenLoginUser(context);
+                      },
+                      text: "Log In",
+                      isLoading: widget.isLoading),
                 ],
               ),
             ),
@@ -143,10 +144,7 @@ class _LoginWidgetState extends State<LoginWidget> {
       email = _emailController.text;
       password = _passwordController.text;
 
-      // BlocProvider.of<LoginBloc>(context).add(LoginUserEvent(
-      //   email: email,
-      //   password: password,
-      // ));
+      widget.loginFunction(email, password);
     }
   }
 
