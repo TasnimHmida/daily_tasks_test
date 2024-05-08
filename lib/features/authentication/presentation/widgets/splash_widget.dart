@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/app_theme.dart';
-
+import '../../../../core/widgets/main_button.dart';
 class SplashWidget extends StatefulWidget {
   const SplashWidget({super.key});
 
@@ -17,70 +17,77 @@ class _SplashWidgetState extends State<SplashWidget> {
       backgroundColor: ebonyClay,
       body: SafeArea(
           child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 40.h),
+        padding: pagePadding,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Align(
               alignment: Alignment.topLeft,
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SvgPicture.asset('assets/icons/app_logo.svg', height: 47.h),
-                    Row(
-                      children: [
-                        Text(
-                          "Day",
-                          style: TextStyle(
-                            fontFamily: 'PilatExtended',
-                            fontSize: 16.26.sp,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
+              child: SizedBox(
+                width: 95.w,
+                child: Column(children: [
+                  Align(
+                      child: SvgPicture.asset('assets/icons/app_logo.svg',
+                          height: 47.h)),
+                  Row(
+                    children: [
+                      Text(
+                        "Day",
+                        style: TextStyle(
+                          fontFamily: 'PilatExtended',
+                          fontSize: 16.26.sp,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
                         ),
-                        Text(
-                          "Task",
-                          style: TextStyle(
-                            fontFamily: 'PilatExtended',
-                            fontSize: 16.26.sp,
-                            fontWeight: FontWeight.w600,
-                            color: goldenRod,
-                          ),
+                      ),
+                      Text(
+                        "Task",
+                        style: TextStyle(
+                          fontFamily: 'PilatExtended',
+                          fontSize: 16.26.sp,
+                          fontWeight: FontWeight.w600,
+                          color: goldenRod,
                         ),
-                      ],
-                    ),
-                  ]),
-            ),
-            SizedBox(
-              height: 30.h,
+                      ),
+                    ],
+                  ),
+                ]),
+              ),
             ),
             Container(
-              height: 320.h,
-              width: double.infinity,
+              height: 330.h,
+              width: 369.w,
               decoration: const BoxDecoration(color: Colors.white),
               child: SvgPicture.asset(
                 'assets/images/splash_screen_image.svg',
+                height: 313.h,
                 width: 321.w,
               ),
             ),
-            Text(
-              "Manage\nyour\nTask with",
-              style: TextStyle(
-                fontFamily: 'PilatExtended',
-                fontSize: 61.sp,
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
-              ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Manage\nyour\nTask with",
+                  style: TextStyle(
+                      fontFamily: 'PilatExtended',
+                      fontSize: 61.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                      height: 1),
+                ),
+                Text(
+                  "DayTask",
+                  style: TextStyle(
+                      fontFamily: 'PilatExtended',
+                      fontSize: 61.sp,
+                      fontWeight: FontWeight.w600,
+                      color: goldenRod,
+                      height: 1),
+                ),
+              ],
             ),
-            Text(
-              "DayTask",
-              style: TextStyle(
-                fontFamily: 'PilatExtended',
-                fontSize: 61.sp,
-                fontWeight: FontWeight.w600,
-                color: goldenRod,
-              ),
-            ),
+            MainButton(buttonFunction: () {}, text: "Let's Start")
           ],
         ),
       )),
