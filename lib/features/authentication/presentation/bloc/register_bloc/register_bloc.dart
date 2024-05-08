@@ -2,24 +2,24 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/error/failures.dart';
 import '../../../../../core/strings/failures.dart';
-import '../../../domain/use_cases/login_usecase.dart';
+import '../../../domain/use_cases/register_usecase.dart';
 
-part 'login_event.dart';
+part 'register_event.dart';
 
-part 'login_state.dart';
+part 'register_state.dart';
 
-class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  final LoginUseCase loginUseCase;
+class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
+  final RegisterUseCase registerUseCase;
 
-  LoginBloc({
-    required this.loginUseCase,
-  }) : super(const LoginState()) {
-    on<LoginEvent>((event, emit) async {
-      if (event is LoginUserEvent) {
+  RegisterBloc({
+    required this.registerUseCase,
+  }) : super(const RegisterState()) {
+    on<RegisterEvent>((event, emit) async {
+      if (event is RegisterUserEvent) {
         emit(state.copyWith(isLoading: true, error: '', success: false));
 
         final failureOrDoneMessage =
-            await loginUseCase(event.email, event.password);
+            await registerUseCase(event.userName, event.email, event.password);
         failureOrDoneMessage.fold(
           (failure) {
             emit(state.copyWith(

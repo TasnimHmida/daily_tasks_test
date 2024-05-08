@@ -8,8 +8,12 @@ import '../../../../core/widgets/main_button.dart';
 import '../pages/login_page.dart';
 
 class RegisterWidget extends StatefulWidget {
+  final bool isLoading;
+  final Function(String, String, String) registerFunction;
   const RegisterWidget({
     super.key,
+    required this.isLoading,
+    required this.registerFunction,
   });
 
   @override
@@ -133,7 +137,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                       validateCredentialsThenRegisterUser(context);
                     },
                     text: "Sign Up",
-                    // isLoading: widget.isLoading
+                    isLoading: widget.isLoading
                   ),
                 ],
               ),
@@ -183,10 +187,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
       email = _emailController.text;
       password = _passwordController.text;
 
-      // BlocProvider.of<LoginBloc>(context).add(LoginUserEvent(
-      //   email: email,
-      //   password: password,
-      // ));
+      widget.registerFunction(name, email, password);
     }
   }
 

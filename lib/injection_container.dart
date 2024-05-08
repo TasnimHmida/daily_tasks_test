@@ -9,12 +9,14 @@ import 'features/authentication/domain/use_cases/login_usecase.dart';
 import 'features/authentication/domain/use_cases/logout_usecase.dart';
 import 'features/authentication/domain/use_cases/register_usecase.dart';
 import 'features/authentication/presentation/bloc/login_bloc/login_bloc.dart';
+import 'features/authentication/presentation/bloc/register_bloc/register_bloc.dart';
 
 final sl = GetIt.instance;
 
 Future<void> init() async {
   // Bloc
   sl.registerFactory(() => LoginBloc(loginUseCase: sl()));
+  sl.registerFactory(() => RegisterBloc(registerUseCase: sl()));
 
   // UseCases
   sl.registerLazySingleton(() => LoginUseCase(repository: sl()));
