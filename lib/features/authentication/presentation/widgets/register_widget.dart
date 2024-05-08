@@ -5,18 +5,19 @@ import '../../../../core/app_theme.dart';
 import '../../../../core/utils/input_validation.dart';
 import '../../../../core/widgets/input_field.dart';
 import '../../../../core/widgets/main_button.dart';
-import '../pages/register_page.dart';
+import '../pages/login_page.dart';
 
-class LoginWidget extends StatefulWidget {
-  const LoginWidget({
+class RegisterWidget extends StatefulWidget {
+  const RegisterWidget({
     super.key,
   });
 
   @override
-  State<LoginWidget> createState() => _LoginWidgetState();
+  State<RegisterWidget> createState() => _RegisterWidgetState();
 }
 
-class _LoginWidgetState extends State<LoginWidget> {
+class _RegisterWidgetState extends State<RegisterWidget> {
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -31,6 +32,7 @@ class _LoginWidgetState extends State<LoginWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(children: [
+              SizedBox(height: 40.h),
               SvgPicture.asset(
                 'assets/icons/app_logo.svg',
                 height: 71.38.h,
@@ -66,7 +68,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Welcome Back!",
+                    "Create your account",
                     style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 26.sp,
@@ -75,8 +77,14 @@ class _LoginWidgetState extends State<LoginWidget> {
                   ),
                   SizedBox(height: 10.h),
                   InputField(
+                      hintText: 'Full Name',
+                      prefixIcon: 'assets/icons/user_icon.svg',
+                      controller: _nameController,
+                      validator: (value) =>
+                          validateField(value!, 'Name', context)),
+                  SizedBox(height: 20.h),
+                  InputField(
                       hintText: 'Email Address',
-                      isPassword: false,
                       prefixIcon: 'assets/icons/email_icon.svg',
                       controller: _emailController,
                       validator: (value) => validateEmail(value!, context)),
@@ -89,22 +97,52 @@ class _LoginWidgetState extends State<LoginWidget> {
                     validator: (value) =>
                         validatePasswordForLogin(value!, context),
                   ),
-                  SizedBox(height: 60.h),
+                  SizedBox(height: 20.h),
+                  Wrap(children: [
+                    SvgPicture.asset('assets/icons/done_icon.svg',
+                        height: 20.h),
+                    SizedBox(width: 10.w),
+                    Text(
+                      "I have read & agreed to DayTask ",
+                      style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w400,
+                          color: nepal),
+                    ),
+                    Text(
+                      "Privacy Policy,",
+                      style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w400,
+                          color: goldenRod),
+                    ),
+                    Text(
+                      "      Terms & Condition",
+                      style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w400,
+                          color: goldenRod),
+                    ),
+                  ]),
+                  SizedBox(height: 50.h),
                   MainButton(
                     buttonFunction: () {
-                      validateCredentialsThenLoginUser(context);
+                      validateCredentialsThenRegisterUser(context);
                     },
-                    text: "Log In",
+                    text: "Sign Up",
                     // isLoading: widget.isLoading
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 100.h),
+            SizedBox(height: 80.h),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Don’t have an account?",
+                Text("Already have an account?",
                     style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 16.sp,
@@ -115,9 +153,9 @@ class _LoginWidgetState extends State<LoginWidget> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    navigateToRegisterScreen();
+                    navigateToLoginScreen();
                   },
-                  child: Text("Sign Up",
+                  child: Text("Log In",
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 16.sp,
@@ -134,12 +172,14 @@ class _LoginWidgetState extends State<LoginWidget> {
     );
   }
 
-  void validateCredentialsThenLoginUser(context) async {
+  void validateCredentialsThenRegisterUser(context) async {
     final isValid = _formKey.currentState!.validate();
     if (isValid) {
+      final String name;
       final String email;
       final String password;
 
+      name = _nameController.text;
       email = _emailController.text;
       password = _passwordController.text;
 
@@ -150,9 +190,9 @@ class _LoginWidgetState extends State<LoginWidget> {
     }
   }
 
-  navigateToRegisterScreen() {
+  navigateToLoginScreen() {
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-      return const RegisterPage();
+      return const LoginPage();
     }));
   }
 
