@@ -3,6 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/app_theme.dart';
 import '../../../../core/widgets/main_button.dart';
+import '../pages/login_page.dart';
+
 class SplashWidget extends StatefulWidget {
   const SplashWidget({super.key});
 
@@ -87,7 +89,14 @@ class _SplashWidgetState extends State<SplashWidget> {
                 ),
               ],
             ),
-            MainButton(buttonFunction: () {}, text: "Let's Start")
+            MainButton(
+                buttonFunction: () {
+                  Navigator.of(context)
+                      .pushReplacement(MaterialPageRoute(builder: (_) {
+                    return const LoginPage();
+                  }));
+                },
+                text: "Let's Start")
           ],
         ),
       )),
