@@ -1,7 +1,9 @@
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 import 'core/network/network_info.dart';
+import 'core/utils/pref_utils.dart';
 import 'features/authentication/data/data_sources/auth_remote_data_source.dart';
 import 'features/authentication/data/repositories/auth_repository_impl.dart';
 import 'features/authentication/domain/repositories/auth_repository.dart';
@@ -39,4 +41,8 @@ Future<void> init() async {
 
   //! External
   sl.registerLazySingleton<SupabaseClient>(() => Supabase.instance.client);
+  final sharedPreferences = await SharedPreferences.getInstance();
+  sl.registerLazySingleton(() => sharedPreferences);
+  sl.registerLazySingleton<PrefUtils>(
+          () => PrefUtilsImpl(sharedPreferences: sl()));
 }

@@ -69,7 +69,6 @@ class _TextFormFieldWidget extends State<InputField> {
             letterSpacing: widget.isPassword ? 1 : 0,
           ),
           autovalidateMode: AutovalidateMode.onUserInteraction,
-          // showCursor: widget.showCursor,
           decoration: InputDecoration(
             hintText: widget.hintText,
             filled: true, // Set filled to true
@@ -116,7 +115,6 @@ class _TextFormFieldWidget extends State<InputField> {
                 : null,
           ),
           validator: widget.validator,
-          // keyboardType: widget.inputType!,
         ),
       ],
     );

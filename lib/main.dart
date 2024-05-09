@@ -5,8 +5,6 @@ import 'core/utils/constants.dart';
 import 'features/authentication/presentation/pages/splash_screen.dart';
 import 'package:daily_tasks_test/injection_container.dart' as di;
 
-import 'features/projects/presentation/pages/home_page.dart';
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await di.init();
@@ -34,7 +32,7 @@ class _MyAppState extends State<MyApp> {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'DayTask',
-      home: HomePage(),
+      home: SplashScreen(),
     );
   }
 }

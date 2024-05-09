@@ -80,7 +80,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<UserModel> getUserInfo() async {
     try {
       UserResponse? user = await supabase.auth.getUser();
-      return UserModel.fromJson(user.user?.userMetadata?['username']);
+      print('user::: ${user.user!.userMetadata!}');
+      if (user != null) {
+        return UserModel.fromJson(user.user!.userMetadata!);
+      } else {
+        throw ServerException(message: 'No user logged in');
+      }
     } catch (e) {
       throw ServerException(message: 'No user logged in');
     }

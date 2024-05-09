@@ -27,28 +27,22 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget _buildBody() {
     return Center(
       child: BlocConsumer<SplashBloc, SplashState>(listener: (context, state) {
-        if (state.success) {
-          if (mounted) {
-            Timer(const Duration(seconds: 3), () {
-              if (mounted) {
+        if (mounted) {
+          Timer(const Duration(seconds: 3), () {
+            if (mounted) {
+              if (state.success) {
+                Navigator.of(context)
+                    .pushReplacement(MaterialPageRoute(builder: (_) {
+                  return const HomePage();
+                }));
+              } else {
                 Navigator.of(context)
                     .pushReplacement(MaterialPageRoute(builder: (_) {
                   return const HomePage();
                 }));
               }
-            });
-          }
-        } else {
-          if (mounted) {
-            Timer(const Duration(seconds: 3), () {
-              if (mounted) {
-                Navigator.of(context)
-                    .pushReplacement(MaterialPageRoute(builder: (_) {
-                  return const LoginPage();
-                }));
-              }
-            });
-          }
+            }
+          });
         }
       }, builder: (context, state) {
         return SplashWidget(isUserLogged: state.success);
