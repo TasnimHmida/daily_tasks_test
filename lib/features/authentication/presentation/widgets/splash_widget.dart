@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/app_theme.dart';
+import '../../../../core/widgets/bottom_nav_bar.dart';
 import '../../../../core/widgets/main_button.dart';
 import '../../../projects/presentation/pages/home_page.dart';
 import '../pages/login_page.dart';
@@ -97,7 +98,7 @@ class _SplashWidgetState extends State<SplashWidget> {
                   Navigator.of(context)
                       .pushReplacement(MaterialPageRoute(builder: (_) {
                     return widget.isUserLogged
-                        ? const HomePage()
+                        ? const BottomNavBar()
                         : const LoginPage();
                   }));
                 },

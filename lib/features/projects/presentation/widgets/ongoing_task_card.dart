@@ -85,7 +85,7 @@ class _OngoingTaskCardState extends State<OngoingTaskCard> {
               ),
               CircularPercentIndicator(
                   radius: 30.r,
-                  lineWidth: 3.w,
+                  lineWidth: 2.4.w,
                   percent: .6,
                   center: Text(
                     "60%",
@@ -99,7 +99,9 @@ class _OngoingTaskCardState extends State<OngoingTaskCard> {
                   progressColor: goldenRod,
                   backgroundColor: pickledBlueWood,
                   reverse: true,
-                  animation: true)
+                  animation: true,
+                animationDuration: 800
+              )
             ],
           ),
         ],

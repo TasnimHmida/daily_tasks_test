@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/widgets/bottom_nav_bar.dart';
 import '../../../projects/presentation/pages/home_page.dart';
 import '../bloc/splash_bloc/splash_bloc.dart';
 import '../widgets/splash_widget.dart';
@@ -33,12 +34,13 @@ class _SplashScreenState extends State<SplashScreen> {
               if (state.success) {
                 Navigator.of(context)
                     .pushReplacement(MaterialPageRoute(builder: (_) {
-                  return const HomePage();
+                  return const BottomNavBar();
                 }));
-              } else {
+              }
+              if (state.error.isNotEmpty) {
                 Navigator.of(context)
                     .pushReplacement(MaterialPageRoute(builder: (_) {
-                  return const HomePage();
+                  return const LoginPage();
                 }));
               }
             }

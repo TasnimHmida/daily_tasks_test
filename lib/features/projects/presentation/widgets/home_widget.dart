@@ -26,97 +26,105 @@ class _HomeWidgetState extends State<HomeWidget> {
       backgroundColor: ebonyClay,
       body: SafeArea(
           child: Padding(
-        padding: pagePadding,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+        padding: homePagePadding,
+        child: SingleChildScrollView(
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Welcome Back!",
-                      style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 11.79.sp,
-                        fontWeight: FontWeight.w500,
-                        color: goldenRod,
-                      ),
-                    ),
-                    Text(
-                      "Fazil Laghari",
-                      style: TextStyle(
-                        fontFamily: 'PilatExtended',
-                        fontSize: 22.29.sp,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-                Image.asset('assets/images/user_image.png', height: 48.h),
-              ],
-            ),
-            SearchBox(searchController: _searchController),
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(
-                "Completed Projects",
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
-              SizedBox(height: 15.h),
-              SizedBox(
-                height: 175.h,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: items.length,
-                  itemBuilder: (context, index) {
-                    return CompletedTaskCard(
-                        project: items[index], isFirstItem: index == 0);
-                  },
-                  separatorBuilder: (BuildContext context, int index) {
-                    return SizedBox(width: 10.w);
-                  },
-                ),
-              ),
-            ]),
-            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "Completed Projects",
-                  style: TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 20.sp,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Welcome Back!",
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 11.79.sp,
+                            fontWeight: FontWeight.w500,
+                            color: goldenRod,
+                          ),
+                        ),
+                        Text(
+                          "Fazil Laghari",
+                          style: TextStyle(
+                            fontFamily: 'PilatExtended',
+                            fontSize: 22.29.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Image.asset('assets/images/user_image.png', height: 48.h),
+                  ],
                 ),
-                SizedBox(height: 15.h),
-                SizedBox(
-                  height: 400.h,
-                  child: ListView.separated(
-                    itemCount: items.length,
-                    itemBuilder: (context, index) {
-                      return OngoingTaskCard(
-                          project: items[index]);
-                    },
-                    separatorBuilder: (BuildContext context, int index) {
-                      return SizedBox(height: 15.h);
-                    },
+                SizedBox(height: 30.h),
+                SearchBox(searchController: _searchController),
+                SizedBox(height: 30.h),
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(
+                    "Completed Projects",
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-              ]
-            )
-          ],
+                  SizedBox(height: 15.h),
+                  SizedBox(
+                    height: 175.h,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: items.length,
+                      itemBuilder: (context, index) {
+                        return CompletedTaskCard(
+                            project: items[index], isFirstItem: index == 0);
+                      },
+                      separatorBuilder: (BuildContext context, int index) {
+                        return SizedBox(width: 10.w);
+                      },
+                    ),
+                  ),
+                ]),
+                SizedBox(height: 25.h),
+                Expanded(
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Ongoing Projects",
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 15.h),
+                        Expanded(
+                          child: ListView.separated(
+                            itemCount: items.length,
+                            itemBuilder: (context, index) {
+                              return OngoingTaskCard(project: items[index]);
+                            },
+                            separatorBuilder:
+                                (BuildContext context, int index) {
+                              return SizedBox(height: 15.h);
+                            },
+                          ),
+                        ),
+                      ]),
+                )
+              ],
+            ),
+          ),
         ),
       )),
     );
