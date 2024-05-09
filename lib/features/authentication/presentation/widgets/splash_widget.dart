@@ -21,7 +21,7 @@ class _SplashWidgetState extends State<SplashWidget> {
     return Scaffold(
       backgroundColor: ebonyClay,
       body: SafeArea(
-          child: Container(
+          child: Padding(
         padding: pagePadding,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

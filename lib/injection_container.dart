@@ -32,7 +32,7 @@ Future<void> init() async {
       () => AuthRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()));
 // DataSources
   sl.registerLazySingleton<AuthRemoteDataSource>(
-      () => AuthRemoteDataSourceImpl(supabase: sl()));
+      () => AuthRemoteDataSourceImpl(supabase: sl(), prefUtils: sl()));
   //! Core
   sl.registerLazySingleton(() => InternetConnectionChecker());
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));

@@ -20,13 +20,13 @@ String? validateField(String value, hintText, BuildContext context) {
 }
 
 String? validatePassword(
-    String password, String hintText, BuildContext context) {
+    String password, BuildContext context) {
 
   if (password.trim().isEmpty) {
     return "Password can't be empty";
   }
-  if (password.trim().length < 8 || password.trim().length > 16) {
-    return "Password must contain at least 8 and at most 16 characters";
+  if (password.trim().length < 6 || password.trim().length > 16) {
+    return "Password must contain at least 6 and at most 16 characters";
   }
 
   if (!password.contains(RegExp(r'\d')) ||

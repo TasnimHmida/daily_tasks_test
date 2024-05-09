@@ -1,21 +1,27 @@
 import 'package:dartz/dartz.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 import '../../../../core/error/exception.dart';
+import '../../../../core/utils/pref_utils.dart';
 import '../models/user_model.dart';
 
 abstract class AuthRemoteDataSource {
   Future<Unit> login(String email, String password);
 
-  Future<Unit> signUp(String email, String password, String userName);
+  Future<Unit> signUp(
+      {required String email,
+      required String password,
+      required String userName});
 
   Future<Unit> signOut();
+
   Future<UserModel> getUserInfo();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
+  final PrefUtils prefUtils;
   final SupabaseClient supabase;
 
-  AuthRemoteDataSourceImpl({required this.supabase});
+  AuthRemoteDataSourceImpl({required this.supabase, required this.prefUtils});
 
   @override
   Future<Unit> login(String email, String password) async {
@@ -24,6 +30,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         email: email,
         password: password,
       );
+      UserResponse? user = await supabase.auth.getUser();
+      prefUtils.setUserInfo(
+        name: user.user?.userMetadata?['username'] ?? '',
+        email: user.user?.userMetadata?['email'] ?? '',
+      );
+      ;
       return Future.value(unit);
     } on AuthException catch (e) {
       throw ServerException(message: e.message);
@@ -31,9 +43,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<Unit> signUp(String email, String password, String userName) async {
-    print(email);
-    print(userName);
+  Future<Unit> signUp(
+      {required String email,
+      required String password,
+      required String userName}) async {
+    print('email::: $email');
+    print('userName:: $userName');
     print(password);
     try {
       await supabase.auth.signUp(
@@ -60,6 +75,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw ServerException(message: e.message);
     }
   }
+
   @override
   Future<UserModel> getUserInfo() async {
     try {

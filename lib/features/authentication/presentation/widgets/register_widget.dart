@@ -102,7 +102,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                     isPassword: true,
                     controller: _passwordController,
                     validator: (value) =>
-                        validatePasswordForLogin(value!, context),
+                        validatePassword(value!, context),
                   ),
                   SizedBox(height: 20.h),
                   Wrap(children: [

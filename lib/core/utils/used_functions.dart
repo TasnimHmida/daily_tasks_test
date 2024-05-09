@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../features/authentication/data/models/user_model.dart';
+
 void showSnackBar(
     BuildContext context, String message, Color snackBarBackgroundColor,
     {int height = 0, void Function()? onSnackBarCompleted}) async {
@@ -19,4 +21,27 @@ void showSnackBar(
       .showSnackBar(snackBar)
       .closed
       .whenComplete(onSnackBarCompleted ?? () {});
+}
+
+List<Widget> buildImages(List<UserModel> users) {
+  List<Widget> images = [];
+
+  for (int i = 0; i < users.length; i++) {
+    images.add(
+      Positioned(
+        left: 15.w * i,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(80.0),
+          child: Image.asset(
+            '${users[i].profilePicture}',
+            width: 20.w,
+            height: 20.w,
+            fit: BoxFit.cover,
+          ),
+        ),
+      ),
+    );
+  }
+
+  return images;
 }

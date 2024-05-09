@@ -39,6 +39,8 @@ dependencies:
   flutter_screenutil: ^5.9.0
   supabase_flutter: ^2.5.2
   supabase_auth_ui: ^0.4.4
+  shared_preferences: ^2.2.3
+  percent_indicator: ^4.2.3
 
 
   # The following adds the Cupertino Icons font to your application.

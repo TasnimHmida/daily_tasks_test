@@ -18,8 +18,10 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       if (event is RegisterUserEvent) {
         emit(state.copyWith(isLoading: true, error: '', success: false));
 
-        final failureOrDoneMessage =
-            await registerUseCase(event.userName, event.email, event.password);
+        final failureOrDoneMessage = await registerUseCase(
+            userName: event.userName,
+            email: event.email,
+            password: event.password);
         failureOrDoneMessage.fold(
           (failure) {
             emit(state.copyWith(
