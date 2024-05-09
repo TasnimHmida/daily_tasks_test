@@ -10,6 +10,7 @@ import '../pages/login_page.dart';
 class RegisterWidget extends StatefulWidget {
   final bool isLoading;
   final Function(String, String, String) registerFunction;
+
   const RegisterWidget({
     super.key,
     required this.isLoading,
@@ -25,6 +26,8 @@ class _RegisterWidgetState extends State<RegisterWidget> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String error = '';
+  bool isChecked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -103,8 +106,23 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                   ),
                   SizedBox(height: 20.h),
                   Wrap(children: [
-                    SvgPicture.asset('assets/icons/done_icon.svg',
-                        height: 20.h),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isChecked = !isChecked;
+                          if (isChecked) {
+                            error = '';
+                          } else {
+                            error = 'This field should be checked';
+                          }
+                        });
+                      },
+                      child: SvgPicture.asset(
+                        isChecked
+                            ? 'assets/icons/done_icon.svg'
+                            : 'assets/icons/is_not_checked_icon.svg',
+                      ),
+                    ),
                     SizedBox(width: 10.w),
                     Text(
                       "I have read & agreed to DayTask ",
@@ -131,18 +149,36 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                           color: goldenRod),
                     ),
                   ]),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        constraints: const BoxConstraints(minHeight: 16.0),
+                        padding: const EdgeInsets.only(left: 20, right: 10),
+                        child: Text(
+                          (error.isNotEmpty) ? ' * $error' : '',
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 13.0,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.red,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                   SizedBox(height: 50.h),
                   MainButton(
-                    buttonFunction: () {
-                      validateCredentialsThenRegisterUser(context);
-                    },
-                    text: "Sign Up",
-                    isLoading: widget.isLoading
-                  ),
+                      buttonFunction: () {
+                        validateCredentialsThenRegisterUser(context);
+                      },
+                      text: "Sign Up",
+                      isLoading: widget.isLoading),
                 ],
               ),
             ),
-            SizedBox(height: 80.h),
+            SizedBox(height: 50.h),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -178,6 +214,12 @@ class _RegisterWidgetState extends State<RegisterWidget> {
 
   void validateCredentialsThenRegisterUser(context) async {
     final isValid = _formKey.currentState!.validate();
+    if (!isChecked) {
+      setState(() {
+        error = 'This field should be checked';
+      });
+      return;
+    }
     if (isValid) {
       final String name;
       final String email;

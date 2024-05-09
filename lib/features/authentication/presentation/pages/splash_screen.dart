@@ -1,5 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../projects/presentation/pages/home_page.dart';
+import '../bloc/splash_bloc/splash_bloc.dart';
 import '../widgets/splash_widget.dart';
+import 'package:daily_tasks_test/injection_container.dart' as di;
+
+import 'login_page.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -11,37 +19,40 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
-    return
-        // BlocProvider(
-        // create: (context) =>
-        // di.sl<SplashPageBloc>()..add(CheckIfUserIsLoggedInEvent()),
-        // child:
-        _buildBody()
-        // )
-        ;
+    return BlocProvider(
+        create: (context) => di.sl<SplashBloc>()..add(GetUserEvent()),
+        child: _buildBody());
   }
 
   Widget _buildBody() {
-    return const Center(
-      child:
-      // BlocConsumer<SplashPageBloc, SplashPageState>(
-      //     listener: (context, state) {
-      //   if (state is NavigateToHomeScreenState) {
-      //     if (mounted) {
-      //       Timer(const Duration(seconds: 3), () {
-      //         if (mounted) {
-      //           Navigator.of(context)
-      //               .pushReplacement(MaterialPageRoute(builder: (_) {
-      //             return const HomePage();
-      //           }));
-      //         }
-      //       });
-      //     }
-      //   }
-      // }, builder: (context, state) {
-      //   return
-          SplashWidget()
-      // ;}),
+    return Center(
+      child: BlocConsumer<SplashBloc, SplashState>(listener: (context, state) {
+        if (state.success) {
+          if (mounted) {
+            Timer(const Duration(seconds: 3), () {
+              if (mounted) {
+                Navigator.of(context)
+                    .pushReplacement(MaterialPageRoute(builder: (_) {
+                  return const HomePage();
+                }));
+              }
+            });
+          }
+        } else {
+          if (mounted) {
+            Timer(const Duration(seconds: 3), () {
+              if (mounted) {
+                Navigator.of(context)
+                    .pushReplacement(MaterialPageRoute(builder: (_) {
+                  return const LoginPage();
+                }));
+              }
+            });
+          }
+        }
+      }, builder: (context, state) {
+        return SplashWidget(isUserLogged: state.success);
+      }),
     );
   }
 }

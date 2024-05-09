@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/app_theme.dart';
 import '../../../../core/utils/used_functions.dart';
+import '../../../projects/presentation/pages/home_page.dart';
 import '../bloc/login_bloc/login_bloc.dart';
 import '../widgets/login_widget.dart';
 import 'package:daily_tasks_test/injection_container.dart' as di;
@@ -31,9 +32,8 @@ class _LoginPageState extends State<LoginPage> {
           showSnackBar(context, state.error, goldenRod.withOpacity(0.8));
         }
         else if (state.success) {
-          print('success');
-          // Navigator.of(context).pushReplacement(
-          //     MaterialPageRoute(builder: (_) => const HomePage()));
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => const HomePage()));
         }
       }, builder: (context, state) {
         return LoginWidget(

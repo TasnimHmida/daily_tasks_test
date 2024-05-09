@@ -3,10 +3,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/app_theme.dart';
 import '../../../../core/widgets/main_button.dart';
+import '../../../projects/presentation/pages/home_page.dart';
 import '../pages/login_page.dart';
 
 class SplashWidget extends StatefulWidget {
-  const SplashWidget({super.key});
+  final bool isUserLogged;
+
+  const SplashWidget({super.key, required this.isUserLogged});
 
   @override
   _SplashWidgetState createState() => _SplashWidgetState();
@@ -93,7 +96,9 @@ class _SplashWidgetState extends State<SplashWidget> {
                 buttonFunction: () {
                   Navigator.of(context)
                       .pushReplacement(MaterialPageRoute(builder: (_) {
-                    return const LoginPage();
+                    return widget.isUserLogged
+                        ? const HomePage()
+                        : const LoginPage();
                   }));
                 },
                 text: "Let's Start")

@@ -6,6 +6,8 @@ import '../bloc/register_bloc/register_bloc.dart';
 import '../widgets/register_widget.dart';
 import 'package:daily_tasks_test/injection_container.dart' as di;
 
+import 'login_page.dart';
+
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
 
@@ -31,9 +33,9 @@ class _RegisterPageState extends State<RegisterPage> {
         if (state.error.isNotEmpty) {
           showSnackBar(context, state.error, goldenRod.withOpacity(0.8));
         } else if (state.success) {
-          print('register success');
-          // Navigator.of(context).pushReplacement(
-          //     MaterialPageRoute(builder: (_) => const HomePage()));
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => const LoginPage()));
+          showSnackBar(context, 'Please verify your email with the link that was sent to you.', goldenRod.withOpacity(0.8));
         }
       }, builder: (context, state) {
         return RegisterWidget(
