@@ -1,0 +1,31 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/app_theme.dart';
+import '../../../../core/utils/used_functions.dart';
+import 'package:daily_tasks_test/injection_container.dart' as di;
+
+import '../../../authentication/data/models/user_model.dart';
+import '../../data/models/project_model.dart';
+import '../widgets/home_widget.dart';
+
+class HomePage extends StatefulWidget {
+  final List<ProjectModel> projects;
+  final UserModel user;
+  const HomePage({super.key, required this.projects, required this.user});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(backgroundColor: ebonyClay, body: _buildBody(widget.projects));
+  }
+
+  Widget _buildBody(List<ProjectModel> projects) {
+    return Center(
+        child: HomeWidget(projects: projects, user: widget.user),
+        );
+  }
+}
