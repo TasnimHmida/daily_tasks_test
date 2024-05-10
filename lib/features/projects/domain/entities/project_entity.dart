@@ -5,12 +5,14 @@ class ProjectEntity extends Equatable {
   final String? details;
   final String? time;
   final String? date;
+  final double? percentage;
 
   const ProjectEntity(
     this.name,
     this.details,
     this.time,
     this.date,
+    this.percentage,
   );
 
   @override
@@ -19,5 +21,6 @@ class ProjectEntity extends Equatable {
         details,
         time,
         date,
+    percentage,
       ];
 }

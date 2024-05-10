@@ -1,8 +1,8 @@
+import 'package:daily_tasks_test/features/authentication/presentation/pages/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/app_theme.dart';
 import '../../../../core/utils/used_functions.dart';
-import '../../../projects/presentation/pages/home_page.dart';
 import '../bloc/login_bloc/login_bloc.dart';
 import '../widgets/login_widget.dart';
 import 'package:daily_tasks_test/injection_container.dart' as di;
@@ -33,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
         }
         else if (state.success) {
           Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => const HomePage()));
+              MaterialPageRoute(builder: (_) => const SplashScreen()));
         }
       }, builder: (context, state) {
         return LoginWidget(

@@ -1,29 +1,29 @@
-part of 'splash_bloc.dart';
+part of 'core_bloc.dart';
 
-class SplashState extends Equatable {
+class CoreState extends Equatable {
   final bool isLoading;
   final String error;
   final bool success;
-  final UserModel? user;
+  final List<ProjectModel>? projects;
 
-  const SplashState({
+  const CoreState({
     this.isLoading = false,
     this.error = "",
     this.success = false,
-    this.user,
+    this.projects,
   });
 
-  SplashState copyWith({
+  CoreState copyWith({
     bool? isLoading,
     String? error,
     bool? success,
-    UserModel? user,
+    List<ProjectModel>? projects,
   }) {
-    return SplashState(
+    return CoreState(
       isLoading: isLoading ?? this.isLoading,
       error: error ?? this.error,
       success: success ?? this.success,
-      user: user ?? this.user,
+      projects: projects ?? this.projects,
     );
   }
 
@@ -32,6 +32,6 @@ class SplashState extends Equatable {
         isLoading,
         error,
         success,
-        user,
+        projects,
       ];
 }

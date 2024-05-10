@@ -2,14 +2,16 @@ import 'package:daily_tasks_test/features/projects/presentation/widgets/search_b
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/app_theme.dart';
+import '../../../authentication/data/models/user_model.dart';
 import '../../data/models/project_model.dart';
 import 'completed_task_card.dart';
 import 'ongoing_task_card.dart';
 
 class HomeWidget extends StatefulWidget {
-  const HomeWidget({
-    super.key,
-  });
+  final List<ProjectModel> projects;
+  final UserModel user;
+
+  const HomeWidget({super.key, required this.projects, required this.user});
 
   @override
   _HomeWidgetState createState() => _HomeWidgetState();
@@ -17,8 +19,20 @@ class HomeWidget extends StatefulWidget {
 
 class _HomeWidgetState extends State<HomeWidget> {
   final TextEditingController _searchController = TextEditingController();
-  List<ProjectModel> items = List.generate(
-      10, (index) => const ProjectModel(name: 'Real Estate Website Design'));
+  List<ProjectModel> completedProjects = [];
+  List<ProjectModel> ongoingProjects = [];
+
+  @override
+  void initState() {
+    super.initState();
+    for (var project in widget.projects) {
+      if (project.percentage != null && project.percentage! >= 100) {
+        completedProjects.add(project);
+      } else {
+        ongoingProjects.add(project);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +65,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                           ),
                         ),
                         Text(
-                          "Fazil Laghari",
+                          widget.user.userName ?? '',
                           style: TextStyle(
                             fontFamily: 'PilatExtended',
                             fontSize: 22.29.sp,
@@ -80,17 +94,30 @@ class _HomeWidgetState extends State<HomeWidget> {
                   SizedBox(height: 15.h),
                   SizedBox(
                     height: 175.h,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: items.length,
-                      itemBuilder: (context, index) {
-                        return CompletedTaskCard(
-                            project: items[index], isFirstItem: index == 0);
-                      },
-                      separatorBuilder: (BuildContext context, int index) {
-                        return SizedBox(width: 10.w);
-                      },
-                    ),
+                    child: completedProjects.isEmpty
+                        ? Center(
+                            child: Text(
+                            "No Completed Projects Yet.",
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.white,
+                            ),
+                          ))
+                        : ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: completedProjects.length,
+                            itemBuilder: (context, index) {
+                              return CompletedTaskCard(
+                                  project: completedProjects[index],
+                                  isFirstItem: index == 0);
+                            },
+                            separatorBuilder:
+                                (BuildContext context, int index) {
+                              return SizedBox(width: 10.w);
+                            },
+                          ),
                   ),
                 ]),
                 SizedBox(height: 25.h),
@@ -109,16 +136,28 @@ class _HomeWidgetState extends State<HomeWidget> {
                         ),
                         SizedBox(height: 15.h),
                         Expanded(
-                          child: ListView.separated(
-                            itemCount: items.length,
-                            itemBuilder: (context, index) {
-                              return OngoingTaskCard(project: items[index]);
-                            },
-                            separatorBuilder:
-                                (BuildContext context, int index) {
-                              return SizedBox(height: 15.h);
-                            },
-                          ),
+                          child: ongoingProjects.isEmpty
+                              ? Center(
+                                  child: Text(
+                                  "No Ongoing Projects Yet.",
+                                  style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.white,
+                                  ),
+                                ))
+                              : ListView.separated(
+                                  itemCount: ongoingProjects.length,
+                                  itemBuilder: (context, index) {
+                                    return OngoingTaskCard(
+                                        project: ongoingProjects[index]);
+                                  },
+                                  separatorBuilder:
+                                      (BuildContext context, int index) {
+                                    return SizedBox(height: 15.h);
+                                  },
+                                ),
                         ),
                       ]),
                 )

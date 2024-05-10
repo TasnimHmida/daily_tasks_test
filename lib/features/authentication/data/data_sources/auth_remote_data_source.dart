@@ -32,10 +32,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
       UserResponse? user = await supabase.auth.getUser();
       prefUtils.setUserInfo(
+        userId: user.user?.id ?? '',
         name: user.user?.userMetadata?['username'] ?? '',
         email: user.user?.userMetadata?['email'] ?? '',
       );
-      ;
       return Future.value(unit);
     } on AuthException catch (e) {
       throw ServerException(message: e.message);
@@ -80,9 +80,18 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<UserModel> getUserInfo() async {
     try {
       UserResponse? user = await supabase.auth.getUser();
-      print('user::: ${user.user!.userMetadata!}');
+
       if (user != null) {
-        return UserModel.fromJson(user.user!.userMetadata!);
+        prefUtils.setUserInfo(
+          userId: user.user?.id ?? '',
+          name: user.user?.userMetadata?['username'] ?? '',
+          email: user.user?.userMetadata?['email'] ?? '',
+        );
+        return UserModel(
+          userId: user.user?.id ?? '',
+          userName: user.user?.userMetadata?['username'] ?? '',
+          email: user.user?.userMetadata?['email'] ?? '',
+        );
       } else {
         throw ServerException(message: 'No user logged in');
       }

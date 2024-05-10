@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/widgets/bottom_nav_bar.dart';
 import '../../../projects/presentation/pages/home_page.dart';
+import '../../data/models/user_model.dart';
 import '../bloc/splash_bloc/splash_bloc.dart';
 import '../widgets/splash_widget.dart';
 import 'package:daily_tasks_test/injection_container.dart' as di;
@@ -34,7 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
               if (state.success) {
                 Navigator.of(context)
                     .pushReplacement(MaterialPageRoute(builder: (_) {
-                  return const BottomNavBar();
+                  return BottomNavBar(user: state.user!);
                 }));
               }
               if (state.error.isNotEmpty) {
@@ -47,7 +48,10 @@ class _SplashScreenState extends State<SplashScreen> {
           });
         }
       }, builder: (context, state) {
-        return SplashWidget(isUserLogged: state.success);
+        return SplashWidget(
+          isUserLogged: state.success,
+          user: state.user ?? UserModel(),
+        );
       }),
     );
   }

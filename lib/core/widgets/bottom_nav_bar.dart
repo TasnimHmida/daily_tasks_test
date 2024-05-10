@@ -1,18 +1,24 @@
+import 'package:daily_tasks_test/injection_container.dart' as di;
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-
+import '../../features/authentication/data/models/user_model.dart';
 import '../../features/projects/presentation/pages/home_page.dart';
 import '../app_theme.dart';
+import '../bloc/core_bloc.dart';
+import '../strings/failures.dart';
 
 class BottomNavBar extends StatefulWidget {
+  final UserModel user;
   final int? specificIndex;
 
   const BottomNavBar({
-    Key? key,
+    super.key,
     this.specificIndex,
-  }) : super(key: key);
+    required this.user,
+  });
 
   @override
   _BottomNavBar createState() => _BottomNavBar();
@@ -26,8 +32,6 @@ class _BottomNavBar extends State<BottomNavBar> {
   void initState() {
     super.initState();
     _currentIndex = widget.specificIndex ?? 0;
-
-    // BlocProvider.of<CoreBloc>(context).add(GetRemoteUserEvent());
   }
 
   void _onItemTapped(int index) {
@@ -37,52 +41,64 @@ class _BottomNavBar extends State<BottomNavBar> {
   }
 
   Future<void> _onRefresh(BuildContext context) async {
-    // BlocProvider.of<CoreBloc>(context).add(GetRemoteUserEvent());
+    BlocProvider.of<CoreBloc>(context).add(GetAllProjectsEvent());
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> widgetOptions = <Widget>[
-      const HomePage(),
-      const Center(child: Text('chat screen')),
-      const Center(child: Text('add project screen')),
-      const Center(child: Text('calendar screen')),
-      const Center(child: Text('notifications screen'))
-    ];
-    return
-        // BlocConsumer<CoreBloc, CoreState>(
-        // listener: (context, state) {},
-        // builder: (context, state) {
-        //   return
-        GestureDetector(
+    return BlocProvider(
+        create: (context) => di.sl<CoreBloc>()..add(GetAllProjectsEvent()),
+        child: Scaffold(
+          backgroundColor: ebonyClay,
+          body: _buildBody(),
+        ));
+  }
+
+  Widget _buildBody() {
+    return BlocConsumer<CoreBloc, CoreState>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        final List<Widget> widgetOptions = <Widget>[
+          RefreshIndicator(
+              backgroundColor: lynch,
+              color: goldenRod,
+              onRefresh: () => _onRefresh(context),
+              child: state.isLoading
+                  ? Container(
+                      color: ebonyClay,
+                      child: const Center(
+                          child: CircularProgressIndicator(
+                              backgroundColor: lynch, color: goldenRod)))
+                  : HomePage(projects: state.projects ?? [], user: widget.user)),
+          const Center(child: Text('chat screen')),
+          const Center(child: Text('add project screen')),
+          const Center(child: Text('calendar screen')),
+          const Center(child: Text('notifications screen'))
+        ];
+        return GestureDetector(
             onTap: () {
               FocusScope.of(context).requestFocus(FocusNode());
             },
             child: Scaffold(
                 key: scaffoldKey,
                 body:
-                    // (!state.isLoading &&
-                    //     state.error == OFFLINE_FAILURE_MESSAGE)
-                    //     ? RefreshIndicator(
-                    //     child: ListView(
-                    //       children: [
-                    //         SizedBox(
-                    //           height: 200.h,
-                    //         ),
-                    //         Center(
-                    //           child: NoDataFoundWidget(
-                    //             message: "No Internet connection".tr(context),
-                    //             image: "assets/images/no_internet.svg",
-                    //           ),
-                    //         )
-                    //       ],
-                    //     ),
-                    //     onRefresh: () => _onRefresh(context))
-                    //     :
-                    IndexedStack(
-                  index: _currentIndex,
-                  children: widgetOptions,
-                ),
+                    (!state.isLoading && state.error == OFFLINE_FAILURE_MESSAGE)
+                        ? RefreshIndicator(
+                            child: ListView(
+                              children: [
+                                SizedBox(
+                                  height: 200.h,
+                                ),
+                                const Center(
+                                  child: Text("No Internet connection"),
+                                )
+                              ],
+                            ),
+                            onRefresh: () => _onRefresh(context))
+                        : IndexedStack(
+                            index: _currentIndex,
+                            children: widgetOptions,
+                          ),
                 bottomNavigationBar: BottomNavigationBar(
                   backgroundColor: outerSpace,
                   type: BottomNavigationBarType.fixed,
@@ -107,15 +123,16 @@ class _BottomNavBar extends State<BottomNavBar> {
                     ),
                     BottomNavigationBarItem(
                       icon: Container(
+                        margin: EdgeInsets.only(top: 15.h),
                         height: 54.w,
                         width: 54.w,
                         color: goldenRod,
-                        child: SizedBox(
-                          height: 20.w,
-                          width: 20.w,
-                          child: SvgPicture.asset(
-                              "assets/icons/add_task_icon.svg",
-                              height: 20.w),
+                        child: ConstrainedBox(
+                          constraints:
+                              BoxConstraints(maxWidth: 20.w, maxHeight: 20.w),
+                          child: Image.asset(
+                            "assets/icons/add_task_icon.png",
+                          ),
                         ),
                       ),
                       label: "",
@@ -136,9 +153,8 @@ class _BottomNavBar extends State<BottomNavBar> {
                       label: "Notification",
                     ),
                   ],
-                ))
-            //   );
-            // },
-            );
+                )));
+      },
+    );
   }
 }

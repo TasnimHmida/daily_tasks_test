@@ -4,10 +4,14 @@ import '../../../../core/app_theme.dart';
 import '../../../../core/utils/used_functions.dart';
 import 'package:daily_tasks_test/injection_container.dart' as di;
 
+import '../../../authentication/data/models/user_model.dart';
+import '../../data/models/project_model.dart';
 import '../widgets/home_widget.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final List<ProjectModel> projects;
+  final UserModel user;
+  const HomePage({super.key, required this.projects, required this.user});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -16,24 +20,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(backgroundColor: ebonyClay, body: _buildBody());
+    return Scaffold(backgroundColor: ebonyClay, body: _buildBody(widget.projects));
   }
 
-  Widget _buildBody() {
-    return const Center(
-        child:
-            // BlocConsumer<LoginBloc, LoginState>(listener: (context, state) {
-            //   if (state.error.isNotEmpty) {
-            //     showSnackBar(context, state.error, goldenRod.withOpacity(0.8));
-            //   } else if (state.success) {
-            //     print('success');
-            //     // Navigator.of(context).pushReplacement(
-            //     //     MaterialPageRoute(builder: (_) => const HomePage()));
-            //   }
-            // }, builder: (context, state) {
-            //   return
-            HomeWidget()
-        // ;}),
+  Widget _buildBody(List<ProjectModel> projects) {
+    return Center(
+        child: HomeWidget(projects: projects, user: widget.user),
         );
   }
 }

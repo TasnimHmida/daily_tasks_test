@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-
 import '../../../../core/app_theme.dart';
 import '../../../../core/utils/used_functions.dart';
 import '../../../authentication/data/models/user_model.dart';
@@ -18,6 +17,19 @@ class OngoingTaskCard extends StatefulWidget {
 }
 
 class _OngoingTaskCardState extends State<OngoingTaskCard> {
+  String formattedDate = '';
+
+  @override
+  void initState() {
+    super.initState();
+    DateTime date = DateTime.parse(widget.project.date ?? '');
+    int day = date.day;
+    String month = DateFormat('MMMM').format(date);
+    setState(() {
+      formattedDate = '$day $month';
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -41,6 +53,7 @@ class _OngoingTaskCardState extends State<OngoingTaskCard> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,7 +86,7 @@ class _OngoingTaskCardState extends State<OngoingTaskCard> {
                       ]),
                   SizedBox(height: 10.h),
                   Text(
-                    "Due on : 21 March",
+                    "Due on : $formattedDate",
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 11.sp,
@@ -86,9 +99,9 @@ class _OngoingTaskCardState extends State<OngoingTaskCard> {
               CircularPercentIndicator(
                   radius: 30.r,
                   lineWidth: 2.4.w,
-                  percent: .6,
+                  percent: (widget.project.percentage ?? 0).toInt() / 100,
                   center: Text(
-                    "60%",
+                    '${(widget.project.percentage ?? 0).toInt().toString()}%',
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 11.sp,
@@ -100,8 +113,7 @@ class _OngoingTaskCardState extends State<OngoingTaskCard> {
                   backgroundColor: pickledBlueWood,
                   reverse: true,
                   animation: true,
-                animationDuration: 800
-              )
+                  animationDuration: 800)
             ],
           ),
         ],

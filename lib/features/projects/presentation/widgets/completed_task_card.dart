@@ -27,6 +27,7 @@ class _CompletedTaskCardState extends State<CompletedTaskCard> {
       height: 175.h,
       color: widget.isFirstItem ? goldenRod : fiord,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
