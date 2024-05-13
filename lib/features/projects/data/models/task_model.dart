@@ -3,10 +3,10 @@ import '../../domain/entities/task_entity.dart';
 class TaskModel extends TaskEntity {
   @override
   const TaskModel({
-    String? id,
+    int? id,
     String? name,
     bool? isDone,
-    String? projectId,
+    int? projectId,
   }) : super(
           id,
           name,
@@ -16,10 +16,10 @@ class TaskModel extends TaskEntity {
 
   factory TaskModel.fromJson(Map<String, dynamic> json) {
     return TaskModel(
-      id: json['id'].toString(),
+      id: json['id'],
       name: json['name'],
-      isDone: json['isDone'],
-      projectId: json['projectId'] ?? '',
+      isDone: json['is_done'],
+      projectId: json['project_id'] ?? '',
     );
   }
 
@@ -27,8 +27,8 @@ class TaskModel extends TaskEntity {
     return {
       "id": id,
       "name": name,
-      "isDone": isDone,
-      "projectId": projectId,
+      "is_done": isDone,
+      "project_id": projectId,
     };
   }
 }

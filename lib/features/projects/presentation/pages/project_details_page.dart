@@ -5,6 +5,7 @@ import '../../../../core/utils/used_functions.dart';
 import 'package:daily_tasks_test/injection_container.dart' as di;
 import '../../data/models/project_model.dart';
 import '../bloc/add_project_bloc/add_project_bloc.dart';
+import '../bloc/tasks_bloc/tasks_bloc.dart';
 import '../widgets/project_details_widget.dart';
 
 class ProjectDetailsPage extends StatefulWidget {
@@ -20,13 +21,14 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => di.sl<AddProjectBloc>(),
+      create: (context) => di.sl<TasksBloc>()
+        ..add(GetProjectTasksEvent(projectId: widget.project.id.toString())),
       child: Scaffold(backgroundColor: ebonyClay, body: _buildBody()),
     );
   }
 
   Widget _buildBody() {
-    return BlocConsumer<AddProjectBloc, AddProjectState>(
+    return BlocConsumer<TasksBloc, TasksState>(
       listener: (context, state) {
         if (state.error.isNotEmpty) {
           showSnackBar(context, state.error, goldenRod.withOpacity(0.8));
@@ -37,7 +39,8 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
       },
       builder: (context, state) {
         return Center(
-          child: ProjectDetailsWidget(project: widget.project),
+          child: ProjectDetailsWidget(
+              project: widget.project, tasks: state.tasks ?? [], isLoading: state.isLoading),
         );
       },
     );

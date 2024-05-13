@@ -5,6 +5,7 @@ import '../../../../core/network/network_info.dart';
 import '../../domain/repositories/projects_repository.dart';
 import '../data_sources/projects_remote_data_source.dart';
 import '../models/project_model.dart';
+import '../models/task_model.dart';
 
 class ProjectsRepositoryImpl implements ProjectsRepository {
   final ProjectsRemoteDataSource remoteDataSource;
@@ -28,6 +29,22 @@ class ProjectsRepositoryImpl implements ProjectsRepository {
   }
 
   @override
+  Future<Either<Failure, List<TaskModel>>> getProjectTasks(
+      String projectId) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteResponse =
+            await remoteDataSource.getProjectTasks(projectId);
+        return Right(remoteResponse);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      return Left(OfflineFailure());
+    }
+  }
+
+  @override
   Future<Either<Failure, Unit>> createProject(ProjectModel project) async {
     if (await networkInfo.isConnected) {
       try {
@@ -40,6 +57,7 @@ class ProjectsRepositoryImpl implements ProjectsRepository {
       return Left(OfflineFailure());
     }
   }
+
   @override
   Future<Either<Failure, Unit>> updateProject(ProjectModel project) async {
     if (await networkInfo.isConnected) {
@@ -53,5 +71,4 @@ class ProjectsRepositoryImpl implements ProjectsRepository {
       return Left(OfflineFailure());
     }
   }
-
 }

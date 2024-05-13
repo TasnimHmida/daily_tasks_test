@@ -3,7 +3,7 @@ import '../../domain/entities/project_entity.dart';
 class ProjectModel extends TaskEntity {
   @override
   const ProjectModel({
-    String? id,
+    int? id,
     String? name,
     String? details,
     String? time,
@@ -20,7 +20,7 @@ class ProjectModel extends TaskEntity {
 
   factory ProjectModel.fromJson(Map<String, dynamic> json) {
     return ProjectModel(
-      id: json['id'].toString(),
+      id: json['id'],
       name: json['name'],
       details: json['details'],
       time: json['time'] ?? '',

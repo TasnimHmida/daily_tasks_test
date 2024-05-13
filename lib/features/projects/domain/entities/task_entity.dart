@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 
 class TaskEntity extends Equatable {
-  final String? id;
+  final int? id;
   final String? name;
   final bool? isDone;
-  final String? projectId;
+  final int? projectId;
 
   const TaskEntity(
     this.id,

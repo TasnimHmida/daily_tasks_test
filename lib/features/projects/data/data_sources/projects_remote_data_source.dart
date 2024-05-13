@@ -4,10 +4,11 @@ import '../../../../core/error/exception.dart';
 import '../../../../core/strings/failures.dart';
 import '../../../../core/utils/pref_utils.dart';
 import '../models/project_model.dart';
+import '../models/task_model.dart';
 
 abstract class ProjectsRemoteDataSource {
   Future<List<ProjectModel>> getAllProjects();
-
+  Future<List<TaskModel>> getProjectTasks(String projectId);
   Future<Unit> createProject(ProjectModel project);
 
   Future<Unit> updateProject(ProjectModel project);
@@ -37,6 +38,26 @@ class ProjectsRemoteDataSourceImpl implements ProjectsRemoteDataSource {
     } catch (e) {
       throw ServerException(message: UNEXPECTED_FAILURE_MESSAGE);
     }
+  }
+
+  @override
+  Future<List<TaskModel>> getProjectTasks(String projectId) async {
+    // try {
+      var user = prefUtils.getUserInfo();
+      final response = await supabase
+          .from('tasks')
+          .select()
+          .eq('user_id', user?.userId ?? '')
+          .eq('project_id', projectId);
+
+      final List<TaskModel> tasks = response
+          .map<TaskModel>((jsonModel) => TaskModel.fromJson(jsonModel))
+          .toList();
+
+      return tasks;
+    // } catch (e) {
+    //   throw ServerException(message: UNEXPECTED_FAILURE_MESSAGE);
+    // }
   }
 
   @override

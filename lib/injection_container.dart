@@ -20,7 +20,9 @@ import 'features/projects/data/repositories/projects_repository_impl.dart';
 import 'features/projects/domain/repositories/projects_repository.dart';
 import 'features/projects/domain/use_cases/create_project_usecase.dart';
 import 'features/projects/domain/use_cases/get_all_projects_usecase.dart';
+import 'features/projects/domain/use_cases/get_project_tasks_usecase.dart';
 import 'features/projects/presentation/bloc/add_project_bloc/add_project_bloc.dart';
+import 'features/projects/presentation/bloc/tasks_bloc/tasks_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -31,6 +33,7 @@ Future<void> init() async {
   sl.registerFactory(() => RegisterBloc(registerUseCase: sl()));
   sl.registerFactory(() => SplashBloc(getUserUseCase: sl()));
   sl.registerFactory(() => AddProjectBloc(createProjectUseCase: sl()));
+  sl.registerFactory(() => TasksBloc(getProjectTasksUseCase: sl()));
 
   // UseCases
   sl.registerLazySingleton(() => LoginUseCase(repository: sl()));
@@ -39,6 +42,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetUserInfoUseCase(repository: sl()));
   sl.registerLazySingleton(() => GetAllProjectsUseCase(repository: sl()));
   sl.registerLazySingleton(() => CreateProjectUseCase(repository: sl()));
+  sl.registerLazySingleton(() => GetProjectTasksUseCase(repository: sl()));
 
   // Repository
   sl.registerLazySingleton<AuthRepository>(

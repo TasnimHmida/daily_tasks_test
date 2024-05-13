@@ -16,10 +16,14 @@ import 'ongoing_task_card.dart';
 
 class ProjectDetailsWidget extends StatefulWidget {
   final ProjectModel project;
+  final List<TaskModel> tasks;
+  final bool isLoading;
 
   const ProjectDetailsWidget({
     super.key,
     required this.project,
+    required this.tasks,
+    required this.isLoading,
   });
 
   @override
@@ -35,29 +39,6 @@ class _ProjectDetailsWidgetState extends State<ProjectDetailsWidget> {
         userName: 'Robert', profilePicture: 'assets/images/user_image.png'),
     const UserModel(
         userName: 'Sophia', profilePicture: 'assets/images/user_image.png'),
-  ];
-
-  List<TaskModel> tasks = [
-    const TaskModel(
-      name: 'User Interviews',
-      isDone: true,
-    ),
-    const TaskModel(
-      name: 'Wireframes',
-      isDone: true,
-    ),
-    const TaskModel(
-      name: 'Design System',
-      isDone: true,
-    ),
-    const TaskModel(
-      name: 'Design System',
-      isDone: false,
-    ),
-    const TaskModel(
-      name: 'Final Mockups',
-      isDone: false,
-    ),
   ];
 
   String formattedDate = '';
@@ -95,177 +76,120 @@ class _ProjectDetailsWidgetState extends State<ProjectDetailsWidget> {
         padding: homePagePadding,
         child: SingleChildScrollView(
           child: SizedBox(
-            height: MediaQuery.of(context).size.height * .99,
-            child: Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: SvgPicture.asset(
-                          'assets/icons/arrow_back.svg',
-                          height: 20.h,
-                        ),
+            height: MediaQuery.of(context).size.height * .8,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: SvgPicture.asset(
+                        'assets/icons/arrow_back.svg',
+                        height: 20.h,
                       ),
-                      Text(
-                        "Project Details",
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 20.sp,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {},
-                        child: SvgPicture.asset(
-                          'assets/icons/edit_icon.svg',
-                          height: 24.h,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 30.h),
-                  Text(
-                    widget.project.name ?? '',
-                    style: TextStyle(
-                        fontFamily: 'PilatExtended',
-                        fontSize: 21.sp,
-                        fontWeight: FontWeight.w600,
+                    ),
+                    Text(
+                      "Project Details",
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.w500,
                         color: Colors.white,
-                        height: 1.2),
-                  ),
-                  SizedBox(height: 30.h),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(children: [
-                          Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 10.h, vertical: 10.h),
-                              color: goldenRod,
-                              child: SvgPicture.asset(
-                                  'assets/icons/due_date_icon.svg')),
-                          SizedBox(width: 10.w),
-                          Column(children: [
-                            Text(
-                              'Due Date',
-                              style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 11.sp,
-                                fontWeight: FontWeight.w500,
-                                color: nepal,
-                              ),
-                            ),
-                            Text(
-                              formattedDate,
-                              style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 17.sp,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ])
-                        ]),
-                        Row(children: [
-                          Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 10.h, vertical: 10.h),
-                              color: goldenRod,
-                              child: SvgPicture.asset(
-                                  'assets/icons/project_team_icon.svg')),
-                          SizedBox(width: 10.w),
-                          Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Project Team',
-                                  style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontSize: 11.sp,
-                                    fontWeight: FontWeight.w500,
-                                    color: nepal,
-                                  ),
-                                ),
-                                SizedBox(height: 2.h),
-                                SizedBox(
-                                  height: 25.h,
-                                  width: 80.w,
-                                  child: Stack(children: buildImages(members)),
-                                ),
-                              ])
-                        ]),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {},
+                      child: SvgPicture.asset(
+                        'assets/icons/edit_icon.svg',
+                        height: 24.h,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 30.h),
+                Text(
+                  widget.project.name ?? '',
+                  style: TextStyle(
+                      fontFamily: 'PilatExtended',
+                      fontSize: 21.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                      height: 1.2),
+                ),
+                SizedBox(height: 30.h),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(children: [
+                        Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 10.h, vertical: 10.h),
+                            color: goldenRod,
+                            child: SvgPicture.asset(
+                                'assets/icons/due_date_icon.svg')),
                         SizedBox(width: 10.w),
-                      ]),
-                  SizedBox(height: 30.h),
-                  Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Project Details",
-                          style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                        ),
-                        SizedBox(height: 15.h),
-                        Text(
-                          widget.project.details ?? '',
-                          style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w400,
-                            color: jungleMist,
-                          ),
-                        ),
-                      ]),
-                  SizedBox(height: 30.h),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Project Progress",
-                          style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                        ),
-                        CircularPercentIndicator(
-                            radius: 30.r,
-                            lineWidth: 2.4.w,
-                            percent:
-                                (widget.project.percentage ?? 0).toInt() / 100,
-                            center: Text(
-                              '${(widget.project.percentage ?? 0).toInt().toString()}%',
-                              style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 11.sp,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                              ),
+                        Column(children: [
+                          Text(
+                            'Due Date',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.w500,
+                              color: nepal,
                             ),
-                            progressColor: goldenRod,
-                            backgroundColor: pickledBlueWood,
-                            reverse: true,
-                            animation: true,
-                            animationDuration: 800)
+                          ),
+                          Text(
+                            formattedDate,
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 17.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ])
                       ]),
-                  SizedBox(height: 30.h),
+                      Row(children: [
+                        Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 10.h, vertical: 10.h),
+                            color: goldenRod,
+                            child: SvgPicture.asset(
+                                'assets/icons/project_team_icon.svg')),
+                        SizedBox(width: 10.w),
+                        Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Project Team',
+                                style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 11.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: nepal,
+                                ),
+                              ),
+                              SizedBox(height: 2.h),
+                              SizedBox(
+                                height: 25.h,
+                                width: 80.w,
+                                child: Stack(children: buildImages(members)),
+                              ),
+                            ])
+                      ]),
+                      SizedBox(width: 10.w),
+                    ]),
+                SizedBox(height: 30.h),
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text(
-                    "All Tasks",
+                    "Project Details",
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 20.sp,
@@ -274,47 +198,119 @@ class _ProjectDetailsWidgetState extends State<ProjectDetailsWidget> {
                     ),
                   ),
                   SizedBox(height: 15.h),
-                  Expanded(
-                    child: ListView.separated(
-                      itemCount: tasks.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: EdgeInsets.only(
-                              bottom: index == tasks.length - 1 ? 200.h : 0),
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10.w, vertical: 7.h),
-                            color: fiord,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  tasks[index].name ?? '',
-                                  style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 7.h, vertical: 7.h),
-                                    color: goldenRod,
-                                    child: SvgPicture.asset(
-                                        'assets/icons/task_${tasks[index].isDone! ? '' : 'not_'}done_icon.svg')),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                      separatorBuilder: (BuildContext context, int index) {
-                        return SizedBox(height: 15.h);
-                      },
+                  Text(
+                    widget.project.details ?? '',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w400,
+                      color: jungleMist,
                     ),
                   ),
-                ],
-              ),
+                ]),
+                SizedBox(height: 30.h),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Project Progress",
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                      CircularPercentIndicator(
+                          radius: 30.r,
+                          lineWidth: 2.4.w,
+                          percent:
+                              (widget.project.percentage ?? 0).toInt() / 100,
+                          center: Text(
+                            '${(widget.project.percentage ?? 0).toInt().toString()}%',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                          progressColor: goldenRod,
+                          backgroundColor: pickledBlueWood,
+                          reverse: true,
+                          animation: true,
+                          animationDuration: 800)
+                    ]),
+                SizedBox(height: 30.h),
+                Text(
+                  "All Tasks",
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(height: 15.h),
+                Expanded(
+                  child: widget.isLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                              backgroundColor: lynch, color: goldenRod))
+                      : widget.tasks.isEmpty
+                          ? Center(
+                              child: Text(
+                              'No tasks to this project yet.',
+                              style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w300,
+                                color: Colors.white,
+                              ),
+                            ))
+                          : ListView.separated(
+                              itemCount: widget.tasks.length,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom: index == widget.tasks.length - 1
+                                          ? 200.h
+                                          : 0),
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 10.w, vertical: 7.h),
+                                    color: fiord,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          widget.tasks[index].name ?? '',
+                                          style: TextStyle(
+                                            fontFamily: 'Inter',
+                                            fontSize: 18.sp,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 7.h, vertical: 7.h),
+                                            color: goldenRod,
+                                            child: SvgPicture.asset(
+                                                'assets/icons/task_${(widget.tasks[index].isDone ?? false) ? '' : 'not_'}done_icon.svg')),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                              separatorBuilder:
+                                  (BuildContext context, int index) {
+                                return SizedBox(height: 15.h);
+                              },
+                            ),
+                ),
+              ],
             ),
           ),
         ),
