@@ -10,8 +10,9 @@ import '../pages/project_details_page.dart';
 
 class OngoingTaskCard extends StatefulWidget {
   final ProjectModel project;
+  final Function() refreshFunc;
 
-  const OngoingTaskCard({super.key, required this.project});
+  const OngoingTaskCard({super.key, required this.project, required this.refreshFunc});
 
   @override
   _OngoingTaskCardState createState() => _OngoingTaskCardState();
@@ -34,9 +35,17 @@ class _OngoingTaskCardState extends State<OngoingTaskCard> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => ProjectDetailsPage(project: widget.project)));
+      onTap: () async {
+        final information = await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ProjectDetailsPage(project: widget.project)),
+        );
+        if (information != null) {
+          widget.refreshFunc();
+        }
+        // Navigator.of(context).push(
+        //     MaterialPageRoute(builder: (_) => ProjectDetailsPage(project: widget.project)));
       },
       child: Container(
         padding: EdgeInsets.all(10.w),

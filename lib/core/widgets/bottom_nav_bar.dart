@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../features/authentication/data/models/user_model.dart';
-import '../../features/projects/presentation/pages/add_project_page.dart';
+import '../../features/projects/presentation/pages/add_or_edit_project_page.dart';
 import '../../features/projects/presentation/pages/home_page.dart';
 import '../app_theme.dart';
 import '../bloc/core_bloc.dart';
@@ -75,9 +75,12 @@ class _BottomNavBar extends State<BottomNavBar> {
                           child: CircularProgressIndicator(
                               backgroundColor: lynch, color: goldenRod)))
                   : HomePage(
-                      projects: state.projects ?? [], user: widget.user)),
+                      projects: state.projects ?? [], user: widget.user, refreshFunc: (){
+                BlocProvider.of<CoreBloc>(context).add(GetAllProjectsEvent());
+
+              })),
           const Center(child: Text('chat screen')),
-          AddProjectPage(returnNavBarFunc: () {
+          AddOrEditProjectPage(returnNavBarFunc: () {
             setState(() {
               isShowNavBar = true;
               _currentIndex = 0;

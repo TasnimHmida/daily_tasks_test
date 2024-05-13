@@ -7,6 +7,7 @@ class TaskEntity extends Equatable {
   final String? time;
   final String? date;
   final double? percentage;
+  final String? userId;
 
   const TaskEntity(
     this.id,
@@ -15,15 +16,17 @@ class TaskEntity extends Equatable {
     this.time,
     this.date,
     this.percentage,
+    this.userId,
   );
 
   @override
   List<Object?> get props => [
-    id,
+        id,
         name,
         details,
         time,
         date,
-    percentage,
+        percentage,
+        userId,
       ];
 }

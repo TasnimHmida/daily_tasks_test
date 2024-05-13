@@ -1,29 +1,25 @@
-part of 'tasks_bloc.dart';
+part of 'add_edit_project_bloc.dart';
 
-class TasksState extends Equatable {
+class AddEditProjectState extends Equatable {
   final bool isLoading;
   final String error;
   final bool success;
-  final List<TaskModel>? tasks;
 
-  const TasksState({
+  const AddEditProjectState({
     this.isLoading = false,
     this.error = "",
     this.success = false,
-    this.tasks,
   });
 
-  TasksState copyWith({
+  AddEditProjectState copyWith({
     bool? isLoading,
     String? error,
     bool? success,
-    List<TaskModel>? tasks,
   }) {
-    return TasksState(
+    return AddEditProjectState(
       isLoading: isLoading ?? this.isLoading,
       error: error ?? this.error,
       success: success ?? this.success,
-      tasks: tasks ?? this.tasks,
     );
   }
 
@@ -32,6 +28,5 @@ class TasksState extends Equatable {
         isLoading,
         error,
         success,
-        tasks,
       ];
 }

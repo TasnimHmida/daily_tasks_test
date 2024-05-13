@@ -11,6 +11,7 @@ import '../../../../core/widgets/main_button.dart';
 import '../../../authentication/data/models/user_model.dart';
 import '../../data/models/project_model.dart';
 import '../../data/models/task_model.dart';
+import '../pages/add_or_edit_project_page.dart';
 import 'completed_task_card.dart';
 import 'ongoing_task_card.dart';
 
@@ -18,12 +19,14 @@ class ProjectDetailsWidget extends StatefulWidget {
   final ProjectModel project;
   final List<TaskModel> tasks;
   final bool isLoading;
+  final Function() refreshFunc;
 
   const ProjectDetailsWidget({
     super.key,
     required this.project,
     required this.tasks,
     required this.isLoading,
+    required this.refreshFunc,
   });
 
   @override
@@ -87,7 +90,7 @@ class _ProjectDetailsWidgetState extends State<ProjectDetailsWidget> {
                   children: [
                     InkWell(
                       onTap: () {
-                        Navigator.of(context).pop();
+                        Navigator.of(context).pop('refresh');
                       },
                       child: SvgPicture.asset(
                         'assets/icons/arrow_back.svg',
@@ -104,7 +107,22 @@ class _ProjectDetailsWidgetState extends State<ProjectDetailsWidget> {
                       ),
                     ),
                     InkWell(
-                      onTap: () {},
+                      onTap: () async {
+                        final information = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AddOrEditProjectPage(
+                                    project: widget.project,
+                                    returnNavBarFunc: () {
+                                      Navigator.of(context).pop('refresh');
+                                    },
+                                    refreshFunc: () {},
+                                  )),
+                        );
+                        if (information != null) {
+                          widget.refreshFunc();
+                        }
+                      },
                       child: SvgPicture.asset(
                         'assets/icons/edit_icon.svg',
                         height: 24.h,

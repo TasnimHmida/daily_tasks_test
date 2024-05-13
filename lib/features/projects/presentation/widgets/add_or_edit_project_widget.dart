@@ -13,23 +13,25 @@ import '../../data/models/project_model.dart';
 import 'completed_task_card.dart';
 import 'ongoing_task_card.dart';
 
-class AddProjectWidget extends StatefulWidget {
+class AddOrEditProjectWidget extends StatefulWidget {
   final Function() returnNavBarFunc;
-  final Function(ProjectModel) addProjectFunction;
+  final Function(ProjectModel) addOrEditProjectFunction;
   final bool isLoading;
+  final ProjectModel? project;
 
-  const AddProjectWidget({
+  const AddOrEditProjectWidget({
     super.key,
     required this.returnNavBarFunc,
     required this.isLoading,
-    required this.addProjectFunction,
+    required this.addOrEditProjectFunction,
+    this.project,
   });
 
   @override
-  _AddProjectWidgetState createState() => _AddProjectWidgetState();
+  _AddOrEditProjectWidgetState createState() => _AddOrEditProjectWidgetState();
 }
 
-class _AddProjectWidgetState extends State<AddProjectWidget> {
+class _AddOrEditProjectWidgetState extends State<AddOrEditProjectWidget> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _detailsController = TextEditingController();
@@ -42,6 +44,20 @@ class _AddProjectWidgetState extends State<AddProjectWidget> {
     const UserModel(
         userName: 'Sophia', profilePicture: 'assets/images/user_image.png'),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.project != null) {
+      setState(() {
+        _titleController.text = widget.project!.name ?? '';
+        _detailsController.text = widget.project!.details ?? '';
+        selectedDate = widget.project!.date ?? '';
+        selectedDateApi = widget.project!.date ?? '';
+        selectedTime = widget.project!.time ?? '';
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +87,7 @@ class _AddProjectWidgetState extends State<AddProjectWidget> {
                       ),
                     ),
                     Text(
-                      "Create New Project",
+                      "${widget.project != null ? "Update" : "Create"} New Project",
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 20.sp,
@@ -297,7 +313,7 @@ class _AddProjectWidgetState extends State<AddProjectWidget> {
                       buttonFunction: () {
                         final isValid = _formKey.currentState!.validate();
                         if (isValid) {
-                          widget.addProjectFunction(ProjectModel(
+                          widget.addOrEditProjectFunction(ProjectModel(
                             name: _titleController.text,
                             details: _detailsController.text,
                             time: selectedTime,
@@ -305,7 +321,7 @@ class _AddProjectWidgetState extends State<AddProjectWidget> {
                           ));
                         }
                       },
-                      text: "Create",
+                      text: widget.project != null ? "Update" : "Create",
                       isLoading: widget.isLoading),
                 ]),
               ],

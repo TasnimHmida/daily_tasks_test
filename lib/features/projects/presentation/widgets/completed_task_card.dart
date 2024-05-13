@@ -11,9 +11,13 @@ import '../pages/project_details_page.dart';
 class CompletedTaskCard extends StatefulWidget {
   final ProjectModel project;
   final bool isFirstItem;
+  final Function() refreshFunc;
 
   const CompletedTaskCard(
-      {super.key, required this.project, this.isFirstItem = false});
+      {super.key,
+      required this.project,
+      this.isFirstItem = false,
+      required this.refreshFunc});
 
   @override
   _CompletedTaskCardState createState() => _CompletedTaskCardState();
@@ -23,9 +27,16 @@ class _CompletedTaskCardState extends State<CompletedTaskCard> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (_) => ProjectDetailsPage(project: widget.project)));
+      onTap: () async {
+        final information = await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  ProjectDetailsPage(project: widget.project)),
+        );
+        if (information != null) {
+          widget.refreshFunc();
+        }
       },
       child: Container(
         padding: EdgeInsets.all(10.w),

@@ -8,7 +8,9 @@ import '../models/task_model.dart';
 
 abstract class ProjectsRemoteDataSource {
   Future<List<ProjectModel>> getAllProjects();
+  Future<ProjectModel> getProjectById(String projectId);
   Future<List<TaskModel>> getProjectTasks(String projectId);
+
   Future<Unit> createProject(ProjectModel project);
 
   Future<Unit> updateProject(ProjectModel project);
@@ -41,8 +43,32 @@ class ProjectsRemoteDataSourceImpl implements ProjectsRemoteDataSource {
   }
 
   @override
+  Future<ProjectModel> getProjectById(String projectId) async {
+    try {
+      var user = prefUtils.getUserInfo();
+      final response = await supabase
+          .from('projects')
+          .select()
+          .eq('user_id', user?.userId ?? '')
+          .eq('id', projectId);
+
+      final List<ProjectModel> projects = response
+          .map<ProjectModel>((jsonModel) => ProjectModel.fromJson(jsonModel))
+          .toList();
+
+      if (projects.isNotEmpty) {
+        return projects[0];
+      } else {
+        throw ServerException(message: UNEXPECTED_FAILURE_MESSAGE);
+      }
+    } catch (e) {
+      throw ServerException(message: UNEXPECTED_FAILURE_MESSAGE);
+    }
+  }
+
+  @override
   Future<List<TaskModel>> getProjectTasks(String projectId) async {
-    // try {
+    try {
       var user = prefUtils.getUserInfo();
       final response = await supabase
           .from('tasks')
@@ -55,9 +81,9 @@ class ProjectsRemoteDataSourceImpl implements ProjectsRemoteDataSource {
           .toList();
 
       return tasks;
-    // } catch (e) {
-    //   throw ServerException(message: UNEXPECTED_FAILURE_MESSAGE);
-    // }
+    } catch (e) {
+      throw ServerException(message: UNEXPECTED_FAILURE_MESSAGE);
+    }
   }
 
   @override
@@ -89,7 +115,7 @@ class ProjectsRemoteDataSourceImpl implements ProjectsRemoteDataSource {
         'details': project.details,
         'time': project.time,
         'date': project.date,
-        'user_id': user?.userId,
+        'user_id': project.userId,
       }).eq('id', project.id ?? '');
 
       return Future.value(unit);

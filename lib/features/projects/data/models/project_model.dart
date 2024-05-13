@@ -9,6 +9,7 @@ class ProjectModel extends TaskEntity {
     String? time,
     String? date,
     double? percentage,
+    String? userId,
   }) : super(
     id,
           name,
@@ -16,6 +17,7 @@ class ProjectModel extends TaskEntity {
           time,
           date,
           percentage,
+    userId,
         );
 
   factory ProjectModel.fromJson(Map<String, dynamic> json) {
@@ -25,6 +27,7 @@ class ProjectModel extends TaskEntity {
       details: json['details'],
       time: json['time'] ?? '',
       date: json['date'] ?? '',
+      userId: json['user_id'] ?? '',
       percentage: double.parse((json['completed_percentage'] ?? 0).toString()),
     );
   }
@@ -37,6 +40,7 @@ class ProjectModel extends TaskEntity {
       "time": time,
       "date": date,
       "completed_percentage": percentage,
+      "user_id": userId,
     };
   }
 }

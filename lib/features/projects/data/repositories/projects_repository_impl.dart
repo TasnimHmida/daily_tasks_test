@@ -27,6 +27,19 @@ class ProjectsRepositoryImpl implements ProjectsRepository {
       return Left(OfflineFailure());
     }
   }
+  @override
+  Future<Either<Failure, ProjectModel>> getProjectById(String projectId) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteResponse = await remoteDataSource.getProjectById(projectId);
+        return Right(remoteResponse);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      return Left(OfflineFailure());
+    }
+  }
 
   @override
   Future<Either<Failure, List<TaskModel>>> getProjectTasks(

@@ -10,8 +10,9 @@ import 'ongoing_task_card.dart';
 class HomeWidget extends StatefulWidget {
   final List<ProjectModel> projects;
   final UserModel user;
+  final Function() refreshFunc;
 
-  const HomeWidget({super.key, required this.projects, required this.user});
+  const HomeWidget({super.key, required this.projects, required this.user,required this.refreshFunc});
 
   @override
   _HomeWidgetState createState() => _HomeWidgetState();
@@ -111,7 +112,9 @@ class _HomeWidgetState extends State<HomeWidget> {
                             itemBuilder: (context, index) {
                               return CompletedTaskCard(
                                   project: completedProjects[index],
-                                  isFirstItem: index == 0);
+                                  isFirstItem: index == 0,
+                                  refreshFunc: widget.refreshFunc
+                              );
                             },
                             separatorBuilder:
                                 (BuildContext context, int index) {
@@ -157,7 +160,9 @@ class _HomeWidgetState extends State<HomeWidget> {
                                               ? 200.h
                                               : 0),
                                       child: OngoingTaskCard(
-                                          project: ongoingProjects[index]),
+                                          project: ongoingProjects[index],
+                                          refreshFunc: widget.refreshFunc
+                                      ),
                                     );
                                   },
                                   separatorBuilder:

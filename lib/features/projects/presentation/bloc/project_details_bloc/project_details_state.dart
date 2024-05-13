@@ -1,25 +1,33 @@
-part of 'add_project_bloc.dart';
+part of 'project_details_bloc.dart';
 
-class AddProjectState extends Equatable {
+class ProjectDetailsState extends Equatable {
   final bool isLoading;
   final String error;
   final bool success;
+  final ProjectModel? project;
+  final List<TaskModel>? tasks;
 
-  const AddProjectState({
+  const ProjectDetailsState({
     this.isLoading = false,
     this.error = "",
     this.success = false,
+    this.project,
+    this.tasks,
   });
 
-  AddProjectState copyWith({
+  ProjectDetailsState copyWith({
     bool? isLoading,
     String? error,
     bool? success,
+    ProjectModel? project,
+    List<TaskModel>? tasks,
   }) {
-    return AddProjectState(
+    return ProjectDetailsState(
       isLoading: isLoading ?? this.isLoading,
       error: error ?? this.error,
       success: success ?? this.success,
+      project: project ?? this.project,
+      tasks: tasks ?? this.tasks,
     );
   }
 
@@ -28,5 +36,7 @@ class AddProjectState extends Equatable {
         isLoading,
         error,
         success,
+        project,
+        tasks,
       ];
 }
