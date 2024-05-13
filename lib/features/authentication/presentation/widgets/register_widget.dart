@@ -84,6 +84,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                   ),
                   SizedBox(height: 10.h),
                   InputField(
+                      inputTitle: 'Full Name',
                       hintText: 'Full Name',
                       prefixIcon: 'assets/icons/user_icon.svg',
                       controller: _nameController,
@@ -91,12 +92,14 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                           validateField(value!, 'Name', context)),
                   SizedBox(height: 20.h),
                   InputField(
-                      hintText: 'Email Address',
+                      inputTitle: 'Email Address',
+                      hintText: 'example@email.com',
                       prefixIcon: 'assets/icons/email_icon.svg',
                       controller: _emailController,
                       validator: (value) => validateEmail(value!, context)),
                   SizedBox(height: 20.h),
                   InputField(
+                    inputTitle: 'Password',
                     hintText: 'Password',
                     prefixIcon: 'assets/icons/password_icon.svg',
                     isPassword: true,

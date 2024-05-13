@@ -6,21 +6,25 @@ import '../app_theme.dart';
 
 class InputField extends StatefulWidget {
   final TextEditingController controller;
-  final String hintText;
+  final String? inputTitle;
+  final String? hintText;
   final List<TextInputFormatter>? inputFormatters;
   late void Function(String value)? onChanged;
   final String? Function(String?)? validator;
-  final String prefixIcon;
+  final String? prefixIcon;
+  final int? maxLines;
   final bool isPassword;
 
   InputField({
     super.key,
     required this.controller,
-    required this.hintText,
+    this.hintText,
+    this.inputTitle,
     this.validator,
     this.inputFormatters,
     this.onChanged,
-    this.prefixIcon = 'assets/icons/ic_calendar.svg',
+    this.prefixIcon,
+    this.maxLines,
     FocusNode? focusNode,
     this.isPassword = false,
   });
@@ -39,14 +43,20 @@ class _TextFormFieldWidget extends State<InputField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(widget.hintText,
-            style: TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 18.sp,
-              fontWeight: FontWeight.w400,
-              color: nepal,
-            )),
-        SizedBox(height: 10.h),
+        widget.inputTitle != null
+            ? Column(
+                children: [
+                  Text(widget.inputTitle!,
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w400,
+                        color: nepal,
+                      )),
+                  SizedBox(height: 10.h),
+                ],
+              )
+            : Container(),
         TextFormField(
           controller: widget.controller,
           cursorColor: Colors.white,
@@ -55,6 +65,7 @@ class _TextFormFieldWidget extends State<InputField> {
                   ? true
                   : false
               : false,
+          maxLines: widget.maxLines ?? 1,
           onEditingComplete: () {
             FocusScope.of(context).nextFocus();
           },
@@ -71,8 +82,10 @@ class _TextFormFieldWidget extends State<InputField> {
           autovalidateMode: AutovalidateMode.onUserInteraction,
           decoration: InputDecoration(
             hintText: widget.hintText,
-            filled: true, // Set filled to true
-            fillColor: fiord, //
+            filled: true,
+            // Set filled to true
+            fillColor: fiord,
+            //
             hintStyle: TextStyle(
                 fontFamily: "Inter",
                 color: Colors.white,
@@ -89,17 +102,19 @@ class _TextFormFieldWidget extends State<InputField> {
             focusedBorder: const UnderlineInputBorder(
               borderSide: BorderSide(color: goldenRod),
             ),
-            prefixIcon: IconButton(
-              icon: SvgPicture.asset(
-                widget.prefixIcon,
-                height: 24.h,
-              ),
-              onPressed: () {
-                setState(() {
-                  hidePassword = !hidePassword;
-                });
-              },
-            ),
+            prefixIcon: widget.prefixIcon != null
+                ? IconButton(
+                    icon: SvgPicture.asset(
+                      widget.prefixIcon!,
+                      height: 24.h,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        hidePassword = !hidePassword;
+                      });
+                    },
+                  )
+                : null,
             suffixIcon: widget.isPassword
                 ? IconButton(
                     icon: SvgPicture.asset(
