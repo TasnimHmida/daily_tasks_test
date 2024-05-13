@@ -82,6 +82,9 @@ class _BottomNavBar extends State<BottomNavBar> {
               isShowNavBar = true;
               _currentIndex = 0;
             });
+          },
+          refreshFunc: (){
+            BlocProvider.of<CoreBloc>(context).add(GetAllProjectsEvent());
           }),
           const Center(child: Text('calendar screen')),
           const Center(child: Text('notifications screen'))

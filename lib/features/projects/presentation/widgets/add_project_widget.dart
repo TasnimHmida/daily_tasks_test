@@ -14,10 +14,14 @@ import 'ongoing_task_card.dart';
 
 class AddProjectWidget extends StatefulWidget {
   final Function() returnNavBarFunc;
+  final Function(ProjectModel) addProjectFunction;
+  final bool isLoading;
 
   const AddProjectWidget({
     super.key,
     required this.returnNavBarFunc,
+    required this.isLoading,
+    required this.addProjectFunction,
   });
 
   @override
@@ -28,7 +32,14 @@ class _AddProjectWidgetState extends State<AddProjectWidget> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _detailsController = TextEditingController();
   String selectedDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
+  String selectedDateApi = DateFormat('yyyy/MM/dd').format(DateTime.now());
   String selectedTime = DateFormat('hh:mm a').format(DateTime.now());
+  List<UserModel> members = [
+    const UserModel(
+        userName: 'Robert', profilePicture: 'assets/images/user_image.png'),
+    const UserModel(
+        userName: 'Sophia', profilePicture: 'assets/images/user_image.png'),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -115,15 +126,67 @@ class _AddProjectWidgetState extends State<AddProjectWidget> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'no members yet.',
-                      style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 15.sp,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.white,
-                      ),
-                    ),
+                    members.isEmpty
+                        ? Text(
+                            'no members yet.',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.white,
+                            ),
+                          )
+                        : SizedBox(
+                            height: 40.h,
+                            width: 300.w,
+                            child: ListView.separated(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: members.length,
+                              itemBuilder: (context, index) {
+                                return Container(
+                                    color: fiord,
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 10.w),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(children: [
+                                          Image.asset(
+                                            '${members[index].profilePicture}',
+                                            width: 20.w,
+                                            height: 20.w,
+                                            fit: BoxFit.cover,
+                                          ),
+                                          SizedBox(
+                                            width: 5.w,
+                                          ),
+                                          Text(
+                                            members[index].userName ?? '',
+                                            style: TextStyle(
+                                              fontFamily: 'Inter',
+                                              fontSize: 14.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.white,
+                                            ),
+                                          )
+                                        ]),
+                                        SizedBox(
+                                          width: 30.w,
+                                        ),
+                                        SvgPicture.asset(
+                                          'assets/icons/close_icon.svg',
+                                          height: 20.h,
+                                        ),
+                                      ],
+                                    ));
+                              },
+                              separatorBuilder:
+                                  (BuildContext context, int index) {
+                                return SizedBox(width: 10.w);
+                              },
+                            ),
+                          ),
                     InkWell(
                       onTap: () {},
                       child: Container(
@@ -191,6 +254,7 @@ class _AddProjectWidgetState extends State<AddProjectWidget> {
                           setState(() {
                             selectedDate =
                                 DateFormat('dd/MM/yyyy').format(date);
+                            selectedDateApi = DateFormat('yyyy/MM/dd').format(date);
                           });
                         },
                         child: Row(children: [
@@ -220,9 +284,16 @@ class _AddProjectWidgetState extends State<AddProjectWidget> {
                     ]),
                 SizedBox(height: 150.h),
                 MainButton(
-                  buttonFunction: () {},
-                  text: "Create",
-                ),
+                    buttonFunction: () {
+                      widget.addProjectFunction(ProjectModel(
+                        name: _titleController.text,
+                        details: _detailsController.text,
+                        time: selectedTime,
+                        date: selectedDateApi,
+                      ));
+                    },
+                    text: "Create",
+                    isLoading: widget.isLoading),
               ]),
             ],
           ),

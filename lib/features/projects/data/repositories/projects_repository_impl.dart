@@ -27,4 +27,31 @@ class ProjectsRepositoryImpl implements ProjectsRepository {
     }
   }
 
+  @override
+  Future<Either<Failure, Unit>> createProject(ProjectModel project) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteResponse = await remoteDataSource.createProject(project);
+        return Right(remoteResponse);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      return Left(OfflineFailure());
+    }
+  }
+  @override
+  Future<Either<Failure, Unit>> updateProject(ProjectModel project) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteResponse = await remoteDataSource.updateProject(project);
+        return Right(remoteResponse);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      return Left(OfflineFailure());
+    }
+  }
+
 }

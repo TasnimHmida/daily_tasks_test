@@ -3,15 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/app_theme.dart';
 import '../../../../core/utils/used_functions.dart';
 import 'package:daily_tasks_test/injection_container.dart' as di;
-
-import '../../../authentication/data/models/user_model.dart';
-import '../../data/models/project_model.dart';
+import '../bloc/add_project_bloc/add_project_bloc.dart';
 import '../widgets/add_project_widget.dart';
-import '../widgets/home_widget.dart';
 
 class AddProjectPage extends StatefulWidget {
   final Function() returnNavBarFunc;
-  const AddProjectPage({super.key,required this.returnNavBarFunc});
+  final Function() refreshFunc;
+
+  const AddProjectPage({super.key, required this.returnNavBarFunc, required this.refreshFunc});
 
   @override
   State<AddProjectPage> createState() => _AddProjectPageState();
@@ -20,12 +19,33 @@ class AddProjectPage extends StatefulWidget {
 class _AddProjectPageState extends State<AddProjectPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(backgroundColor: ebonyClay, body: _buildBody());
+    return BlocProvider(
+      create: (context) => di.sl<AddProjectBloc>(),
+      child: Scaffold(backgroundColor: ebonyClay, body: _buildBody()),
+    );
   }
 
   Widget _buildBody() {
-    return Center(
-        child: AddProjectWidget(returnNavBarFunc: widget.returnNavBarFunc),
+    return BlocConsumer<AddProjectBloc, AddProjectState>(
+      listener: (context, state) {
+        if (state.error.isNotEmpty) {
+          showSnackBar(context, state.error, goldenRod.withOpacity(0.8));
+        } else if (state.success) {
+          widget.returnNavBarFunc();
+          widget.refreshFunc();
+        }
+      },
+      builder: (context, state) {
+        return Center(
+          child: AddProjectWidget(
+              returnNavBarFunc: widget.returnNavBarFunc,
+              isLoading: state.isLoading,
+              addProjectFunction: (project) {
+                BlocProvider.of<AddProjectBloc>(context)
+                    .add(CreateProjectEvent(project: project));
+              }),
         );
+      },
+    );
   }
 }

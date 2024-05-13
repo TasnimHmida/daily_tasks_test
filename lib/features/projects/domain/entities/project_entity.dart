@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class ProjectEntity extends Equatable {
+  final String? id;
   final String? name;
   final String? details;
   final String? time;
@@ -8,6 +9,7 @@ class ProjectEntity extends Equatable {
   final double? percentage;
 
   const ProjectEntity(
+    this.id,
     this.name,
     this.details,
     this.time,
@@ -17,6 +19,7 @@ class ProjectEntity extends Equatable {
 
   @override
   List<Object?> get props => [
+    id,
         name,
         details,
         time,

@@ -150,8 +150,15 @@ class _HomeWidgetState extends State<HomeWidget> {
                               : ListView.separated(
                                   itemCount: ongoingProjects.length,
                                   itemBuilder: (context, index) {
-                                    return OngoingTaskCard(
-                                        project: ongoingProjects[index]);
+                                    return Padding(
+                                      padding: EdgeInsets.only(
+                                          bottom: index ==
+                                                  ongoingProjects.length - 1
+                                              ? 200.h
+                                              : 0),
+                                      child: OngoingTaskCard(
+                                          project: ongoingProjects[index]),
+                                    );
                                   },
                                   separatorBuilder:
                                       (BuildContext context, int index) {
@@ -159,6 +166,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                                   },
                                 ),
                         ),
+                        // SizedBox(height: 30.h),
                       ]),
                 )
               ],
