@@ -1,6 +1,6 @@
 import '../../domain/entities/project_entity.dart';
 
-class ProjectModel extends ProjectEntity {
+class ProjectModel extends TaskEntity {
   @override
   const ProjectModel({
     String? id,
