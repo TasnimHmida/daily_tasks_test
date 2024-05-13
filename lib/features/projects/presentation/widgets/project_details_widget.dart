@@ -116,7 +116,6 @@ class _ProjectDetailsWidgetState extends State<ProjectDetailsWidget> {
                                     returnNavBarFunc: () {
                                       Navigator.of(context).pop('refresh');
                                     },
-                                    refreshFunc: () {},
                                   )),
                         );
                         if (information != null) {

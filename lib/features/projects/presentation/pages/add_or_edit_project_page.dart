@@ -10,12 +10,9 @@ import '../widgets/add_or_edit_project_widget.dart';
 class AddOrEditProjectPage extends StatefulWidget {
   final ProjectModel? project;
   final Function() returnNavBarFunc;
-  final Function() refreshFunc;
-
   const AddOrEditProjectPage(
       {super.key,
       required this.returnNavBarFunc,
-      required this.refreshFunc,
       this.project});
 
   @override
@@ -37,8 +34,8 @@ class _AddOrEditProjectPageState extends State<AddOrEditProjectPage> {
         if (state.error.isNotEmpty) {
           showSnackBar(context, state.error, goldenRod.withOpacity(0.8));
         } else if (state.success) {
+          Navigator.of(context).pop('refreshh');
           widget.returnNavBarFunc();
-          widget.refreshFunc();
         }
       },
       builder: (context, state) {

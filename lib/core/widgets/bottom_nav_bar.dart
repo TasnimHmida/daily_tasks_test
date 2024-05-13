@@ -28,20 +28,27 @@ class BottomNavBar extends StatefulWidget {
 class _BottomNavBar extends State<BottomNavBar> {
   var scaffoldKey = GlobalKey<ScaffoldState>();
   int _currentIndex = 0;
-  bool isShowNavBar = true;
 
-  void _onItemTapped(int index) {
+  void _onItemTapped(int index, refreshFunction) async {
     setState(() {
       _currentIndex = index;
     });
+
     if (_currentIndex == 2) {
-      setState(() {
-        isShowNavBar = false;
-      });
-    } else {
-      setState(() {
-        isShowNavBar = true;
-      });
+      final information = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => AddOrEditProjectPage(
+                  returnNavBarFunc: () {
+                    setState(() {
+                      _currentIndex = 0;
+                    });
+                  },
+                )),
+      );
+      if (information != null) {
+        refreshFunction();
+      }
     }
   }
 
@@ -75,20 +82,20 @@ class _BottomNavBar extends State<BottomNavBar> {
                           child: CircularProgressIndicator(
                               backgroundColor: lynch, color: goldenRod)))
                   : HomePage(
-                      projects: state.projects ?? [], user: widget.user, refreshFunc: (){
-                BlocProvider.of<CoreBloc>(context).add(GetAllProjectsEvent());
-
-              })),
+                      projects: state.projects ?? [],
+                      user: widget.user,
+                      refreshFunc: () {
+                        BlocProvider.of<CoreBloc>(context)
+                            .add(GetAllProjectsEvent());
+                      })),
           const Center(child: Text('chat screen')),
-          AddOrEditProjectPage(returnNavBarFunc: () {
-            setState(() {
-              isShowNavBar = true;
-              _currentIndex = 0;
-            });
-          },
-          refreshFunc: (){
-            BlocProvider.of<CoreBloc>(context).add(GetAllProjectsEvent());
-          }),
+          AddOrEditProjectPage(
+            returnNavBarFunc: () {
+              setState(() {
+                _currentIndex = 0;
+              });
+            },
+          ),
           const Center(child: Text('calendar screen')),
           const Center(child: Text('notifications screen'))
         ];
@@ -116,64 +123,64 @@ class _BottomNavBar extends State<BottomNavBar> {
                             index: _currentIndex,
                             children: widgetOptions,
                           ),
-                bottomNavigationBar: isShowNavBar
-                    ? BottomNavigationBar(
-                        backgroundColor: outerSpace,
-                        type: BottomNavigationBarType.fixed,
-                        selectedItemColor: goldenRod,
-                        unselectedItemColor: lynch,
-                        selectedFontSize: 10.sp,
-                        unselectedFontSize: 10.sp,
-                        currentIndex: _currentIndex,
-                        onTap: (int newIndex) => _onItemTapped(newIndex),
-                        items: <BottomNavigationBarItem>[
-                          BottomNavigationBarItem(
-                            icon: SvgPicture.asset("assets/icons/home_icon.svg",
-                                color: _currentIndex == 0 ? goldenRod : lynch,
-                                fit: BoxFit.fill),
-                            label: "Home",
+                bottomNavigationBar: BottomNavigationBar(
+                  backgroundColor: outerSpace,
+                  type: BottomNavigationBarType.fixed,
+                  selectedItemColor: goldenRod,
+                  unselectedItemColor: lynch,
+                  selectedFontSize: 10.sp,
+                  unselectedFontSize: 10.sp,
+                  currentIndex: _currentIndex,
+                  onTap: (int newIndex) => _onItemTapped(newIndex, () {
+                    BlocProvider.of<CoreBloc>(context)
+                        .add(GetAllProjectsEvent());
+                  }),
+                  items: <BottomNavigationBarItem>[
+                    BottomNavigationBarItem(
+                      icon: SvgPicture.asset("assets/icons/home_icon.svg",
+                          color: _currentIndex == 0 ? goldenRod : lynch,
+                          fit: BoxFit.fill),
+                      label: "Home",
+                    ),
+                    BottomNavigationBarItem(
+                      icon: SvgPicture.asset("assets/icons/chat_icon.svg",
+                          color: _currentIndex == 1 ? goldenRod : lynch,
+                          fit: BoxFit.fill),
+                      label: "Chat",
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Container(
+                        margin: EdgeInsets.only(top: 15.h),
+                        height: 54.w,
+                        width: 54.w,
+                        color: goldenRod,
+                        child: ConstrainedBox(
+                          constraints:
+                              BoxConstraints(maxWidth: 20.w, maxHeight: 20.w),
+                          child: Image.asset(
+                            "assets/icons/add_task_icon.png",
                           ),
-                          BottomNavigationBarItem(
-                            icon: SvgPicture.asset("assets/icons/chat_icon.svg",
-                                color: _currentIndex == 1 ? goldenRod : lynch,
-                                fit: BoxFit.fill),
-                            label: "Chat",
-                          ),
-                          BottomNavigationBarItem(
-                            icon: Container(
-                              margin: EdgeInsets.only(top: 15.h),
-                              height: 54.w,
-                              width: 54.w,
-                              color: goldenRod,
-                              child: ConstrainedBox(
-                                constraints: BoxConstraints(
-                                    maxWidth: 20.w, maxHeight: 20.w),
-                                child: Image.asset(
-                                  "assets/icons/add_task_icon.png",
-                                ),
-                              ),
-                            ),
-                            label: "",
-                          ),
-                          //state show just for the club user
-                          BottomNavigationBarItem(
-                            icon: SvgPicture.asset(
-                                "assets/icons/calendar_icon.svg",
-                                color: _currentIndex == 3 ? goldenRod : lynch,
-                                fit: BoxFit.fill),
-                            label: "Calendar",
-                          ),
+                        ),
+                      ),
+                      label: "",
+                    ),
+                    //state show just for the club user
+                    BottomNavigationBarItem(
+                      icon: SvgPicture.asset("assets/icons/calendar_icon.svg",
+                          color: _currentIndex == 3 ? goldenRod : lynch,
+                          fit: BoxFit.fill),
+                      label: "Calendar",
+                    ),
 
-                          BottomNavigationBarItem(
-                            icon: SvgPicture.asset(
-                                "assets/icons/notifications_icon.svg",
-                                color: _currentIndex == 4 ? goldenRod : lynch,
-                                fit: BoxFit.fill),
-                            label: "Notification",
-                          ),
-                        ],
-                      )
-                    : null));
+                    BottomNavigationBarItem(
+                      icon: SvgPicture.asset(
+                          "assets/icons/notifications_icon.svg",
+                          color: _currentIndex == 4 ? goldenRod : lynch,
+                          fit: BoxFit.fill),
+                      label: "Notification",
+                    ),
+                  ],
+                )));
       },
     );
   }
