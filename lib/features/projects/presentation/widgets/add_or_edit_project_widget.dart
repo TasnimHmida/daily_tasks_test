@@ -79,7 +79,7 @@ class _AddOrEditProjectWidgetState extends State<AddOrEditProjectWidget> {
                   children: [
                     InkWell(
                       onTap: () {
-                        Navigator.of(context).pop();
+                        Navigator.of(context).pop('refresh');
                         widget.returnNavBarFunc();
                       },
                       child: SvgPicture.asset(

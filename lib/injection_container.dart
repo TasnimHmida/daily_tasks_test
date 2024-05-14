@@ -18,11 +18,13 @@ import 'features/authentication/presentation/bloc/splash_bloc/splash_bloc.dart';
 import 'features/projects/data/data_sources/projects_remote_data_source.dart';
 import 'features/projects/data/repositories/projects_repository_impl.dart';
 import 'features/projects/domain/repositories/projects_repository.dart';
+import 'features/projects/domain/use_cases/add_task_usecase.dart';
 import 'features/projects/domain/use_cases/create_project_usecase.dart';
 import 'features/projects/domain/use_cases/get_all_projects_usecase.dart';
 import 'features/projects/domain/use_cases/get_project_by_id_usecase.dart';
 import 'features/projects/domain/use_cases/get_project_tasks_usecase.dart';
 import 'features/projects/domain/use_cases/update_project_usecase.dart';
+import 'features/projects/domain/use_cases/update_task_usecase.dart';
 import 'features/projects/presentation/bloc/add_edit_project_bloc/add_edit_project_bloc.dart';
 import 'features/projects/presentation/bloc/project_details_bloc/project_details_bloc.dart';
 
@@ -35,7 +37,7 @@ Future<void> init() async {
   sl.registerFactory(() => RegisterBloc(registerUseCase: sl()));
   sl.registerFactory(() => SplashBloc(getUserUseCase: sl()));
   sl.registerFactory(() => AddEditProjectBloc(updateProjectUseCase: sl(), createProjectUseCase: sl()));
-  sl.registerFactory(() => ProjectDetailsBloc(getProjectTasksUseCase: sl(), getProjectByIdUseCase: sl()));
+  sl.registerFactory(() => ProjectDetailsBloc(getProjectTasksUseCase: sl(), getProjectByIdUseCase: sl(), addTaskUseCase: sl(), updateTaskUseCase: sl()));
 
   // UseCases
   sl.registerLazySingleton(() => LoginUseCase(repository: sl()));
@@ -47,6 +49,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => UpdateProjectUseCase(repository: sl()));
   sl.registerLazySingleton(() => GetProjectTasksUseCase(repository: sl()));
   sl.registerLazySingleton(() => GetProjectByIdUseCase(repository: sl()));
+  sl.registerLazySingleton(() => AddTaskUseCase(repository: sl()));
+  sl.registerLazySingleton(() => UpdateTaskUseCase(repository: sl()));
 
   // Repository
   sl.registerLazySingleton<AuthRepository>(

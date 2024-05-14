@@ -8,12 +8,15 @@ import '../models/task_model.dart';
 
 abstract class ProjectsRemoteDataSource {
   Future<List<ProjectModel>> getAllProjects();
+
   Future<ProjectModel> getProjectById(String projectId);
-  Future<List<TaskModel>> getProjectTasks(String projectId);
 
   Future<Unit> createProject(ProjectModel project);
 
   Future<Unit> updateProject(ProjectModel project);
+  Future<List<TaskModel>> getProjectTasks(String projectId);
+  Future<Unit> addTask(TaskModel task);
+  Future<Unit> updateTask(TaskModel task);
 }
 
 class ProjectsRemoteDataSourceImpl implements ProjectsRemoteDataSource {
@@ -67,26 +70,6 @@ class ProjectsRemoteDataSourceImpl implements ProjectsRemoteDataSource {
   }
 
   @override
-  Future<List<TaskModel>> getProjectTasks(String projectId) async {
-    try {
-      var user = prefUtils.getUserInfo();
-      final response = await supabase
-          .from('tasks')
-          .select()
-          .eq('user_id', user?.userId ?? '')
-          .eq('project_id', projectId);
-
-      final List<TaskModel> tasks = response
-          .map<TaskModel>((jsonModel) => TaskModel.fromJson(jsonModel))
-          .toList();
-
-      return tasks;
-    } catch (e) {
-      throw ServerException(message: UNEXPECTED_FAILURE_MESSAGE);
-    }
-  }
-
-  @override
   Future<Unit> createProject(ProjectModel project) async {
     try {
       var user = prefUtils.getUserInfo();
@@ -109,7 +92,6 @@ class ProjectsRemoteDataSourceImpl implements ProjectsRemoteDataSource {
   @override
   Future<Unit> updateProject(ProjectModel project) async {
     try {
-      var user = prefUtils.getUserInfo();
       await supabase.from('projects').update({
         'name': project.name,
         'details': project.details,
@@ -117,6 +99,59 @@ class ProjectsRemoteDataSourceImpl implements ProjectsRemoteDataSource {
         'date': project.date,
         'user_id': project.userId,
       }).eq('id', project.id ?? '');
+
+      return Future.value(unit);
+    } catch (e) {
+      throw ServerException(message: UNEXPECTED_FAILURE_MESSAGE);
+    }
+  }
+
+  @override
+  Future<List<TaskModel>> getProjectTasks(String projectId) async {
+    try {
+      var user = prefUtils.getUserInfo();
+      final response = await supabase
+          .from('tasks')
+          .select()
+          .eq('user_id', user?.userId ?? '')
+          .eq('project_id', projectId);
+
+      final List<TaskModel> tasks = response
+          .map<TaskModel>((jsonModel) => TaskModel.fromJson(jsonModel))
+          .toList();
+
+      return tasks;
+    } catch (e) {
+      throw ServerException(message: UNEXPECTED_FAILURE_MESSAGE);
+    }
+  }
+
+  @override
+  Future<Unit> addTask(TaskModel task) async {
+    var user = prefUtils.getUserInfo();
+    try {
+      await supabase.from('tasks').insert({
+        'name': task.name,
+        'is_done': task.isDone,
+        'project_id': task.projectId,
+        'user_id': user?.userId,
+      });
+
+      return Future.value(unit);
+    } catch (e) {
+      throw ServerException(message: UNEXPECTED_FAILURE_MESSAGE);
+    }
+  }
+
+  @override
+  Future<Unit> updateTask(TaskModel task) async {
+    try {
+      await supabase.from('tasks').update({
+        'name': task.name,
+        'is_done': task.isDone,
+        'project_id': task.projectId,
+        'user_id': task.userId,
+      }).eq('id', task.id ?? '');
 
       return Future.value(unit);
     } catch (e) {

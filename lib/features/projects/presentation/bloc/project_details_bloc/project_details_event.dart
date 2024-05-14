@@ -30,3 +30,29 @@ class GetProjectTasksEvent extends ProjectDetailsEvent {
         projectId,
       ];
 }
+
+class AddTaskEvent extends ProjectDetailsEvent {
+  final TaskModel task;
+
+  AddTaskEvent({
+    required this.task,
+  });
+
+  @override
+  List<Object> get props => [
+        task,
+      ];
+}
+
+class UpdateTaskEvent extends ProjectDetailsEvent {
+  final TaskModel task;
+
+  UpdateTaskEvent({
+    required this.task,
+  });
+
+  @override
+  List<Object> get props => [
+        task,
+      ];
+}

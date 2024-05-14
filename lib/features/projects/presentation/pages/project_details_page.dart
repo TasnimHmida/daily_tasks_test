@@ -4,6 +4,7 @@ import '../../../../core/app_theme.dart';
 import '../../../../core/utils/used_functions.dart';
 import 'package:daily_tasks_test/injection_container.dart' as di;
 import '../../data/models/project_model.dart';
+import '../../data/models/task_model.dart';
 import '../bloc/project_details_bloc/project_details_bloc.dart';
 import '../widgets/project_details_widget.dart';
 
@@ -38,23 +39,46 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
         }
       },
       builder: (context, state) {
-        if (state.isLoading) {
+        if (state.isLoading || state.isTasksLoading || state.project == null) {
           return const Center(
               child: CircularProgressIndicator(
                   backgroundColor: lynch, color: goldenRod));
         }
-        return Center(
-          child: ProjectDetailsWidget(
+        return RefreshIndicator(
+          backgroundColor: lynch,
+          color: goldenRod,
+          onRefresh: () => _onRefresh(context),
+          child: Center(
+            child: ProjectDetailsWidget(
               project: state.project ?? widget.project,
               tasks: state.tasks ?? [],
-              isLoading: state.isLoading,
-            refreshFunc: (){
-              BlocProvider.of<ProjectDetailsBloc>(context)
-                  .add(GetProjectByIdEvent(projectId: widget.project.id.toString()));
-            }
+              refreshFunc: () {
+                BlocProvider.of<ProjectDetailsBloc>(context).add(
+                    GetProjectByIdEvent(
+                        projectId: widget.project.id.toString()));
+                BlocProvider.of<ProjectDetailsBloc>(context).add(
+                    GetProjectTasksEvent(
+                        projectId: widget.project.id.toString()));
+              },
+              addTaskFunc: (TaskModel task) {
+                BlocProvider.of<ProjectDetailsBloc>(context)
+                    .add(AddTaskEvent(task: task));
+              },
+              updateTaskFunc: (TaskModel task) {
+                BlocProvider.of<ProjectDetailsBloc>(context)
+                    .add(UpdateTaskEvent(task: task));
+              },
+            ),
           ),
         );
       },
     );
+  }
+
+  Future<void> _onRefresh(BuildContext context) async {
+    BlocProvider.of<ProjectDetailsBloc>(context)
+        .add(GetProjectByIdEvent(projectId: widget.project.id.toString()));
+    BlocProvider.of<ProjectDetailsBloc>(context)
+        .add(GetProjectTasksEvent(projectId: widget.project.id.toString()));
   }
 }

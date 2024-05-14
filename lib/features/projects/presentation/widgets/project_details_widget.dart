@@ -1,4 +1,5 @@
 import 'package:daily_tasks_test/features/projects/presentation/widgets/search_box.dart';
+import 'package:daily_tasks_test/features/projects/presentation/widgets/task_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -12,21 +13,24 @@ import '../../../authentication/data/models/user_model.dart';
 import '../../data/models/project_model.dart';
 import '../../data/models/task_model.dart';
 import '../pages/add_or_edit_project_page.dart';
+import 'add_task_popup.dart';
 import 'completed_task_card.dart';
 import 'ongoing_task_card.dart';
 
 class ProjectDetailsWidget extends StatefulWidget {
   final ProjectModel project;
   final List<TaskModel> tasks;
-  final bool isLoading;
   final Function() refreshFunc;
+  final Function(TaskModel) addTaskFunc;
+  final Function(TaskModel) updateTaskFunc;
 
   const ProjectDetailsWidget({
     super.key,
     required this.project,
     required this.tasks,
-    required this.isLoading,
     required this.refreshFunc,
+    required this.addTaskFunc,
+    required this.updateTaskFunc,
   });
 
   @override
@@ -44,6 +48,8 @@ class _ProjectDetailsWidgetState extends State<ProjectDetailsWidget> {
         userName: 'Sophia', profilePicture: 'assets/images/user_image.png'),
   ];
 
+  List<TaskModel> tasks = [];
+
   String formattedDate = '';
 
   @override
@@ -54,6 +60,10 @@ class _ProjectDetailsWidgetState extends State<ProjectDetailsWidget> {
     String month = DateFormat('MMMM').format(date);
     setState(() {
       formattedDate = '$day $month';
+    });
+
+    setState(() {
+      tasks = widget.tasks;
     });
   }
 
@@ -69,7 +79,20 @@ class _ProjectDetailsWidgetState extends State<ProjectDetailsWidget> {
         child: SizedBox(
           width: 318.w,
           child: MainButton(
-            buttonFunction: () {},
+            buttonFunction: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AddTaskPopup(
+                    addTaskFunc: (TaskModel task) {
+                      widget.addTaskFunc(task);
+                      Navigator.of(context).pop();
+                    },
+                    projectId: widget.project.id ?? 0,
+                  ); // Show the popup dialog
+                },
+              );
+            },
             text: "Add Task",
           ),
         ),
@@ -113,9 +136,7 @@ class _ProjectDetailsWidgetState extends State<ProjectDetailsWidget> {
                           MaterialPageRoute(
                               builder: (context) => AddOrEditProjectPage(
                                     project: widget.project,
-                                    returnNavBarFunc: () {
-                                      Navigator.of(context).pop('refresh');
-                                    },
+                                    returnNavBarFunc: () {},
                                   )),
                         );
                         if (information != null) {
@@ -270,62 +291,35 @@ class _ProjectDetailsWidgetState extends State<ProjectDetailsWidget> {
                 ),
                 SizedBox(height: 15.h),
                 Expanded(
-                  child: widget.isLoading
-                      ? const Center(
-                          child: CircularProgressIndicator(
-                              backgroundColor: lynch, color: goldenRod))
-                      : widget.tasks.isEmpty
-                          ? Center(
-                              child: Text(
-                              'No tasks to this project yet.',
-                              style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w300,
-                                color: Colors.white,
-                              ),
-                            ))
-                          : ListView.separated(
-                              itemCount: widget.tasks.length,
-                              itemBuilder: (context, index) {
-                                return Padding(
-                                  padding: EdgeInsets.only(
-                                      bottom: index == widget.tasks.length - 1
-                                          ? 200.h
-                                          : 0),
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 10.w, vertical: 7.h),
-                                    color: fiord,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          widget.tasks[index].name ?? '',
-                                          style: TextStyle(
-                                            fontFamily: 'Inter',
-                                            fontSize: 18.sp,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        Container(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 7.h, vertical: 7.h),
-                                            color: goldenRod,
-                                            child: SvgPicture.asset(
-                                                'assets/icons/task_${(widget.tasks[index].isDone ?? false) ? '' : 'not_'}done_icon.svg')),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                              separatorBuilder:
-                                  (BuildContext context, int index) {
-                                return SizedBox(height: 15.h);
-                              },
-                            ),
+                  child: tasks.isEmpty
+                      ? Center(
+                          child: Text(
+                          'No tasks to this project yet.',
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w300,
+                            color: Colors.white,
+                          ),
+                        ))
+                      : ListView.separated(
+                          itemCount: tasks.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: EdgeInsets.only(
+                                  bottom:
+                                      index == tasks.length - 1 ? 200.h : 0),
+                              child: TaskLine(
+                                  task: tasks[index],
+                                  updateTaskFunc: (TaskModel task) {
+                                    widget.updateTaskFunc(task);
+                                  }),
+                            );
+                          },
+                          separatorBuilder: (BuildContext context, int index) {
+                            return SizedBox(height: 15.h);
+                          },
+                        ),
                 ),
               ],
             ),

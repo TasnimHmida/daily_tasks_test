@@ -7,11 +7,13 @@ class TaskModel extends TaskEntity {
     String? name,
     bool? isDone,
     int? projectId,
+    String? userId,
   }) : super(
           id,
           name,
           isDone,
           projectId,
+    userId,
         );
 
   factory TaskModel.fromJson(Map<String, dynamic> json) {
@@ -20,6 +22,7 @@ class TaskModel extends TaskEntity {
       name: json['name'],
       isDone: json['is_done'],
       projectId: json['project_id'] ?? '',
+      userId: json['user_id'] ?? '',
     );
   }
 
@@ -29,6 +32,7 @@ class TaskModel extends TaskEntity {
       "name": name,
       "is_done": isDone,
       "project_id": projectId,
+      "user_id": userId,
     };
   }
 }

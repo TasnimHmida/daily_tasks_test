@@ -5,12 +5,14 @@ class TaskEntity extends Equatable {
   final String? name;
   final bool? isDone;
   final int? projectId;
+  final String? userId;
 
   const TaskEntity(
     this.id,
     this.name,
     this.isDone,
     this.projectId,
+    this.userId,
   );
 
   @override
@@ -19,5 +21,6 @@ class TaskEntity extends Equatable {
         name,
         isDone,
         projectId,
+        userId,
       ];
 }

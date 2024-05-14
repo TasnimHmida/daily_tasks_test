@@ -2,6 +2,7 @@ part of 'project_details_bloc.dart';
 
 class ProjectDetailsState extends Equatable {
   final bool isLoading;
+  final bool isTasksLoading;
   final String error;
   final bool success;
   final ProjectModel? project;
@@ -9,6 +10,7 @@ class ProjectDetailsState extends Equatable {
 
   const ProjectDetailsState({
     this.isLoading = false,
+    this.isTasksLoading = false,
     this.error = "",
     this.success = false,
     this.project,
@@ -17,6 +19,7 @@ class ProjectDetailsState extends Equatable {
 
   ProjectDetailsState copyWith({
     bool? isLoading,
+    bool? isTasksLoading,
     String? error,
     bool? success,
     ProjectModel? project,
@@ -24,6 +27,7 @@ class ProjectDetailsState extends Equatable {
   }) {
     return ProjectDetailsState(
       isLoading: isLoading ?? this.isLoading,
+      isTasksLoading: isTasksLoading ?? this.isTasksLoading,
       error: error ?? this.error,
       success: success ?? this.success,
       project: project ?? this.project,
@@ -34,6 +38,7 @@ class ProjectDetailsState extends Equatable {
   @override
   List<Object?> get props => [
         isLoading,
+    isTasksLoading,
         error,
         success,
         project,
