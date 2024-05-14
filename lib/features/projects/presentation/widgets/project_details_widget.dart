@@ -80,7 +80,6 @@ class _ProjectDetailsWidgetState extends State<ProjectDetailsWidget> {
       projectProgress = 0.0;
       });
     }
-    print('projectProgress${projectProgress}');
   }
 
   void _updateProjectProgress() {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import '../app_theme.dart';
 
 class MainButton extends StatefulWidget {
@@ -22,7 +23,7 @@ class _MainButtonState extends State<MainButton> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        height: 67.sp,
+        height: widget.text == 'Logout' ? 54.h : 67.h,
         child: TextButton(
           onPressed: widget.buttonFunction,
           style: TextButton.styleFrom(
@@ -37,14 +38,31 @@ class _MainButtonState extends State<MainButton> {
                 ? const CircularProgressIndicator(
                     color: Colors.black,
                   )
-                : Text(
-                    widget.text,
-                    style: TextStyle(
-                        fontFamily: 'Inter',
-                        color: Colors.black,
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.w600),
-                  ),
+                : widget.text == 'Logout'
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                            SvgPicture.asset(
+                              'assets/icons/logout_icon.svg',
+                            ),
+                            SizedBox(width: 10.w),
+                            Text(
+                              "Logout",
+                              style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  color: ebonyClay,
+                                  fontSize: 18.sp,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ])
+                    : Text(
+                        widget.text,
+                        style: TextStyle(
+                            fontFamily: 'Inter',
+                            color: Colors.black,
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.w600),
+                      ),
           ),
         ));
   }

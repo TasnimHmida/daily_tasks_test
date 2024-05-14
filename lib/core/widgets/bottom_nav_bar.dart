@@ -89,12 +89,11 @@ class _BottomNavBar extends State<BottomNavBar> {
                             .add(GetAllProjectsEvent());
                       })),
           const Center(child: Text('chat screen')),
-          AddOrEditProjectPage(
-            returnNavBarFunc: () {
-              setState(() {
-                _currentIndex = 0;
-              });
-            },
+          const Scaffold(
+            backgroundColor: outerSpace,
+            body: Center(
+                child: CircularProgressIndicator(
+                    backgroundColor: lynch, color: goldenRod)),
           ),
           const Center(child: Text('calendar screen')),
           const Center(child: Text('notifications screen'))

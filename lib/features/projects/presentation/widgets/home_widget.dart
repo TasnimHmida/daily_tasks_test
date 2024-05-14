@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/app_theme.dart';
 import '../../../authentication/data/models/user_model.dart';
+import '../../../profile/presentation/pages/profile_page.dart';
 import '../../data/models/project_model.dart';
 import 'completed_task_card.dart';
 import 'ongoing_task_card.dart';
@@ -12,7 +13,11 @@ class HomeWidget extends StatefulWidget {
   final UserModel user;
   final Function() refreshFunc;
 
-  const HomeWidget({super.key, required this.projects, required this.user,required this.refreshFunc});
+  const HomeWidget(
+      {super.key,
+      required this.projects,
+      required this.user,
+      required this.refreshFunc});
 
   @override
   _HomeWidgetState createState() => _HomeWidgetState();
@@ -44,40 +49,46 @@ class _HomeWidgetState extends State<HomeWidget> {
         padding: homePagePadding,
         child: SingleChildScrollView(
           child: SizedBox(
-            height: MediaQuery.of(context).size.height*.9,
+            height: MediaQuery.of(context).size.height * .9,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Welcome Back!",
-                          style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 11.79.sp,
-                            fontWeight: FontWeight.w500,
-                            color: goldenRod,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const ProfilePage()));
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Welcome Back!",
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 11.79.sp,
+                              fontWeight: FontWeight.w500,
+                              color: goldenRod,
+                            ),
                           ),
-                        ),
-                        Text(
-                          widget.user.userName ?? '',
-                          style: TextStyle(
-                            fontFamily: 'PilatExtended',
-                            fontSize: 22.29.sp,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
+                          Text(
+                            widget.user.userName ?? '',
+                            style: TextStyle(
+                              fontFamily: 'PilatExtended',
+                              fontSize: 22.29.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    Image.asset('assets/images/user_image.png', height: 48.h),
-                  ],
+                        ],
+                      ),
+                      Image.asset('assets/images/user_image.png', height: 48.h),
+                    ],
+                  ),
                 ),
                 SizedBox(height: 30.h),
                 SearchBox(searchController: _searchController),
@@ -113,8 +124,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                               return CompletedTaskCard(
                                   project: completedProjects[index],
                                   isFirstItem: index == 0,
-                                  refreshFunc: widget.refreshFunc
-                              );
+                                  refreshFunc: widget.refreshFunc);
                             },
                             separatorBuilder:
                                 (BuildContext context, int index) {
@@ -161,8 +171,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                                               : 0),
                                       child: OngoingTaskCard(
                                           project: ongoingProjects[index],
-                                          refreshFunc: widget.refreshFunc
-                                      ),
+                                          refreshFunc: widget.refreshFunc),
                                     );
                                   },
                                   separatorBuilder:

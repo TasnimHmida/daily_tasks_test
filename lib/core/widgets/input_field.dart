@@ -14,6 +14,7 @@ class InputField extends StatefulWidget {
   final String? prefixIcon;
   final int? maxLines;
   final bool isPassword;
+  final bool isEdit;
 
   InputField({
     super.key,
@@ -27,6 +28,7 @@ class InputField extends StatefulWidget {
     this.maxLines,
     FocusNode? focusNode,
     this.isPassword = false,
+    this.isEdit = false,
   });
 
   @override
@@ -102,6 +104,7 @@ class _TextFormFieldWidget extends State<InputField> {
             focusedBorder: const UnderlineInputBorder(
               borderSide: BorderSide(color: goldenRod),
             ),
+            enabledBorder: InputBorder.none,
             prefixIcon: widget.prefixIcon != null
                 ? IconButton(
                     icon: SvgPicture.asset(
@@ -127,7 +130,13 @@ class _TextFormFieldWidget extends State<InputField> {
                       });
                     },
                   )
-                : null,
+                : widget.isEdit
+                    ? IconButton(
+                        icon: SvgPicture.asset('assets/icons/edit_icon.svg',
+                            height: 24.h, color: nepal),
+                        onPressed: () {},
+                      )
+                    : null,
           ),
           validator: widget.validator,
         ),
