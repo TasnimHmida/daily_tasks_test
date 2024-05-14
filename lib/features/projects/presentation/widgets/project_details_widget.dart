@@ -47,7 +47,7 @@ class _ProjectDetailsWidgetState extends State<ProjectDetailsWidget> {
     const UserModel(
         userName: 'Sophia', profilePicture: 'assets/images/user_image.png'),
   ];
-
+  late double projectProgress;
   List<TaskModel> tasks = [];
 
   String formattedDate = '';
@@ -55,15 +55,37 @@ class _ProjectDetailsWidgetState extends State<ProjectDetailsWidget> {
   @override
   void initState() {
     super.initState();
+    _initializeData();
+  }
+
+  void _initializeData() {
+    setState(() {
+      projectProgress = widget.project.percentage ?? 0;
+      tasks = widget.tasks;
+    });
     DateTime date = DateTime.parse(widget.project.date ?? '');
     int day = date.day;
     String month = DateFormat('MMMM').format(date);
-    setState(() {
-      formattedDate = '$day $month';
-    });
+    formattedDate = '$day $month';
+  }
 
+  void _calculateProjectProgress() {
+    if (tasks.isNotEmpty) {
+      int completedTasks = tasks.where((task) => task.isDone ?? false).length;
+      setState((){
+      projectProgress = completedTasks *100 / tasks.length;
+      });
+    } else {
+      setState((){
+      projectProgress = 0.0;
+      });
+    }
+    print('projectProgress${projectProgress}');
+  }
+
+  void _updateProjectProgress() {
     setState(() {
-      tasks = widget.tasks;
+      _calculateProjectProgress();
     });
   }
 
@@ -86,6 +108,8 @@ class _ProjectDetailsWidgetState extends State<ProjectDetailsWidget> {
                   return AddTaskPopup(
                     addTaskFunc: (TaskModel task) {
                       widget.addTaskFunc(task);
+                      tasks.add(task);
+                      _updateProjectProgress();
                       Navigator.of(context).pop();
                     },
                     projectId: widget.project.id ?? 0,
@@ -262,10 +286,9 @@ class _ProjectDetailsWidgetState extends State<ProjectDetailsWidget> {
                       CircularPercentIndicator(
                           radius: 30.r,
                           lineWidth: 2.4.w,
-                          percent:
-                              (widget.project.percentage ?? 0).toInt() / 100,
+                          percent: projectProgress/100,
                           center: Text(
-                            '${(widget.project.percentage ?? 0).toInt().toString()}%',
+                            '${projectProgress.toInt().toString()}%',
                             style: TextStyle(
                               fontFamily: 'Inter',
                               fontSize: 11.sp,
@@ -313,6 +336,10 @@ class _ProjectDetailsWidgetState extends State<ProjectDetailsWidget> {
                                   task: tasks[index],
                                   updateTaskFunc: (TaskModel task) {
                                     widget.updateTaskFunc(task);
+                                    setState(() {
+                                      tasks[index] = task;
+                                    });
+                                    _updateProjectProgress();
                                   }),
                             );
                           },

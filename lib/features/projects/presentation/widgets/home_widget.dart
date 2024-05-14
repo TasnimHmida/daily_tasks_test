@@ -44,7 +44,7 @@ class _HomeWidgetState extends State<HomeWidget> {
         padding: homePagePadding,
         child: SingleChildScrollView(
           child: SizedBox(
-            height: MediaQuery.of(context).size.height,
+            height: MediaQuery.of(context).size.height*.9,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -157,7 +157,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                                       padding: EdgeInsets.only(
                                           bottom: index ==
                                                   ongoingProjects.length - 1
-                                              ? 200.h
+                                              ? 60.h
                                               : 0),
                                       child: OngoingTaskCard(
                                           project: ongoingProjects[index],
