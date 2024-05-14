@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../features/authentication/data/models/user_model.dart';
+import '../app_theme.dart';
 
 void showSnackBar(
     BuildContext context, String message, Color snackBarBackgroundColor,
@@ -44,4 +45,61 @@ List<Widget> buildImages(List<UserModel> users) {
   }
 
   return images;
+}
+
+Future<DateTime?> selectDate(BuildContext context) async {
+  final DateTime? pickedDate = await showDatePicker(
+    context: context,
+    initialDate: DateTime.now(),
+    lastDate: DateTime(3000),
+    initialEntryMode: DatePickerEntryMode.calendarOnly,
+    firstDate: DateTime.now(),
+    // Change this line
+    builder: (context, child) {
+      return Theme(
+        data: Theme.of(context).copyWith(
+          colorScheme: const ColorScheme.dark(
+            primary: fiord,
+            onPrimary: Colors.white,
+            onSurface: goldenRod,
+          ),
+          textButtonTheme: TextButtonThemeData(
+            style: TextButton.styleFrom(
+              foregroundColor: goldenRod,
+            ),
+          ),
+        ),
+        child: child!,
+      );
+    },
+  );
+
+  return pickedDate;
+}
+
+Future<TimeOfDay?> selectTime(BuildContext context) async {
+  final TimeOfDay? pickedTime = await showTimePicker(
+    context: context,
+    initialTime:
+        TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute),
+    builder: (context, child) {
+      return Theme(
+        data: Theme.of(context).copyWith(
+          colorScheme: const ColorScheme.dark(
+            primary: fiord,
+            onPrimary: Colors.white,
+            onSurface: goldenRod,
+          ),
+          textButtonTheme: TextButtonThemeData(
+            style: TextButton.styleFrom(
+              foregroundColor: goldenRod,
+            ),
+          ),
+        ),
+        child: child!,
+      );
+    },
+  );
+
+  return pickedTime;
 }

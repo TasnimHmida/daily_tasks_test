@@ -10,8 +10,9 @@ import 'ongoing_task_card.dart';
 class HomeWidget extends StatefulWidget {
   final List<ProjectModel> projects;
   final UserModel user;
+  final Function() refreshFunc;
 
-  const HomeWidget({super.key, required this.projects, required this.user});
+  const HomeWidget({super.key, required this.projects, required this.user,required this.refreshFunc});
 
   @override
   _HomeWidgetState createState() => _HomeWidgetState();
@@ -43,7 +44,7 @@ class _HomeWidgetState extends State<HomeWidget> {
         padding: homePagePadding,
         child: SingleChildScrollView(
           child: SizedBox(
-            height: MediaQuery.of(context).size.height,
+            height: MediaQuery.of(context).size.height*.9,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,7 +112,9 @@ class _HomeWidgetState extends State<HomeWidget> {
                             itemBuilder: (context, index) {
                               return CompletedTaskCard(
                                   project: completedProjects[index],
-                                  isFirstItem: index == 0);
+                                  isFirstItem: index == 0,
+                                  refreshFunc: widget.refreshFunc
+                              );
                             },
                             separatorBuilder:
                                 (BuildContext context, int index) {
@@ -150,8 +153,17 @@ class _HomeWidgetState extends State<HomeWidget> {
                               : ListView.separated(
                                   itemCount: ongoingProjects.length,
                                   itemBuilder: (context, index) {
-                                    return OngoingTaskCard(
-                                        project: ongoingProjects[index]);
+                                    return Padding(
+                                      padding: EdgeInsets.only(
+                                          bottom: index ==
+                                                  ongoingProjects.length - 1
+                                              ? 60.h
+                                              : 0),
+                                      child: OngoingTaskCard(
+                                          project: ongoingProjects[index],
+                                          refreshFunc: widget.refreshFunc
+                                      ),
+                                    );
                                   },
                                   separatorBuilder:
                                       (BuildContext context, int index) {
@@ -159,6 +171,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                                   },
                                 ),
                         ),
+                        // SizedBox(height: 30.h),
                       ]),
                 )
               ],

@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../features/authentication/data/models/user_model.dart';
+import '../../features/projects/presentation/pages/add_or_edit_project_page.dart';
 import '../../features/projects/presentation/pages/home_page.dart';
 import '../app_theme.dart';
 import '../bloc/core_bloc.dart';
@@ -26,18 +27,29 @@ class BottomNavBar extends StatefulWidget {
 
 class _BottomNavBar extends State<BottomNavBar> {
   var scaffoldKey = GlobalKey<ScaffoldState>();
-  late int _currentIndex;
+  int _currentIndex = 0;
 
-  @override
-  void initState() {
-    super.initState();
-    _currentIndex = widget.specificIndex ?? 0;
-  }
-
-  void _onItemTapped(int index) {
+  void _onItemTapped(int index, refreshFunction) async {
     setState(() {
       _currentIndex = index;
     });
+
+    if (_currentIndex == 2) {
+      final information = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => AddOrEditProjectPage(
+                  returnNavBarFunc: () {
+                    setState(() {
+                      _currentIndex = 0;
+                    });
+                  },
+                )),
+      );
+      if (information != null) {
+        refreshFunction();
+      }
+    }
   }
 
   Future<void> _onRefresh(BuildContext context) async {
@@ -69,9 +81,21 @@ class _BottomNavBar extends State<BottomNavBar> {
                       child: const Center(
                           child: CircularProgressIndicator(
                               backgroundColor: lynch, color: goldenRod)))
-                  : HomePage(projects: state.projects ?? [], user: widget.user)),
+                  : HomePage(
+                      projects: state.projects ?? [],
+                      user: widget.user,
+                      refreshFunc: () {
+                        BlocProvider.of<CoreBloc>(context)
+                            .add(GetAllProjectsEvent());
+                      })),
           const Center(child: Text('chat screen')),
-          const Center(child: Text('add project screen')),
+          AddOrEditProjectPage(
+            returnNavBarFunc: () {
+              setState(() {
+                _currentIndex = 0;
+              });
+            },
+          ),
           const Center(child: Text('calendar screen')),
           const Center(child: Text('notifications screen'))
         ];
@@ -107,7 +131,10 @@ class _BottomNavBar extends State<BottomNavBar> {
                   selectedFontSize: 10.sp,
                   unselectedFontSize: 10.sp,
                   currentIndex: _currentIndex,
-                  onTap: (int newIndex) => _onItemTapped(newIndex),
+                  onTap: (int newIndex) => _onItemTapped(newIndex, () {
+                    BlocProvider.of<CoreBloc>(context)
+                        .add(GetAllProjectsEvent());
+                  }),
                   items: <BottomNavigationBarItem>[
                     BottomNavigationBarItem(
                       icon: SvgPicture.asset("assets/icons/home_icon.svg",

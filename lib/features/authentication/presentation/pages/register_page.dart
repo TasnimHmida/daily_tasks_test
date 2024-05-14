@@ -35,7 +35,8 @@ class _RegisterPageState extends State<RegisterPage> {
         } else if (state.success) {
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (_) => const LoginPage()));
-          showSnackBar(context, 'Please verify your email with the link that was sent to you.', goldenRod.withOpacity(0.8));
+          showSnackBar(context, 'User registered successfully.',
+              goldenRod.withOpacity(0.8));
         }
       }, builder: (context, state) {
         return RegisterWidget(

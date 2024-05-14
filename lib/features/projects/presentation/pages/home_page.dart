@@ -11,7 +11,8 @@ import '../widgets/home_widget.dart';
 class HomePage extends StatefulWidget {
   final List<ProjectModel> projects;
   final UserModel user;
-  const HomePage({super.key, required this.projects, required this.user});
+  final Function() refreshFunc;
+  const HomePage({super.key, required this.projects, required this.user,required this.refreshFunc});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -25,7 +26,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildBody(List<ProjectModel> projects) {
     return Center(
-        child: HomeWidget(projects: projects, user: widget.user),
+        child: HomeWidget(projects: projects, user: widget.user, refreshFunc: widget.refreshFunc),
         );
   }
 }
