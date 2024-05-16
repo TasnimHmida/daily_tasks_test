@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:daily_tasks_test/features/projects/presentation/widgets/search_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -10,11 +8,17 @@ import '../../../../core/utils/input_validation.dart';
 import '../../../../core/widgets/input_field.dart';
 import '../../../../core/widgets/main_button.dart';
 import '../../../authentication/data/models/user_model.dart';
-import '../../data/models/project_model.dart';
 
 class ProfileWidget extends StatefulWidget {
+  final UserModel user;
+  final Function() logoutFunc;
+  final Function(UserModel, File?) editFunction;
+
   const ProfileWidget({
     super.key,
+    required this.editFunction,
+    required this.user,
+    required this.logoutFunc,
   });
 
   @override
@@ -27,6 +31,18 @@ class _ProfileWidgetState extends State<ProfileWidget> {
   final TextEditingController _passwordController = TextEditingController();
   File? imageFile;
   final picker = ImagePicker();
+  bool isEdit = false;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      _nameController.text = widget.user.userName ?? '';
+      _emailController.text = widget.user.email ?? '';
+      _passwordController.text = widget.user.password ?? '';
+    });
+    print('name:::: ${widget.user.userName}');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,21 +85,28 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                 Stack(
                   children: [
                     Container(
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: goldenRod, width: 2)),
-                      child: Padding(
-                        padding: EdgeInsets.all(3.w),
-                        child: imageFile != null
-                            ? CircleAvatar(
-                                radius: 60.r,
-                                backgroundImage: Image.file(imageFile!).image)
-                            : ClipOval(
-                                child: Image.asset(
-                                    'assets/images/profile_image.png',
-                                    height: 127.h)),
-                      ),
-                    ),
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: goldenRod, width: 2)),
+                        child: Padding(
+                          padding: EdgeInsets.all(3.w),
+                          child: imageFile != null
+                              ? CircleAvatar(
+                                  radius: 60.r,
+                                  backgroundImage: Image.file(imageFile!).image)
+                              : widget.user.profilePicture != null
+                                  ? CircleAvatar(
+                                      radius: 60.r,
+                                      backgroundImage: NetworkImage(
+                                        widget.user.profilePicture!,
+                                      ))
+                                  : CircleAvatar(
+                                      radius: 60.r,
+                                      backgroundImage: const AssetImage(
+                                        'assets/images/profile_image.png',
+                                      ),
+                                    ),
+                        )),
                     Positioned(
                         bottom: 5.h,
                         right: 3.w,
@@ -113,25 +136,68 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                     prefixIcon: 'assets/icons/profile_user_icon.svg',
                     isEdit: true,
                     validator: (value) =>
-                        validateField(value!, 'Username', context)),
+                        validateField(value!, 'Username', context),
+                    onChanged: (val) {
+                      setState(() {
+                        isEdit = true;
+                      });
+                    }),
                 SizedBox(height: 20.h),
                 InputField(
                     controller: _emailController,
                     hintText: 'Email@gmail.com',
                     prefixIcon: 'assets/icons/profile_email_icon.svg',
                     isEdit: true,
-                    validator: (value) => validateEmail(value!, context)),
+                    validator: (value) =>
+                        validateField(value!, 'Email', context),
+                    onChanged: (val) {
+                      setState(() {
+                        isEdit = true;
+                      });
+                    }),
                 SizedBox(height: 20.h),
                 InputField(
                     controller: _passwordController,
                     hintText: 'Password',
                     prefixIcon: 'assets/icons/profile_password_icon.svg',
                     isEdit: true,
-                    validator: (value) => validatePassword(value!, context)),
+                    isPassword: true,
+                    validator: (value) =>
+                        validatePassword(value!, context),
+                    onChanged: (val) {
+                      setState(() {
+                        isEdit = true;
+                      });
+                    }),
               ]),
               SizedBox(height: 200.h),
+              if (isEdit)
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: GestureDetector(
+                    onTap: () {
+                      widget.editFunction(
+                          UserModel(
+                              userName: _nameController.text,
+                              email: _emailController.text,
+                              password: _passwordController.text),
+                          imageFile);
+                    },
+                    child: Text("Save Changes",
+                        style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w500,
+                            color: goldenRod,
+                            decoration: TextDecoration.underline,
+                            decorationColor: goldenRod,
+                            decorationStyle: TextDecorationStyle.dotted)),
+                  ),
+                ),
               MainButton(
-                buttonFunction: () {},
+                buttonFunction: () {
+                  widget.logoutFunc();
+                },
                 text: "Logout",
                 // isLoading: widget.isLoading
               ),
@@ -149,6 +215,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
       setState(() {
         imageFile = File(pickedFile.path);
         print("imageFileimageFile $imageFile");
+        isEdit = true;
       });
     } catch (errorMsg) {
       print("image error msg ${errorMsg.toString()}");

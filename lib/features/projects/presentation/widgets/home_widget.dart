@@ -12,12 +12,14 @@ class HomeWidget extends StatefulWidget {
   final List<ProjectModel> projects;
   final UserModel user;
   final Function() refreshFunc;
+  final Function() logoutFunc;
 
   const HomeWidget(
       {super.key,
       required this.projects,
       required this.user,
-      required this.refreshFunc});
+      required this.refreshFunc,
+      required this.logoutFunc});
 
   @override
   _HomeWidgetState createState() => _HomeWidgetState();
@@ -25,8 +27,23 @@ class HomeWidget extends StatefulWidget {
 
 class _HomeWidgetState extends State<HomeWidget> {
   final TextEditingController _searchController = TextEditingController();
+  List<ProjectModel> filteredProjects = [];
   List<ProjectModel> completedProjects = [];
   List<ProjectModel> ongoingProjects = [];
+
+  void _filterProjects(String query) {
+    setState(() {
+      if (query.isNotEmpty) {
+        filteredProjects = widget.projects
+            .where((project) => (project.name ?? '')
+                .toLowerCase()
+                .contains(query.toLowerCase()))
+            .toList();
+      } else {
+        filteredProjects = widget.projects;
+      }
+    });
+  }
 
   @override
   void initState() {
@@ -56,8 +73,9 @@ class _HomeWidgetState extends State<HomeWidget> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => const ProfilePage()));
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) =>
+                            ProfilePage(logoutFunc: widget.logoutFunc)));
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -86,103 +104,157 @@ class _HomeWidgetState extends State<HomeWidget> {
                           ),
                         ],
                       ),
-                      Image.asset('assets/images/user_image.png', height: 48.h),
+                      widget.user.profilePicture != null
+                          ? CircleAvatar(
+                              radius: 25.r,
+                              backgroundImage: NetworkImage(
+                                widget.user.profilePicture!,
+                              ))
+                          : CircleAvatar(
+                              radius: 25.r,
+                              backgroundImage: const AssetImage(
+                                'assets/images/profile_image.png',
+                              ),
+                            ),
                     ],
                   ),
                 ),
                 SizedBox(height: 30.h),
-                SearchBox(searchController: _searchController),
+                SearchBox(
+                  searchController: _searchController,
+                  onChanged: () {
+                    _filterProjects(_searchController.text);
+                  },
+                ),
                 SizedBox(height: 30.h),
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(
-                    "Completed Projects",
-                    style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(height: 15.h),
-                  SizedBox(
-                    height: 175.h,
-                    child: completedProjects.isEmpty
-                        ? Center(
-                            child: Text(
-                            "No Completed Projects Yet.",
-                            style: TextStyle(
-                              fontFamily: 'Inter',
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white,
-                            ),
-                          ))
-                        : ListView.separated(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: completedProjects.length,
-                            itemBuilder: (context, index) {
-                              return CompletedTaskCard(
-                                  project: completedProjects[index],
-                                  isFirstItem: index == 0,
-                                  refreshFunc: widget.refreshFunc);
-                            },
-                            separatorBuilder:
-                                (BuildContext context, int index) {
-                              return SizedBox(width: 10.w);
-                            },
-                          ),
-                  ),
-                ]),
-                SizedBox(height: 25.h),
-                Expanded(
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Ongoing Projects",
-                          style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
+                _searchController.text.isNotEmpty && filteredProjects.isNotEmpty
+                    ? Expanded(
+                        child: ListView.separated(
+                          itemCount: filteredProjects.length,
+                          itemBuilder: (context, index) {
+                            final project = filteredProjects[index];
+                            return Padding(
+                              padding: EdgeInsets.only(
+                                  bottom: index == filteredProjects.length - 1
+                                      ? 60.h
+                                      : 0),
+                              child: OngoingTaskCard(
+                                project: project,
+                                refreshFunc: widget.refreshFunc,
+                              ),
+                            );
+                          },
+                          separatorBuilder: (BuildContext context, int index) {
+                            return SizedBox(height: 15.h);
+                          },
                         ),
-                        SizedBox(height: 15.h),
-                        Expanded(
-                          child: ongoingProjects.isEmpty
-                              ? Center(
-                                  child: Text(
-                                  "No Ongoing Projects Yet.",
-                                  style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: Colors.white,
+                      )
+                    : Expanded(
+                        child: Column(
+                          children: [
+                            Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Completed Projects",
+                                    style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 20.sp,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
                                   ),
-                                ))
-                              : ListView.separated(
-                                  itemCount: ongoingProjects.length,
-                                  itemBuilder: (context, index) {
-                                    return Padding(
-                                      padding: EdgeInsets.only(
-                                          bottom: index ==
-                                                  ongoingProjects.length - 1
-                                              ? 60.h
-                                              : 0),
-                                      child: OngoingTaskCard(
-                                          project: ongoingProjects[index],
-                                          refreshFunc: widget.refreshFunc),
-                                    );
-                                  },
-                                  separatorBuilder:
-                                      (BuildContext context, int index) {
-                                    return SizedBox(height: 15.h);
-                                  },
-                                ),
+                                  SizedBox(height: 15.h),
+                                  SizedBox(
+                                    height: 175.h,
+                                    child: completedProjects.isEmpty
+                                        ? Center(
+                                            child: Text(
+                                            "No Completed Projects Yet.",
+                                            style: TextStyle(
+                                              fontFamily: 'Inter',
+                                              fontSize: 16.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: Colors.white,
+                                            ),
+                                          ))
+                                        : ListView.separated(
+                                            scrollDirection: Axis.horizontal,
+                                            itemCount: completedProjects.length,
+                                            itemBuilder: (context, index) {
+                                              return CompletedTaskCard(
+                                                  project:
+                                                      completedProjects[index],
+                                                  isFirstItem: index == 0,
+                                                  refreshFunc:
+                                                      widget.refreshFunc);
+                                            },
+                                            separatorBuilder:
+                                                (BuildContext context,
+                                                    int index) {
+                                              return SizedBox(width: 10.w);
+                                            },
+                                          ),
+                                  ),
+                                ]),
+                            SizedBox(height: 25.h),
+                            Expanded(
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Ongoing Projects",
+                                      style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 20.sp,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    SizedBox(height: 15.h),
+                                    Expanded(
+                                      child: ongoingProjects.isEmpty
+                                          ? Center(
+                                              child: Text(
+                                              "No Ongoing Projects Yet.",
+                                              style: TextStyle(
+                                                fontFamily: 'Inter',
+                                                fontSize: 16.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.white,
+                                              ),
+                                            ))
+                                          : ListView.separated(
+                                              itemCount: ongoingProjects.length,
+                                              itemBuilder: (context, index) {
+                                                return Padding(
+                                                  padding: EdgeInsets.only(
+                                                      bottom: index ==
+                                                              ongoingProjects
+                                                                      .length -
+                                                                  1
+                                                          ? 60.h
+                                                          : 0),
+                                                  child: OngoingTaskCard(
+                                                      project: ongoingProjects[
+                                                          index],
+                                                      refreshFunc:
+                                                          widget.refreshFunc),
+                                                );
+                                              },
+                                              separatorBuilder:
+                                                  (BuildContext context,
+                                                      int index) {
+                                                return SizedBox(height: 15.h);
+                                              },
+                                            ),
+                                    ),
+                                    // SizedBox(height: 30.h),
+                                  ]),
+                            )
+                          ],
                         ),
-                        // SizedBox(height: 30.h),
-                      ]),
-                )
+                      ),
               ],
             ),
           ),

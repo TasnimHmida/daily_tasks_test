@@ -1,25 +1,29 @@
-part of 'add_edit_project_bloc.dart';
+part of 'profile_bloc.dart';
 
-class AddEditProjectState extends Equatable {
+class ProfileState extends Equatable {
   final bool isLoading;
   final String error;
   final bool success;
+  final UserModel? user;
 
-  const AddEditProjectState({
+  const ProfileState({
     this.isLoading = false,
     this.error = "",
     this.success = false,
+    this.user,
   });
 
-  AddEditProjectState copyWith({
+  ProfileState copyWith({
     bool? isLoading,
     String? error,
     bool? success,
+    UserModel? user,
   }) {
-    return AddEditProjectState(
+    return ProfileState(
       isLoading: isLoading ?? this.isLoading,
       error: error ?? this.error,
       success: success ?? this.success,
+      user: user ?? this.user,
     );
   }
 
@@ -28,5 +32,6 @@ class AddEditProjectState extends Equatable {
         isLoading,
         error,
         success,
+        user,
       ];
 }

@@ -14,7 +14,7 @@ class AuthRepositoryImpl implements AuthRepository {
       {required this.remoteDataSource, required this.networkInfo});
 
   @override
-  Future<Either<Failure, Unit>> login(String email, String password) async {
+  Future<Either<Failure, UserModel>> login(String email, String password) async {
     if (await networkInfo.isConnected) {
       try {
         final remoteResponse = await remoteDataSource.login(email, password);

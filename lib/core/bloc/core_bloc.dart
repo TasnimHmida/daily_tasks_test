@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../features/authentication/domain/use_cases/logout_usecase.dart';
 import '../../features/projects/data/models/project_model.dart';
 import '../error/failures.dart';
 import '../strings/failures.dart';
@@ -11,31 +12,53 @@ part 'core_state.dart';
 
 class CoreBloc extends Bloc<CoreEvent, CoreState> {
   final GetAllProjectsUseCase getAllProjectsUseCase;
+  final LogoutUseCase logoutUseCase;
 
   CoreBloc({
     required this.getAllProjectsUseCase,
+    required this.logoutUseCase,
   }) : super(const CoreState()) {
     on<CoreEvent>((event, emit) async {
       if (event is GetAllProjectsEvent) {
         emit(state.copyWith(isLoading: true, error: '', success: false));
 
-        final failureOrDoneMessage =
-        await getAllProjectsUseCase();
-        print('projects::: ${failureOrDoneMessage}');
+        final failureOrDoneMessage = await getAllProjectsUseCase();
 
         failureOrDoneMessage.fold(
-              (failure) {
+          (failure) {
             emit(state.copyWith(
               error: _mapFailureToMessage(failure),
               isLoading: false,
             ));
           },
-              (projects) {
+          (projects) {
             emit(state.copyWith(
               success: true,
               error: '',
               isLoading: false,
               projects: projects,
+            ));
+          },
+        );
+      }
+      if (event is LogoutEvent) {
+        emit(
+            state.copyWith(isLoading: true, error: '', isLogoutSuccess: false));
+
+        final failureOrDoneMessage = await logoutUseCase();
+
+        failureOrDoneMessage.fold(
+          (failure) {
+            emit(state.copyWith(
+              error: _mapFailureToMessage(failure),
+              isLoading: false,
+            ));
+          },
+          (projects) {
+            emit(state.copyWith(
+              isLogoutSuccess: true,
+              error: '',
+              isLoading: false,
             ));
           },
         );

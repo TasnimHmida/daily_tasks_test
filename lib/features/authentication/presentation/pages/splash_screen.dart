@@ -49,9 +49,9 @@ class _SplashScreenState extends State<SplashScreen> {
         }
       }, builder: (context, state) {
         return SplashWidget(
-          isUserLogged: state.success,
-          user: state.user ?? UserModel(),
-        );
+            isUserLogged: state.success,
+            user: state.user,
+            isButtonDisabled: state.user == null);
       }),
     );
   }

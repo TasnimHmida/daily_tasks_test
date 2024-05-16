@@ -3,7 +3,7 @@ import 'package:dartz/dartz.dart';
 import '../../data/models/user_model.dart';
 
 abstract class AuthRepository {
-  Future<Either<Failure, Unit>> login(String email, String password);
+  Future<Either<Failure, UserModel>> login(String email, String password);
 
   Future<Either<Failure, Unit>> register(
       {required String userName,

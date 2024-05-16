@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/app_theme.dart';
 import '../../../../core/utils/used_functions.dart';
+import '../../../../core/widgets/bottom_nav_bar.dart';
 import '../bloc/login_bloc/login_bloc.dart';
 import '../widgets/login_widget.dart';
 import 'package:daily_tasks_test/injection_container.dart' as di;
@@ -30,10 +31,9 @@ class _LoginPageState extends State<LoginPage> {
       child: BlocConsumer<LoginBloc, LoginState>(listener: (context, state) {
         if (state.error.isNotEmpty) {
           showSnackBar(context, state.error, goldenRod.withOpacity(0.8));
-        }
-        else if (state.success) {
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => const SplashScreen()));
+        } else if (state.success) {
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (_) => BottomNavBar(user: state.user!)));
         }
       }, builder: (context, state) {
         return LoginWidget(

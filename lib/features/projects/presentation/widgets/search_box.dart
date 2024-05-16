@@ -6,7 +6,11 @@ import '../../../../core/app_theme.dart';
 
 class SearchBox extends StatefulWidget {
   final TextEditingController searchController;
-  const SearchBox({Key? key, required this.searchController}) : super(key: key);
+  final Function() onChanged;
+
+  const SearchBox(
+      {Key? key, required this.searchController, required this.onChanged})
+      : super(key: key);
 
   @override
   _SearchBoxState createState() => _SearchBoxState();
@@ -16,41 +20,42 @@ class _SearchBoxState extends State<SearchBox> {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      controller: widget.searchController,
-      cursorColor: Colors.white,
-      onTapOutside: (event) {
-        FocusScope.of(context).unfocus();
-      },
-      style: TextStyle(
-        fontFamily: "Inter",
-        color: Colors.white,
-        fontWeight: FontWeight.w400,
-        fontSize: 18.sp,
-      ),
-      decoration: InputDecoration(
-        hintText: 'Seach tasks',
-        filled: true,
-        fillColor: fiord,
-        enabledBorder: const UnderlineInputBorder(
-          borderSide: BorderSide.none,
+        controller: widget.searchController,
+        cursorColor: Colors.white,
+        onTapOutside: (event) {
+          FocusScope.of(context).unfocus();
+        },
+        style: TextStyle(
+          fontFamily: "Inter",
+          color: Colors.white,
+          fontWeight: FontWeight.w400,
+          fontSize: 18.sp,
         ),
-        hintStyle: TextStyle(
-            fontFamily: "Inter",
-            color: slateGray,
-            fontWeight: FontWeight.w400,
-            fontSize: 16.sp),
-        focusedBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: goldenRod),
-        ),
-        prefixIcon: IconButton(
-          icon: SvgPicture.asset(
-            'assets/icons/search_icon.svg',
-            height: 20.h,
+        decoration: InputDecoration(
+          hintText: 'Seach tasks',
+          filled: true,
+          fillColor: fiord,
+          enabledBorder: const UnderlineInputBorder(
+            borderSide: BorderSide.none,
           ),
-          onPressed: () {},
+          hintStyle: TextStyle(
+              fontFamily: "Inter",
+              color: slateGray,
+              fontWeight: FontWeight.w400,
+              fontSize: 16.sp),
+          focusedBorder: const UnderlineInputBorder(
+            borderSide: BorderSide(color: goldenRod),
+          ),
+          prefixIcon: IconButton(
+            icon: SvgPicture.asset(
+              'assets/icons/search_icon.svg',
+              height: 20.h,
+            ),
+            onPressed: () {},
+          ),
         ),
-      ),
-    );
-
+        onChanged: (val) {
+          widget.onChanged();
+        });
   }
 }
