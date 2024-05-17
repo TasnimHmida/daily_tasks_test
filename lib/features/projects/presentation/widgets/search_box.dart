@@ -35,9 +35,7 @@ class _SearchBoxState extends State<SearchBox> {
           hintText: 'Seach tasks',
           filled: true,
           fillColor: fiord,
-          enabledBorder: const UnderlineInputBorder(
-            borderSide: BorderSide.none,
-          ),
+          enabledBorder:InputBorder.none,
           hintStyle: TextStyle(
               fontFamily: "Inter",
               color: slateGray,

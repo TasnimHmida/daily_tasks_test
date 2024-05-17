@@ -134,7 +134,7 @@ class _ProjectDetailsWidgetState extends State<ProjectDetailsWidget> {
                       },
                       child: SvgPicture.asset(
                         'assets/icons/arrow_back.svg',
-                        height: 20.h,
+                        height: 24.h,
                       ),
                     ),
                     Text(

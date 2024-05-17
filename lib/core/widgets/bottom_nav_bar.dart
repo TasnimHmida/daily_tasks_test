@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import '../../features/manage_user/data/models/user_model.dart';
 import '../../features/authentication/presentation/pages/login_page.dart';
 import '../../features/projects/presentation/pages/add_or_edit_project_page.dart';
+import '../../features/projects/presentation/pages/calendar_page.dart';
 import '../../features/projects/presentation/pages/home_page.dart';
 import '../app_theme.dart';
 import '../bloc/core_bloc.dart';
@@ -113,7 +114,45 @@ class _BottomNavBar extends State<BottomNavBar> {
                 child: CircularProgressIndicator(
                     backgroundColor: lynch, color: goldenRod)),
           ),
-          const Center(child: Text('calendar screen')),
+          RefreshIndicator(
+              backgroundColor: lynch,
+              color: goldenRod,
+              onRefresh: () => _onRefresh(context),
+              child: state.isLoading
+                  ? Container(
+                      color: ebonyClay,
+                      child: const Center(
+                          child: CircularProgressIndicator(
+                              backgroundColor: lynch, color: goldenRod)))
+                  : CalendarPage(
+                      projects: state.projects ?? [],
+                      goBackToHomeScreenFunc: () {
+                        setState(() {
+                          _currentIndex = 0;
+                        });
+                      },
+                      refreshFunc: () {
+                        BlocProvider.of<CoreBloc>(context)
+                            .add(GetAllProjectsEvent());
+                      },
+                      goToAddProjectScreenFunc: () async {
+                        final information = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AddOrEditProjectPage(
+                                    returnNavBarFunc: () {
+                                      setState(() {
+                                        _currentIndex = 0;
+                                      });
+                                    },
+                                  )),
+                        );
+                        if (information != null) {
+                          BlocProvider.of<CoreBloc>(context)
+                              .add(GetAllProjectsEvent());
+                        }
+                      },
+                    )),
           const Center(child: Text('notifications screen'))
         ];
         return GestureDetector(

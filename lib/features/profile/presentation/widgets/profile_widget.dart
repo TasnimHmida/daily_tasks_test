@@ -63,12 +63,11 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                 children: [
                   InkWell(
                     onTap: () {
-                      widget.refreshUserFunc();
-                      // Navigator.of(context).pop('refreshUser');
+                      Navigator.of(context).pop();
                     },
                     child: SvgPicture.asset(
                       'assets/icons/arrow_back.svg',
-                      height: 20.h,
+                      height: 24.h,
                     ),
                   ),
                   Text(
@@ -95,7 +94,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                           child: imageFile != null
                               ? CircleAvatar(
                                   radius: 60.r,
-                                  backgroundImage: Image.file(imageFile!).image)
+                                  backgroundImage:
+                                      Image.file(imageFile!).image)
                               : widget.user.profilePicture != null
                                   ? CircleAvatar(
                                       radius: 60.r,
@@ -164,8 +164,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                     prefixIcon: 'assets/icons/profile_password_icon.svg',
                     isEdit: true,
                     isPassword: true,
-                    validator: (value) =>
-                        validatePassword(value!, context),
+                    validator: (value) => validatePassword(value!, context),
                     onChanged: (val) {
                       setState(() {
                         isEdit = true;
