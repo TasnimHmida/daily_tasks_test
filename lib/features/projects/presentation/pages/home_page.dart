@@ -4,7 +4,7 @@ import '../../../../core/app_theme.dart';
 import '../../../../core/utils/used_functions.dart';
 import 'package:daily_tasks_test/injection_container.dart' as di;
 
-import '../../../authentication/data/models/user_model.dart';
+import '../../../manage_user/data/models/user_model.dart';
 import '../../data/models/project_model.dart';
 import '../widgets/home_widget.dart';
 

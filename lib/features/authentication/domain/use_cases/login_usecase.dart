@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import '../../../../core/error/failures.dart';
-import '../../data/models/user_model.dart';
+import '../../../manage_user/data/models/user_model.dart';
 import '../repositories/auth_repository.dart';
 
 class LoginUseCase {

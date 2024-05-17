@@ -5,7 +5,7 @@ import '../../../../core/app_theme.dart';
 import '../../../../core/widgets/bottom_nav_bar.dart';
 import '../../../../core/widgets/main_button.dart';
 import '../../../projects/presentation/pages/home_page.dart';
-import '../../data/models/user_model.dart';
+import '../../../manage_user/data/models/user_model.dart';
 import '../pages/login_page.dart';
 
 class SplashWidget extends StatefulWidget {

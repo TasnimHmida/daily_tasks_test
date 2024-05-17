@@ -1,10 +1,11 @@
 import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
+import 'package:uuid/uuid.dart';
 import '../../../../core/error/exception.dart';
 import '../../../../core/strings/failures.dart';
 import '../../../../core/utils/pref_utils.dart';
-import '../../../authentication/data/models/user_model.dart';
+import '../../../manage_user/data/models/user_model.dart';
 
 abstract class ProfileRemoteDataSource {
   Future<Unit> updateUser(UserModel user, File? image);
@@ -19,18 +20,15 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
 
   Future<String> uploadImage(File imageFile, String id) async {
     final userId = id;
+    final uuid = Uuid();
+    final uniqueFileName = '${uuid.v4()}';
     try {
-      supabase.storage
-          .from('profile_pictures')
-          .getPublicUrl('/$userId/profilefsdfsdf');
       var res = await supabase.storage
           .from('profile_pictures')
-          .upload('/$userId/profile', imageFile);
-      // print('userId::: $userId');
-      // print("Upload successful: $res");
+          .upload('$userId/profile_pictures/$uniqueFileName', imageFile);
       return supabase.storage
           .from('profile_pictures')
-          .getPublicUrl('/$userId/profile');
+          .getPublicUrl('$userId/profile_pictures/$uniqueFileName');
     } catch (e) {
       print("Error uploading image: $e");
       return '';
@@ -48,6 +46,9 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
             'profile_picture': imageUrl,
           }),
         );
+        await supabase.from('members').update({
+          'profile_picture': imageUrl,
+        }).eq('user_id', userId);
         prefUtils.setUserInfo(
           profilePicture: imageUrl,
         );

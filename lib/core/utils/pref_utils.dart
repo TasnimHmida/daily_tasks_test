@@ -1,5 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../features/authentication/data/models/user_model.dart';
+import '../../features/manage_user/data/models/user_model.dart';
 
 abstract class PrefUtils {
   UserModel? getUserInfo();

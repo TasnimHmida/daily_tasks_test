@@ -60,13 +60,13 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                     GetProjectTasksEvent(
                         projectId: widget.project.id.toString()));
               },
-              addTaskFunc: (TaskModel task) {
+              addTaskFunc: (TaskModel task, double percentage) {
                 BlocProvider.of<ProjectDetailsBloc>(context)
-                    .add(AddTaskEvent(task: task));
+                    .add(AddTaskEvent(task: task, percentage: percentage));
               },
-              updateTaskFunc: (TaskModel task) {
+              updateTaskFunc: (TaskModel task, double percentage) {
                 BlocProvider.of<ProjectDetailsBloc>(context)
-                    .add(UpdateTaskEvent(task: task));
+                    .add(UpdateTaskEvent(task: task, percentage: percentage));
               },
             ),
           ),

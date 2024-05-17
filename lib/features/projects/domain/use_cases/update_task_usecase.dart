@@ -8,7 +8,7 @@ class UpdateTaskUseCase {
   final ProjectsRepository repository;
   UpdateTaskUseCase({required this.repository});
 
-  Future<Either<Failure, Unit>> call(TaskModel task) async {
-    return await repository.updateTask(task);
+  Future<Either<Failure, Unit>> call(TaskModel task, double percentage) async {
+    return await repository.updateTask(task, percentage);
   }
 }

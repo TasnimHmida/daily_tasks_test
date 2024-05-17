@@ -1,3 +1,3 @@
-const supabaseUrl = 'https://dlbovctcjufiegzwrgei.supabase.co';
+const supabaseUrl = 'https://nyjnhphuwlhwjconeudl.supabase.co';
 const supabaseKey =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsYm92Y3RjanVmaWVnendyZ2VpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTUxNzczMTYsImV4cCI6MjAzMDc1MzMxNn0.AEP7Gq_AS-1bD01kUAyXf9Pqc9rdyuhulCkNNAzNTo0';
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im55am5ocGh1d2xod2pjb25ldWRsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTQ0MDMyODgsImV4cCI6MjAyOTk3OTI4OH0.mWDiQS6fvroXjAiACfrFsXjtVsfAVDZVKv8bQMOScGg';

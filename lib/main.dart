@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 import 'core/utils/constants.dart';
+import 'features/authentication/presentation/pages/login_page.dart';
 import 'features/authentication/presentation/pages/splash_screen.dart';
 import 'package:daily_tasks_test/injection_container.dart' as di;
 

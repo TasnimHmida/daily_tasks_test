@@ -85,10 +85,10 @@ class ProjectsRepositoryImpl implements ProjectsRepository {
     }
   }
   @override
-  Future<Either<Failure, Unit>> addTask(TaskModel task) async {
+  Future<Either<Failure, Unit>> addTask(TaskModel task, double percentage) async {
     if (await networkInfo.isConnected) {
       try {
-        final remoteResponse = await remoteDataSource.addTask(task);
+        final remoteResponse = await remoteDataSource.addTask(task, percentage);
         return Right(remoteResponse);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
@@ -98,10 +98,10 @@ class ProjectsRepositoryImpl implements ProjectsRepository {
     }
   }
   @override
-  Future<Either<Failure, Unit>> updateTask(TaskModel task) async {
+  Future<Either<Failure, Unit>> updateTask(TaskModel task, double percentage) async {
     if (await networkInfo.isConnected) {
       try {
-        final remoteResponse = await remoteDataSource.updateTask(task);
+        final remoteResponse = await remoteDataSource.updateTask(task, percentage);
         return Right(remoteResponse);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));

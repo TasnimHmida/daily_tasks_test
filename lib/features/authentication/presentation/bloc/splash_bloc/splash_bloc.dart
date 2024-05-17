@@ -2,8 +2,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/error/failures.dart';
 import '../../../../../core/strings/failures.dart';
-import '../../../data/models/user_model.dart';
-import '../../../domain/use_cases/get_user_info_usecase.dart';
+import '../../../../manage_user/data/models/user_model.dart';
+import '../../../../manage_user/domain/use_cases/get_user_info_usecase.dart';
 
 part 'splash_event.dart';
 

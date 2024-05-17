@@ -1,6 +1,6 @@
 import '../../../../core/error/failures.dart';
 import 'package:dartz/dartz.dart';
-import '../../data/models/user_model.dart';
+import '../../../manage_user/data/models/user_model.dart';
 
 abstract class AuthRepository {
   Future<Either<Failure, UserModel>> login(String email, String password);

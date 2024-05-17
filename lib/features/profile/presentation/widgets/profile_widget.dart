@@ -7,7 +7,7 @@ import '../../../../core/app_theme.dart';
 import '../../../../core/utils/input_validation.dart';
 import '../../../../core/widgets/input_field.dart';
 import '../../../../core/widgets/main_button.dart';
-import '../../../authentication/data/models/user_model.dart';
+import '../../../manage_user/data/models/user_model.dart';
 
 class ProfileWidget extends StatefulWidget {
   final UserModel user;
@@ -41,7 +41,6 @@ class _ProfileWidgetState extends State<ProfileWidget> {
       _emailController.text = widget.user.email ?? '';
       _passwordController.text = widget.user.password ?? '';
     });
-    print('name:::: ${widget.user.userName}');
   }
 
   @override

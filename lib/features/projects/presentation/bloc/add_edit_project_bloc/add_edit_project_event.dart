@@ -29,3 +29,5 @@ class EditProjectEvent extends AddEditProjectEvent {
         project,
       ];
 }
+
+class GetUsersEvent extends AddEditProjectEvent {}

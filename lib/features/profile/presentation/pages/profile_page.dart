@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/app_theme.dart';
 import '../../../../core/utils/used_functions.dart';
 import 'package:daily_tasks_test/injection_container.dart' as di;
-import '../../../authentication/data/models/user_model.dart';
+import '../../../manage_user/data/models/user_model.dart';
 import '../bloc/profile_bloc/profile_bloc.dart';
 import '../widgets/profile_widget.dart';
 

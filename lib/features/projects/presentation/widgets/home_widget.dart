@@ -2,7 +2,7 @@ import 'package:daily_tasks_test/features/projects/presentation/widgets/search_b
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/app_theme.dart';
-import '../../../authentication/data/models/user_model.dart';
+import '../../../manage_user/data/models/user_model.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
 import '../../data/models/project_model.dart';
 import 'completed_task_card.dart';
@@ -166,7 +166,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                                   ),
                                   SizedBox(height: 15.h),
                                   SizedBox(
-                                    height: 175.h,
+                                    height: 140.h,
                                     child: completedProjects.isEmpty
                                         ? Center(
                                             child: Text(

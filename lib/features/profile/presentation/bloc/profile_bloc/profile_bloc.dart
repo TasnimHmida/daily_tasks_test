@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/error/failures.dart';
 import '../../../../../core/strings/failures.dart';
 import '../../../../../core/utils/pref_utils.dart';
-import '../../../../authentication/data/models/user_model.dart';
+import '../../../../manage_user/data/models/user_model.dart';
 import '../../../domain/use_cases/update_task_usecase.dart';
 part 'profile_event.dart';
 part 'profile_state.dart';
