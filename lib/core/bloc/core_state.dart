@@ -6,6 +6,7 @@ class CoreState extends Equatable {
   final bool success;
   final bool isLogoutSuccess;
   final List<ProjectModel>? projects;
+  final UserModel? user;
 
   const CoreState({
     this.isLoading = false,
@@ -13,6 +14,7 @@ class CoreState extends Equatable {
     this.success = false,
     this.isLogoutSuccess = false,
     this.projects,
+    this.user,
   });
 
   CoreState copyWith({
@@ -21,6 +23,7 @@ class CoreState extends Equatable {
     bool? success,
     bool? isLogoutSuccess,
     List<ProjectModel>? projects,
+    UserModel? user,
   }) {
     return CoreState(
       isLoading: isLoading ?? this.isLoading,
@@ -28,6 +31,7 @@ class CoreState extends Equatable {
       success: success ?? this.success,
       isLogoutSuccess: isLogoutSuccess ?? this.isLogoutSuccess,
       projects: projects ?? this.projects,
+      user: user ?? this.user,
     );
   }
 
@@ -38,5 +42,6 @@ class CoreState extends Equatable {
         success,
         isLogoutSuccess,
         projects,
+        user,
       ];
 }

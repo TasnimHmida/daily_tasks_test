@@ -12,8 +12,9 @@ class HomePage extends StatefulWidget {
   final List<ProjectModel> projects;
   final UserModel user;
   final Function() refreshFunc;
+  final Function() refreshUserFunc;
   final Function() logoutFunc;
-  const HomePage({super.key, required this.projects, required this.user,required this.refreshFunc, required this.logoutFunc});
+  const HomePage({super.key, required this.projects, required this.user,required this.refreshFunc, required this.logoutFunc, required this.refreshUserFunc});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -27,7 +28,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildBody(List<ProjectModel> projects) {
     return Center(
-        child: HomeWidget(projects: projects, user: widget.user, refreshFunc: widget.refreshFunc, logoutFunc: widget.logoutFunc),
+        child: HomeWidget(projects: projects, user: widget.user, refreshFunc: widget.refreshFunc, logoutFunc: widget.logoutFunc,refreshUserFunc: widget.refreshUserFunc),
         );
   }
 }

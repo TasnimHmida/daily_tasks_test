@@ -42,7 +42,7 @@ final sl = GetIt.instance;
 Future<void> init() async {
   // Bloc
   sl.registerFactory(
-      () => CoreBloc(getAllProjectsUseCase: sl(), logoutUseCase: sl()));
+      () => CoreBloc(getAllProjectsUseCase: sl(), logoutUseCase: sl(), getUserUseCase: sl()));
   sl.registerFactory(() => LoginBloc(loginUseCase: sl()));
   sl.registerFactory(() => RegisterBloc(registerUseCase: sl()));
   sl.registerFactory(() => SplashBloc(getUserUseCase: sl()));

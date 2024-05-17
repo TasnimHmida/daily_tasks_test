@@ -12,6 +12,7 @@ import '../../../manage_user/data/models/user_model.dart';
 class ProfileWidget extends StatefulWidget {
   final UserModel user;
   final Function() logoutFunc;
+  final Function() refreshUserFunc;
   final Function(UserModel, File?) editFunction;
 
   const ProfileWidget({
@@ -19,6 +20,7 @@ class ProfileWidget extends StatefulWidget {
     required this.editFunction,
     required this.user,
     required this.logoutFunc,
+    required this.refreshUserFunc,
   });
 
   @override
@@ -61,7 +63,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                 children: [
                   InkWell(
                     onTap: () {
-                      Navigator.of(context).pop('refresh');
+                      widget.refreshUserFunc();
+                      // Navigator.of(context).pop('refreshUser');
                     },
                     child: SvgPicture.asset(
                       'assets/icons/arrow_back.svg',

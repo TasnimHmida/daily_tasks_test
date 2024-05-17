@@ -1,5 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../features/authentication/domain/use_cases/logout_usecase.dart';
+import '../../features/manage_user/data/models/user_model.dart';
+import '../../features/manage_user/domain/use_cases/get_user_info_usecase.dart';
 import '../../features/projects/data/models/project_model.dart';
 import '../error/failures.dart';
 import '../strings/failures.dart';
@@ -12,11 +14,13 @@ part 'core_state.dart';
 
 class CoreBloc extends Bloc<CoreEvent, CoreState> {
   final GetAllProjectsUseCase getAllProjectsUseCase;
+  final GetUserInfoUseCase getUserUseCase;
   final LogoutUseCase logoutUseCase;
 
   CoreBloc({
     required this.getAllProjectsUseCase,
     required this.logoutUseCase,
+    required this.getUserUseCase,
   }) : super(const CoreState()) {
     on<CoreEvent>((event, emit) async {
       if (event is GetAllProjectsEvent) {
@@ -59,6 +63,27 @@ class CoreBloc extends Bloc<CoreEvent, CoreState> {
               isLogoutSuccess: true,
               error: '',
               isLoading: false,
+            ));
+          },
+        );
+      }if (event is GetUserEvent) {
+        emit(
+            state.copyWith(isLoading: true, error: ''));
+
+        final failureOrDoneMessage = await getUserUseCase();
+
+        failureOrDoneMessage.fold(
+          (failure) {
+            emit(state.copyWith(
+              error: _mapFailureToMessage(failure),
+              isLoading: false,
+            ));
+          },
+          (user) {
+            emit(state.copyWith(
+              error: '',
+              isLoading: false,
+              user: user
             ));
           },
         );

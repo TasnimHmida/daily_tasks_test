@@ -7,3 +7,4 @@ abstract class CoreEvent extends Equatable {
 
 class GetAllProjectsEvent extends CoreEvent {}
 class LogoutEvent extends CoreEvent {}
+class GetUserEvent extends CoreEvent {}

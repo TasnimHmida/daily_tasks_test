@@ -9,8 +9,9 @@ import '../widgets/profile_widget.dart';
 
 class ProfilePage extends StatefulWidget {
   final Function() logoutFunc;
+  final Function() refreshUserFunc;
   const ProfilePage({
-    super.key, required this.logoutFunc,
+    super.key, required this.logoutFunc, required this.refreshUserFunc,
   });
 
   @override
@@ -33,7 +34,7 @@ class _ProfilePageState extends State<ProfilePage> {
         if (state.error.isNotEmpty) {
           showSnackBar(context, state.error, goldenRod.withOpacity(0.8));
         } else if (state.success) {
-          Navigator.of(context).pop();
+          widget.refreshUserFunc();
           showSnackBar(
               context, 'Updated successfully', goldenRod.withOpacity(0.8));
         }
@@ -46,6 +47,7 @@ class _ProfilePageState extends State<ProfilePage> {
             user: state.user ?? const UserModel(),
             // isLoading: state.isLoading,
             logoutFunc: widget.logoutFunc,
+            refreshUserFunc: widget.refreshUserFunc,
             editFunction: (user, image) {
               BlocProvider.of<ProfileBloc>(context)
                   .add(EditProfileEvent(user: user, image: image));

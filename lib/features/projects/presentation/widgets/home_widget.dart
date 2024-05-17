@@ -12,6 +12,7 @@ class HomeWidget extends StatefulWidget {
   final List<ProjectModel> projects;
   final UserModel user;
   final Function() refreshFunc;
+  final Function() refreshUserFunc;
   final Function() logoutFunc;
 
   const HomeWidget(
@@ -19,6 +20,7 @@ class HomeWidget extends StatefulWidget {
       required this.projects,
       required this.user,
       required this.refreshFunc,
+      required this.refreshUserFunc,
       required this.logoutFunc});
 
   @override
@@ -75,7 +77,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (_) =>
-                            ProfilePage(logoutFunc: widget.logoutFunc)));
+                            ProfilePage(logoutFunc: widget.logoutFunc, refreshUserFunc: widget.refreshUserFunc)));
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

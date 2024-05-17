@@ -48,7 +48,11 @@ class _BottomNavBar extends State<BottomNavBar> {
                 )),
       );
       if (information != null) {
-        refreshFunction();
+        if (information == 'refreshUser') {
+          BlocProvider.of<CoreBloc>(context).add(GetUserEvent());
+        } else {
+          refreshFunction();
+        }
       }
     }
   }
@@ -89,17 +93,19 @@ class _BottomNavBar extends State<BottomNavBar> {
                               backgroundColor: lynch, color: goldenRod)))
                   : HomePage(
                       projects: state.projects ?? [],
-                      user: widget.user,
+                      user: state.user ?? widget.user,
                       refreshFunc: () {
                         BlocProvider.of<CoreBloc>(context)
                             .add(GetAllProjectsEvent());
                       },
-                logoutFunc: () {
-                        BlocProvider.of<CoreBloc>(context)
-                            .add(LogoutEvent());
+                      refreshUserFunc: () {
+                        Navigator.of(context).pop('refreshUser');
+                        BlocProvider.of<CoreBloc>(context).add(GetUserEvent());
                       },
-                      )
-          ),
+                      logoutFunc: () {
+                        BlocProvider.of<CoreBloc>(context).add(LogoutEvent());
+                      },
+                    )),
           const Center(child: Text('chat screen')),
           const Scaffold(
             backgroundColor: outerSpace,
