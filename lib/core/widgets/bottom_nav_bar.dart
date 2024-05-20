@@ -142,7 +142,7 @@ class _BottomNavBar extends State<BottomNavBar> {
                               builder: (context) => AddOrEditProjectPage(
                                     returnNavBarFunc: () {
                                       setState(() {
-                                        _currentIndex = 0;
+                                        _currentIndex = 3;
                                       });
                                     },
                                   )),
