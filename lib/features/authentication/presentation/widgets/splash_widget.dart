@@ -5,14 +5,15 @@ import '../../../../core/app_theme.dart';
 import '../../../../core/widgets/bottom_nav_bar.dart';
 import '../../../../core/widgets/main_button.dart';
 import '../../../projects/presentation/pages/home_page.dart';
-import '../../data/models/user_model.dart';
+import '../../../manage_user/data/models/user_model.dart';
 import '../pages/login_page.dart';
 
 class SplashWidget extends StatefulWidget {
   final bool isUserLogged;
-  final UserModel user;
+  final UserModel? user;
+  final bool isButtonDisabled;
 
-  const SplashWidget({super.key, required this.isUserLogged, required this.user});
+  const SplashWidget({super.key, required this.isUserLogged, required this.user, required this.isButtonDisabled});
 
   @override
   _SplashWidgetState createState() => _SplashWidgetState();
@@ -97,12 +98,16 @@ class _SplashWidgetState extends State<SplashWidget> {
             ),
             MainButton(
                 buttonFunction: () {
-                  Navigator.of(context)
+                  if(widget.isButtonDisabled){
+                    return ;
+                  }else {
+                    Navigator.of(context)
                       .pushReplacement(MaterialPageRoute(builder: (_) {
                     return widget.isUserLogged
-                        ? BottomNavBar(user: widget.user)
+                        ? BottomNavBar(user: widget.user!)
                         : const LoginPage();
                   }));
+                  }
                 },
                 text: "Let's Start")
           ],

@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import '../../features/authentication/data/models/user_model.dart';
+import '../../features/manage_user/data/models/user_model.dart';
+import '../../features/authentication/presentation/pages/login_page.dart';
 import '../../features/projects/presentation/pages/add_or_edit_project_page.dart';
+import '../../features/projects/presentation/pages/calendar_page.dart';
 import '../../features/projects/presentation/pages/home_page.dart';
 import '../app_theme.dart';
 import '../bloc/core_bloc.dart';
@@ -47,7 +49,11 @@ class _BottomNavBar extends State<BottomNavBar> {
                 )),
       );
       if (information != null) {
-        refreshFunction();
+        if (information == 'refreshUser') {
+          BlocProvider.of<CoreBloc>(context).add(GetUserEvent());
+        } else {
+          refreshFunction();
+        }
       }
     }
   }
@@ -68,7 +74,12 @@ class _BottomNavBar extends State<BottomNavBar> {
 
   Widget _buildBody() {
     return BlocConsumer<CoreBloc, CoreState>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state.isLogoutSuccess) {
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => const LoginPage()));
+        }
+      },
       builder: (context, state) {
         final List<Widget> widgetOptions = <Widget>[
           RefreshIndicator(
@@ -83,20 +94,65 @@ class _BottomNavBar extends State<BottomNavBar> {
                               backgroundColor: lynch, color: goldenRod)))
                   : HomePage(
                       projects: state.projects ?? [],
-                      user: widget.user,
+                      user: state.user ?? widget.user,
                       refreshFunc: () {
                         BlocProvider.of<CoreBloc>(context)
                             .add(GetAllProjectsEvent());
-                      })),
+                      },
+                      refreshUserFunc: () {
+                        Navigator.of(context).pop('refreshUser');
+                        BlocProvider.of<CoreBloc>(context).add(GetUserEvent());
+                      },
+                      logoutFunc: () {
+                        BlocProvider.of<CoreBloc>(context).add(LogoutEvent());
+                      },
+                    )),
           const Center(child: Text('chat screen')),
-          AddOrEditProjectPage(
-            returnNavBarFunc: () {
-              setState(() {
-                _currentIndex = 0;
-              });
-            },
+          const Scaffold(
+            backgroundColor: outerSpace,
+            body: Center(
+                child: CircularProgressIndicator(
+                    backgroundColor: lynch, color: goldenRod)),
           ),
-          const Center(child: Text('calendar screen')),
+          RefreshIndicator(
+              backgroundColor: lynch,
+              color: goldenRod,
+              onRefresh: () => _onRefresh(context),
+              child: state.isLoading
+                  ? Container(
+                      color: ebonyClay,
+                      child: const Center(
+                          child: CircularProgressIndicator(
+                              backgroundColor: lynch, color: goldenRod)))
+                  : CalendarPage(
+                      projects: state.projects ?? [],
+                      goBackToHomeScreenFunc: () {
+                        setState(() {
+                          _currentIndex = 0;
+                        });
+                      },
+                      refreshFunc: () {
+                        BlocProvider.of<CoreBloc>(context)
+                            .add(GetAllProjectsEvent());
+                      },
+                      goToAddProjectScreenFunc: () async {
+                        final information = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AddOrEditProjectPage(
+                                    returnNavBarFunc: () {
+                                      setState(() {
+                                        _currentIndex = 3;
+                                      });
+                                    },
+                                  )),
+                        );
+                        if (information != null) {
+                          BlocProvider.of<CoreBloc>(context)
+                              .add(GetAllProjectsEvent());
+                        }
+                      },
+                    )),
           const Center(child: Text('notifications screen'))
         ];
         return GestureDetector(

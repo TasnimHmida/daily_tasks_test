@@ -1,6 +1,7 @@
+import '../../../manage_user/data/models/user_model.dart';
 import '../../domain/entities/project_entity.dart';
 
-class ProjectModel extends TaskEntity {
+class ProjectModel extends ProjectEntity {
   @override
   const ProjectModel({
     int? id,
@@ -10,6 +11,7 @@ class ProjectModel extends TaskEntity {
     String? date,
     double? percentage,
     String? userId,
+    List<UserModel>? members,
   }) : super(
     id,
           name,
@@ -18,9 +20,29 @@ class ProjectModel extends TaskEntity {
           date,
           percentage,
     userId,
+    members,
         );
 
   factory ProjectModel.fromJson(Map<String, dynamic> json) {
+    final Map<String, dynamic>? membersJson = json['members'];
+    // Initialize an empty list to store UserModel objects
+    List<UserModel> membersList = [];
+
+    // Check if membersJson is not null
+    if (membersJson != null) {
+      // Iterate over each key-value pair in membersJson
+      membersJson.forEach((memberId, memberPicture) {
+        // Create a new UserModel object using memberId and memberPicture
+        UserModel member = UserModel(
+          userId: memberId,
+          profilePicture: memberPicture,
+          // Add any other properties you have in UserModel
+        );
+
+        // Add the UserModel object to the membersList
+        membersList.add(member);
+      });
+    }
     return ProjectModel(
       id: json['id'],
       name: json['name'],
@@ -28,6 +50,7 @@ class ProjectModel extends TaskEntity {
       time: json['time'] ?? '',
       date: json['date'] ?? '',
       userId: json['user_id'] ?? '',
+      members: membersList,
       percentage: double.parse((json['completed_percentage'] ?? 0).toString()),
     );
   }
@@ -41,6 +64,7 @@ class ProjectModel extends TaskEntity {
       "date": date,
       "completed_percentage": percentage,
       "user_id": userId,
+      "members": members,
     };
   }
 }

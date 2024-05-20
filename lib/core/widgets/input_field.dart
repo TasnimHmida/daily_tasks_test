@@ -14,6 +14,7 @@ class InputField extends StatefulWidget {
   final String? prefixIcon;
   final int? maxLines;
   final bool isPassword;
+  final bool isEdit;
 
   InputField({
     super.key,
@@ -27,6 +28,7 @@ class InputField extends StatefulWidget {
     this.maxLines,
     FocusNode? focusNode,
     this.isPassword = false,
+    this.isEdit = false,
   });
 
   @override
@@ -58,79 +60,86 @@ class _TextFormFieldWidget extends State<InputField> {
               )
             : Container(),
         TextFormField(
-          controller: widget.controller,
-          cursorColor: Colors.white,
-          obscureText: widget.isPassword
-              ? hidePassword
-                  ? true
-                  : false
-              : false,
-          maxLines: widget.maxLines ?? 1,
-          onEditingComplete: () {
-            FocusScope.of(context).nextFocus();
-          },
-          onTapOutside: (event) {
-            FocusScope.of(context).unfocus();
-          },
-          style: TextStyle(
-            fontFamily: "Inter",
-            color: Colors.white,
-            fontWeight: FontWeight.w400,
-            fontSize: 18.sp,
-            letterSpacing: widget.isPassword ? 1 : 0,
-          ),
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          decoration: InputDecoration(
-            hintText: widget.hintText,
-            filled: true,
-            // Set filled to true
-            fillColor: fiord,
-            //
-            hintStyle: TextStyle(
-                fontFamily: "Inter",
-                color: Colors.white,
-                fontWeight: FontWeight.w400,
-                fontSize: 18.sp),
-            errorStyle: TextStyle(
-                fontFamily: "Inter",
-                color: const Color(0xffF04438),
-                fontWeight: FontWeight.w400,
-                fontSize: 16.sp),
-            errorBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: Colors.red),
+            controller: widget.controller,
+            cursorColor: Colors.white,
+            obscureText: widget.isPassword
+                ? hidePassword
+                    ? true
+                    : false
+                : false,
+            maxLines: widget.maxLines ?? 1,
+            onEditingComplete: () {
+              FocusScope.of(context).nextFocus();
+            },
+            onTapOutside: (event) {
+              FocusScope.of(context).unfocus();
+            },
+            style: TextStyle(
+              fontFamily: "Inter",
+              color: Colors.white,
+              fontWeight: FontWeight.w400,
+              fontSize: 18.sp,
+              letterSpacing: widget.isPassword ? 1 : 0,
             ),
-            focusedBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: goldenRod),
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            decoration: InputDecoration(
+              hintText: widget.hintText,
+              filled: true,
+              // Set filled to true
+              fillColor: fiord,
+              //
+              hintStyle: TextStyle(
+                  fontFamily: "Inter",
+                  color: Colors.white,
+                  fontWeight: FontWeight.w400,
+                  fontSize: 18.sp),
+              errorStyle: TextStyle(
+                  fontFamily: "Inter",
+                  color: const Color(0xffF04438),
+                  fontWeight: FontWeight.w400,
+                  fontSize: 16.sp),
+              errorBorder: const UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
+              ),
+              focusedBorder: const UnderlineInputBorder(
+                borderSide: BorderSide(color: goldenRod),
+              ),
+              enabledBorder: InputBorder.none,
+              prefixIcon: widget.prefixIcon != null
+                  ? IconButton(
+                      icon: SvgPicture.asset(
+                        widget.prefixIcon!,
+                        height: 24.h,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          hidePassword = !hidePassword;
+                        });
+                      },
+                    )
+                  : null,
+              suffixIcon: widget.isPassword
+                  ? IconButton(
+                      icon: SvgPicture.asset(
+                        'assets/icons/hide_password_icon.svg',
+                        height: 24.h,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          hidePassword = !hidePassword;
+                        });
+                      },
+                    )
+                  : widget.isEdit
+                      ? IconButton(
+                          icon: SvgPicture.asset('assets/icons/edit_icon.svg',
+                              height: 24.h, color: nepal),
+                          onPressed: () {},
+                        )
+                      : null,
             ),
-            prefixIcon: widget.prefixIcon != null
-                ? IconButton(
-                    icon: SvgPicture.asset(
-                      widget.prefixIcon!,
-                      height: 24.h,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        hidePassword = !hidePassword;
-                      });
-                    },
-                  )
-                : null,
-            suffixIcon: widget.isPassword
-                ? IconButton(
-                    icon: SvgPicture.asset(
-                      'assets/icons/hide_password_icon.svg',
-                      height: 24.h,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        hidePassword = !hidePassword;
-                      });
-                    },
-                  )
-                : null,
-          ),
-          validator: widget.validator,
-        ),
+            validator: widget.validator,
+            onChanged: widget.onChanged),
       ],
     );
   }

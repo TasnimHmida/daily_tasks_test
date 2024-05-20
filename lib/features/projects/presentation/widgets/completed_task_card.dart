@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
-
 import '../../../../core/app_theme.dart';
 import '../../../../core/utils/used_functions.dart';
-import '../../../authentication/data/models/user_model.dart';
 import '../../data/models/project_model.dart';
 import '../pages/project_details_page.dart';
 
@@ -41,7 +38,7 @@ class _CompletedTaskCardState extends State<CompletedTaskCard> {
       child: Container(
         padding: EdgeInsets.all(10.w),
         width: 183.w,
-        height: 175.h,
+        // height: 175.h,
         color: widget.isFirstItem ? goldenRod : fiord,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,32 +53,29 @@ class _CompletedTaskCardState extends State<CompletedTaskCard> {
                   color: widget.isFirstItem ? Colors.black : Colors.white,
                   height: 1.2),
             ),
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Text(
-                "Team members",
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 11.sp,
-                  fontWeight: FontWeight.w400,
-                  color: widget.isFirstItem ? ebonyClay : Colors.white,
-                ),
-              ),
-              SizedBox(
-                height: 20.h,
-                width: 65.w,
-                child: Stack(
-                    children: buildImages([
-                  const UserModel(
-                      profilePicture: 'assets/images/user_image.png'),
-                  const UserModel(
-                      profilePicture: 'assets/images/user_image.png'),
-                  const UserModel(
-                      profilePicture: 'assets/images/user_image.png'),
-                  const UserModel(
-                      profilePicture: 'assets/images/user_image.png'),
-                ])),
-              ),
-            ]),
+            (widget.project.members ?? []).isNotEmpty
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                        Text(
+                          "Team members",
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 11.sp,
+                            fontWeight: FontWeight.w400,
+                            color:
+                                widget.isFirstItem ? ebonyClay : Colors.white,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20.h,
+                          width: 65.w,
+                          child: Stack(
+                              children:
+                                  buildImages(widget.project.members ?? [])),
+                        ),
+                      ])
+                : Container(),
             Column(children: [
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 Text(

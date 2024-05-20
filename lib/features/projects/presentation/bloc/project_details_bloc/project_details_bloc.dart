@@ -67,7 +67,7 @@ class ProjectDetailsBloc
       if (event is AddTaskEvent) {
         emit(state.copyWith(error: '', success: false));
 
-        final failureOrDoneMessage = await addTaskUseCase(event.task);
+        final failureOrDoneMessage = await addTaskUseCase(event.task, event.percentage);
         failureOrDoneMessage.fold(
           (failure) {
             emit(state.copyWith(
@@ -87,7 +87,7 @@ class ProjectDetailsBloc
       if (event is UpdateTaskEvent) {
         emit(state.copyWith(error: '', success: false));
 
-        final failureOrDoneMessage = await updateTaskUseCase(event.task);
+        final failureOrDoneMessage = await updateTaskUseCase(event.task, event.percentage);
         failureOrDoneMessage.fold(
           (failure) {
             emit(state.copyWith(

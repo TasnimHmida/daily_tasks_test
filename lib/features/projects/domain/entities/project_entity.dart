@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 
-class TaskEntity extends Equatable {
+import '../../../manage_user/data/models/user_model.dart';
+
+class ProjectEntity extends Equatable {
   final int? id;
   final String? name;
   final String? details;
@@ -8,8 +10,9 @@ class TaskEntity extends Equatable {
   final String? date;
   final double? percentage;
   final String? userId;
+  final List<UserModel>? members;
 
-  const TaskEntity(
+  const ProjectEntity(
     this.id,
     this.name,
     this.details,
@@ -17,6 +20,7 @@ class TaskEntity extends Equatable {
     this.date,
     this.percentage,
     this.userId,
+    this.members,
   );
 
   @override
@@ -28,5 +32,6 @@ class TaskEntity extends Equatable {
         date,
         percentage,
         userId,
+    members,
       ];
 }

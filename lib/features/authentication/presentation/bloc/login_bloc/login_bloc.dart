@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/error/failures.dart';
 import '../../../../../core/strings/failures.dart';
+import '../../../../manage_user/data/models/user_model.dart';
 import '../../../domain/use_cases/login_usecase.dart';
 
 part 'login_event.dart';
@@ -27,11 +28,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
               isLoading: false,
             ));
           },
-          (_) {
+          (user) {
             emit(state.copyWith(
               success: true,
               error: '',
               isLoading: false,
+              user: user
             ));
           },
         );

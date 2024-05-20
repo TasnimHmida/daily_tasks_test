@@ -8,13 +8,22 @@ import 'core/utils/pref_utils.dart';
 import 'features/authentication/data/data_sources/auth_remote_data_source.dart';
 import 'features/authentication/data/repositories/auth_repository_impl.dart';
 import 'features/authentication/domain/repositories/auth_repository.dart';
-import 'features/authentication/domain/use_cases/get_user_info_usecase.dart';
 import 'features/authentication/domain/use_cases/login_usecase.dart';
 import 'features/authentication/domain/use_cases/logout_usecase.dart';
 import 'features/authentication/domain/use_cases/register_usecase.dart';
 import 'features/authentication/presentation/bloc/login_bloc/login_bloc.dart';
 import 'features/authentication/presentation/bloc/register_bloc/register_bloc.dart';
 import 'features/authentication/presentation/bloc/splash_bloc/splash_bloc.dart';
+import 'features/manage_user/data/data_sources/user_remote_data_source.dart';
+import 'features/manage_user/data/repositories/user_repository_impl.dart';
+import 'features/manage_user/domain/repositories/user_repository.dart';
+import 'features/manage_user/domain/use_cases/get_all_users_usecase.dart';
+import 'features/manage_user/domain/use_cases/get_user_info_usecase.dart';
+import 'features/profile/data/data_sources/profile_remote_data_source.dart';
+import 'features/profile/data/repositories/profile_repository_impl.dart';
+import 'features/profile/domain/repositories/profile_repository.dart';
+import 'features/profile/domain/use_cases/update_task_usecase.dart';
+import 'features/profile/presentation/bloc/profile_bloc/profile_bloc.dart';
 import 'features/projects/data/data_sources/projects_remote_data_source.dart';
 import 'features/projects/data/repositories/projects_repository_impl.dart';
 import 'features/projects/domain/repositories/projects_repository.dart';
@@ -32,12 +41,20 @@ final sl = GetIt.instance;
 
 Future<void> init() async {
   // Bloc
-  sl.registerFactory(() => CoreBloc(getAllProjectsUseCase: sl()));
+  sl.registerFactory(
+      () => CoreBloc(getAllProjectsUseCase: sl(), logoutUseCase: sl(), getUserUseCase: sl()));
   sl.registerFactory(() => LoginBloc(loginUseCase: sl()));
   sl.registerFactory(() => RegisterBloc(registerUseCase: sl()));
   sl.registerFactory(() => SplashBloc(getUserUseCase: sl()));
-  sl.registerFactory(() => AddEditProjectBloc(updateProjectUseCase: sl(), createProjectUseCase: sl()));
-  sl.registerFactory(() => ProjectDetailsBloc(getProjectTasksUseCase: sl(), getProjectByIdUseCase: sl(), addTaskUseCase: sl(), updateTaskUseCase: sl()));
+  sl.registerFactory(() => AddEditProjectBloc(
+      updateProjectUseCase: sl(), createProjectUseCase: sl(), getAllUsersUseCase: sl()));
+  sl.registerFactory(() => ProjectDetailsBloc(
+      getProjectTasksUseCase: sl(),
+      getProjectByIdUseCase: sl(),
+      addTaskUseCase: sl(),
+      updateTaskUseCase: sl()));
+  sl.registerFactory(
+      () => ProfileBloc(updateUserUseCase: sl(), prefUtils: sl()));
 
   // UseCases
   sl.registerLazySingleton(() => LoginUseCase(repository: sl()));
@@ -51,17 +68,27 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetProjectByIdUseCase(repository: sl()));
   sl.registerLazySingleton(() => AddTaskUseCase(repository: sl()));
   sl.registerLazySingleton(() => UpdateTaskUseCase(repository: sl()));
+  sl.registerLazySingleton(() => UpdateUserUseCase(repository: sl()));
+  sl.registerLazySingleton(() => GetAllUsersUseCase(repository: sl()));
 
   // Repository
   sl.registerLazySingleton<AuthRepository>(
       () => AuthRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()));
   sl.registerLazySingleton<ProjectsRepository>(
       () => ProjectsRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()));
+  sl.registerLazySingleton<ProfileRepository>(
+      () => ProfileRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()));
+  sl.registerLazySingleton<UserRepository>(
+      () => UserRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()));
 // DataSources
   sl.registerLazySingleton<AuthRemoteDataSource>(
       () => AuthRemoteDataSourceImpl(supabase: sl(), prefUtils: sl()));
   sl.registerLazySingleton<ProjectsRemoteDataSource>(
       () => ProjectsRemoteDataSourceImpl(supabase: sl(), prefUtils: sl()));
+  sl.registerLazySingleton<ProfileRemoteDataSource>(
+      () => ProfileRemoteDataSourceImpl(supabase: sl(), prefUtils: sl()));
+  sl.registerLazySingleton<UserRemoteDataSource>(
+      () => UserRemoteDataSourceImpl(supabase: sl(), prefUtils: sl()));
   //! Core
   sl.registerLazySingleton(() => InternetConnectionChecker());
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));

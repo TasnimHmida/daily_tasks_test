@@ -9,7 +9,7 @@ import '../../../../core/app_theme.dart';
 import '../../../../core/utils/used_functions.dart';
 import '../../../../core/widgets/input_field.dart';
 import '../../../../core/widgets/main_button.dart';
-import '../../../authentication/data/models/user_model.dart';
+import '../../../manage_user/data/models/user_model.dart';
 import '../../data/models/project_model.dart';
 import '../../data/models/task_model.dart';
 import '../pages/add_or_edit_project_page.dart';
@@ -21,8 +21,8 @@ class ProjectDetailsWidget extends StatefulWidget {
   final ProjectModel project;
   final List<TaskModel> tasks;
   final Function() refreshFunc;
-  final Function(TaskModel) addTaskFunc;
-  final Function(TaskModel) updateTaskFunc;
+  final Function(TaskModel, double) addTaskFunc;
+  final Function(TaskModel, double) updateTaskFunc;
 
   const ProjectDetailsWidget({
     super.key,
@@ -41,12 +41,6 @@ class _ProjectDetailsWidgetState extends State<ProjectDetailsWidget> {
   String selectedDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
   String selectedDateApi = DateFormat('yyyy/MM/dd').format(DateTime.now());
   String selectedTime = DateFormat('hh:mm a').format(DateTime.now());
-  List<UserModel> members = [
-    const UserModel(
-        userName: 'Robert', profilePicture: 'assets/images/user_image.png'),
-    const UserModel(
-        userName: 'Sophia', profilePicture: 'assets/images/user_image.png'),
-  ];
   late double projectProgress;
   List<TaskModel> tasks = [];
 
@@ -72,15 +66,14 @@ class _ProjectDetailsWidgetState extends State<ProjectDetailsWidget> {
   void _calculateProjectProgress() {
     if (tasks.isNotEmpty) {
       int completedTasks = tasks.where((task) => task.isDone ?? false).length;
-      setState((){
-      projectProgress = completedTasks *100 / tasks.length;
+      setState(() {
+        projectProgress = completedTasks * 100 / tasks.length;
       });
     } else {
-      setState((){
-      projectProgress = 0.0;
+      setState(() {
+        projectProgress = 0.0;
       });
     }
-    print('projectProgress${projectProgress}');
   }
 
   void _updateProjectProgress() {
@@ -107,9 +100,9 @@ class _ProjectDetailsWidgetState extends State<ProjectDetailsWidget> {
                 builder: (BuildContext context) {
                   return AddTaskPopup(
                     addTaskFunc: (TaskModel task) {
-                      widget.addTaskFunc(task);
                       tasks.add(task);
                       _updateProjectProgress();
+                      widget.addTaskFunc(task, projectProgress);
                       Navigator.of(context).pop();
                     },
                     projectId: widget.project.id ?? 0,
@@ -141,7 +134,7 @@ class _ProjectDetailsWidgetState extends State<ProjectDetailsWidget> {
                       },
                       child: SvgPicture.asset(
                         'assets/icons/arrow_back.svg',
-                        height: 20.h,
+                        height: 24.h,
                       ),
                     ),
                     Text(
@@ -242,7 +235,7 @@ class _ProjectDetailsWidgetState extends State<ProjectDetailsWidget> {
                               SizedBox(
                                 height: 25.h,
                                 width: 80.w,
-                                child: Stack(children: buildImages(members)),
+                                child: Stack(children: buildImages(widget.project.members ?? [])),
                               ),
                             ])
                       ]),
@@ -286,7 +279,7 @@ class _ProjectDetailsWidgetState extends State<ProjectDetailsWidget> {
                       CircularPercentIndicator(
                           radius: 30.r,
                           lineWidth: 2.4.w,
-                          percent: projectProgress/100,
+                          percent: projectProgress / 100,
                           center: Text(
                             '${projectProgress.toInt().toString()}%',
                             style: TextStyle(
@@ -335,11 +328,12 @@ class _ProjectDetailsWidgetState extends State<ProjectDetailsWidget> {
                               child: TaskLine(
                                   task: tasks[index],
                                   updateTaskFunc: (TaskModel task) {
-                                    widget.updateTaskFunc(task);
                                     setState(() {
                                       tasks[index] = task;
                                     });
                                     _updateProjectProgress();
+                                    widget.updateTaskFunc(
+                                        task, projectProgress);
                                   }),
                             );
                           },

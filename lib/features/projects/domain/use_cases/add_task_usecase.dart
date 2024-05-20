@@ -8,7 +8,7 @@ class AddTaskUseCase {
   final ProjectsRepository repository;
   AddTaskUseCase({required this.repository});
 
-  Future<Either<Failure, Unit>> call(TaskModel task) async {
-    return await repository.addTask(task);
+  Future<Either<Failure, Unit>> call(TaskModel task, double percentage) async {
+    return await repository.addTask(task,percentage);
   }
 }

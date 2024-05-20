@@ -2,10 +2,10 @@ import 'package:dartz/dartz.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 import '../../../../core/error/exception.dart';
 import '../../../../core/utils/pref_utils.dart';
-import '../models/user_model.dart';
+import '../../../manage_user/data/models/user_model.dart';
 
 abstract class AuthRemoteDataSource {
-  Future<Unit> login(String email, String password);
+  Future<UserModel> login(String email, String password);
 
   Future<Unit> signUp(
       {required String email,
@@ -24,7 +24,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   AuthRemoteDataSourceImpl({required this.supabase, required this.prefUtils});
 
   @override
-  Future<Unit> login(String email, String password) async {
+  Future<UserModel> login(String email, String password) async {
     try {
       await supabase.auth.signInWithPassword(
         email: email,
@@ -32,11 +32,18 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
       UserResponse? user = await supabase.auth.getUser();
       prefUtils.setUserInfo(
-        userId: user.user?.id ?? '',
-        name: user.user?.userMetadata?['username'] ?? '',
-        email: user.user?.userMetadata?['email'] ?? '',
+        userId: user.user?.id,
+        name: user.user?.userMetadata?['username'],
+        email: user.user?.userMetadata?['email'],
+        profilePicture: user.user?.userMetadata?['profile_picture'],
+        password: password,
       );
-      return Future.value(unit);
+      return UserModel(
+        userId: user.user?.id,
+        userName: user.user?.userMetadata?['username'],
+        email: user.user?.userMetadata?['email'],
+        profilePicture: user.user?.userMetadata?['profile_picture'],
+      );
     } on AuthException catch (e) {
       throw ServerException(message: e.message);
     }
@@ -47,9 +54,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       {required String email,
       required String password,
       required String userName}) async {
-    print('email::: $email');
-    print('userName:: $userName');
-    print(password);
     try {
       await supabase.auth.signUp(
         email: email,
@@ -58,7 +62,14 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           'username': userName,
         },
       );
+      UserResponse? user = await supabase.auth.getUser();
 
+      await supabase.from('members').insert({
+        'user_id': user.user?.id,
+        'username': userName,
+      });
+
+      await supabase.auth.signOut();
       return Future.value(unit);
     } on AuthException catch (e) {
       throw ServerException(message: e.message);
@@ -69,7 +80,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<Unit> signOut() async {
     try {
       await supabase.auth.signOut();
-
+      prefUtils.removeUserInfo();
       return Future.value(unit);
     } on AuthException catch (e) {
       throw ServerException(message: e.message);
@@ -82,15 +93,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       UserResponse? user = await supabase.auth.getUser();
 
       if (user != null) {
-        prefUtils.setUserInfo(
-          userId: user.user?.id ?? '',
-          name: user.user?.userMetadata?['username'] ?? '',
-          email: user.user?.userMetadata?['email'] ?? '',
-        );
         return UserModel(
-          userId: user.user?.id ?? '',
-          userName: user.user?.userMetadata?['username'] ?? '',
-          email: user.user?.userMetadata?['email'] ?? '',
+          userId: user.user?.id,
+          userName: user.user?.userMetadata?['username'],
+          email: user.user?.userMetadata?['email'],
+          profilePicture: user.user?.userMetadata?['profile_picture'],
         );
       } else {
         throw ServerException(message: 'No user logged in');

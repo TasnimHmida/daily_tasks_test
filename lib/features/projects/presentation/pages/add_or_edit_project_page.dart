@@ -10,10 +10,9 @@ import '../widgets/add_or_edit_project_widget.dart';
 class AddOrEditProjectPage extends StatefulWidget {
   final ProjectModel? project;
   final Function() returnNavBarFunc;
+
   const AddOrEditProjectPage(
-      {super.key,
-      required this.returnNavBarFunc,
-      this.project});
+      {super.key, required this.returnNavBarFunc, this.project});
 
   @override
   State<AddOrEditProjectPage> createState() => _AddOrEditProjectPageState();
@@ -23,7 +22,10 @@ class _AddOrEditProjectPageState extends State<AddOrEditProjectPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => di.sl<AddEditProjectBloc>(),
+      create: (context) => widget.project != null
+          ? di.sl<AddEditProjectBloc>()
+          : di.sl<AddEditProjectBloc>()
+        ..add(GetUsersEvent()),
       child: Scaffold(backgroundColor: ebonyClay, body: _buildBody()),
     );
   }
@@ -39,13 +41,19 @@ class _AddOrEditProjectPageState extends State<AddOrEditProjectPage> {
         }
       },
       builder: (context, state) {
+        if (state.isLoadingGetUsers) {
+          return const Center(
+              child: CircularProgressIndicator(
+                  backgroundColor: lynch, color: goldenRod));
+        }
         return Center(
           child: AddOrEditProjectWidget(
               returnNavBarFunc: widget.returnNavBarFunc,
               isLoading: state.isLoading,
+              users: state.users,
               addOrEditProjectFunction: (project) {
-                BlocProvider.of<AddEditProjectBloc>(context).add(
-                    widget.project != null
+                BlocProvider.of<AddEditProjectBloc>(context)
+                    .add(widget.project != null
                         ? EditProjectEvent(
                             project: ProjectModel(
                                 name: project.name,
@@ -53,7 +61,9 @@ class _AddOrEditProjectPageState extends State<AddOrEditProjectPage> {
                                 date: project.date,
                                 time: project.time,
                                 id: widget.project!.id,
-                                userId: widget.project!.userId))
+                                userId: widget.project!.userId,
+                                members: project.members),
+                          )
                         : CreateProjectEvent(project: project));
               },
               project: widget.project),

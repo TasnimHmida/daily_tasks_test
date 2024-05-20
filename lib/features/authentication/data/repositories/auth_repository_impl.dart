@@ -4,7 +4,7 @@ import '../../../../core/error/failures.dart';
 import '../../../../core/network/network_info.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../data_sources/auth_remote_data_source.dart';
-import '../models/user_model.dart';
+import '../../../manage_user/data/models/user_model.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
@@ -14,7 +14,7 @@ class AuthRepositoryImpl implements AuthRepository {
       {required this.remoteDataSource, required this.networkInfo});
 
   @override
-  Future<Either<Failure, Unit>> login(String email, String password) async {
+  Future<Either<Failure, UserModel>> login(String email, String password) async {
     if (await networkInfo.isConnected) {
       try {
         final remoteResponse = await remoteDataSource.login(email, password);

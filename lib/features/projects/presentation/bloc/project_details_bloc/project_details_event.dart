@@ -33,26 +33,32 @@ class GetProjectTasksEvent extends ProjectDetailsEvent {
 
 class AddTaskEvent extends ProjectDetailsEvent {
   final TaskModel task;
+  final double percentage;
 
   AddTaskEvent({
     required this.task,
+    required this.percentage,
   });
 
   @override
   List<Object> get props => [
         task,
+        percentage,
       ];
 }
 
 class UpdateTaskEvent extends ProjectDetailsEvent {
   final TaskModel task;
+  final double percentage;
 
   UpdateTaskEvent({
     required this.task,
+    required this.percentage,
   });
 
   @override
   List<Object> get props => [
         task,
+        percentage,
       ];
 }

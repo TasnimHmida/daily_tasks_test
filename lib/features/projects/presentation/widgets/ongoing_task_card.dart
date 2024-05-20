@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import '../../../../core/app_theme.dart';
 import '../../../../core/utils/used_functions.dart';
-import '../../../authentication/data/models/user_model.dart';
 import '../../data/models/project_model.dart';
 import '../pages/project_details_page.dart';
 
@@ -44,8 +43,6 @@ class _OngoingTaskCardState extends State<OngoingTaskCard> {
         if (information != null) {
           widget.refreshFunc();
         }
-        // Navigator.of(context).push(
-        //     MaterialPageRoute(builder: (_) => ProjectDetailsPage(project: widget.project)));
       },
       child: Container(
         padding: EdgeInsets.all(10.w),
@@ -87,20 +84,8 @@ class _OngoingTaskCardState extends State<OngoingTaskCard> {
                             height: 20.h,
                             width: 65.w,
                             child: Stack(
-                                children: buildImages([
-                              const UserModel(
-                                  profilePicture:
-                                      'assets/images/user_image.png'),
-                              const UserModel(
-                                  profilePicture:
-                                      'assets/images/user_image.png'),
-                              const UserModel(
-                                  profilePicture:
-                                      'assets/images/user_image.png'),
-                              const UserModel(
-                                  profilePicture:
-                                      'assets/images/user_image.png'),
-                            ])),
+                                clipBehavior: Clip.none,
+                                children: buildImages(widget.project.members ?? [])),
                           ),
                         ]),
                     SizedBox(height: 10.h),

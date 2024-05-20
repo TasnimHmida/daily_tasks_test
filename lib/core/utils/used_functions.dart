@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../features/authentication/data/models/user_model.dart';
+import '../../features/manage_user/data/models/user_model.dart';
 import '../app_theme.dart';
 
 void showSnackBar(
@@ -33,11 +33,19 @@ List<Widget> buildImages(List<UserModel> users) {
         left: 15.w * i,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(80.0),
-          child: Image.asset(
-            '${users[i].profilePicture}',
-            width: 20.w,
-            height: 20.w,
-            fit: BoxFit.cover,
+          child:
+
+          users[i].profilePicture != null
+              ? CircleAvatar(
+              radius: 10.r,
+              backgroundImage: NetworkImage(
+                users[i].profilePicture!,
+              ))
+              : CircleAvatar(
+            radius: 10.r,
+            backgroundImage: const AssetImage(
+              'assets/images/profile_image.png',
+            ),
           ),
         ),
       ),
