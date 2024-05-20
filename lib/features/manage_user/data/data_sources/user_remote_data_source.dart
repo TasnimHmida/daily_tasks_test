@@ -1,4 +1,3 @@
-import 'package:dartz/dartz.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 import '../../../../core/error/exception.dart';
 import '../../../../core/utils/pref_utils.dart';
