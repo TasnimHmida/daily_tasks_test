@@ -8,8 +8,10 @@ import '../bloc/conversations_bloc/conversations_bloc.dart';
 import '../widgets/conversations_widget.dart';
 
 class ConversationsPage extends StatefulWidget {
+  final Function() goBackToHomeScreenFunc;
   const ConversationsPage({
     super.key,
+    required this.goBackToHomeScreenFunc
   });
 
   @override
@@ -42,6 +44,7 @@ class _ConversationsPageState extends State<ConversationsPage> {
         }
         return ConversationsWidget(
             conversations: state.conversations ?? [],
+            goBackToHomeScreenFunc: widget.goBackToHomeScreenFunc
             // isLoading: state.isLoading,
             );
       }),

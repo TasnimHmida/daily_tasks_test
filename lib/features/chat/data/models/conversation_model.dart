@@ -5,43 +5,23 @@ class ConversationModel extends ConversationEntity {
   @override
   const ConversationModel({
     int? id,
-    String? userId,
-    UserModel? userOne,
-    UserModel? userTwo,
+    UserModel? contact,
     DateTime? createdAt,
   }) : super(
           id,
-          userId,
-          userOne,
-          userTwo,
+          contact,
           createdAt,
         );
 
   factory ConversationModel.fromJson(
       {required Map<String, dynamic> json, required String myUserId}) {
+    UserModel userOne = UserModel.fromJson(json['users'][0]);
+    UserModel userTwo = UserModel.fromJson(json['users'][1]);
+    UserModel otherUser = userOne.userId == myUserId ? userTwo : userOne;
     return ConversationModel(
       id: json['id'],
-      userId: json['user_id'],
-      userOne: UserModel.fromJson(json['user_1']),
-      userTwo: UserModel.fromJson(json['user_2']),
+      contact: otherUser,
       createdAt: DateTime.parse(json['created_at']),
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      "user_1": {
-        "username": userOne?.userName,
-        "user_id": userOne?.userId,
-        "profile_picture": userOne?.profilePicture,
-      },
-      "user_2": {
-        "username": userTwo?.userName,
-        "user_id": userTwo?.userId,
-        "profile_picture": userTwo?.profilePicture,
-      },
-      "created_at": createdAt,
-      "user_id": userId,
-    };
   }
 }

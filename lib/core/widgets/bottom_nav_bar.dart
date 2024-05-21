@@ -109,7 +109,13 @@ class _BottomNavBar extends State<BottomNavBar> {
                         BlocProvider.of<CoreBloc>(context).add(LogoutEvent());
                       },
                     )),
-          const ConversationsPage(),
+          ConversationsPage(
+            goBackToHomeScreenFunc: () {
+              setState(() {
+                _currentIndex = 0;
+              });
+            },
+          ),
           const Scaffold(
             backgroundColor: outerSpace,
             body: Center(

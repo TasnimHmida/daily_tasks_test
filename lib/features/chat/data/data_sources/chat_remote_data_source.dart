@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dartz/dartz.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 import '../../../../core/error/exception.dart';
@@ -21,18 +23,20 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   @override
   Future<List<ConversationModel>> getConversations() async {
     try {
-      var user = prefUtils.getUserInfo();
-      final response = await supabase
-          .from('conversations')
-          .select()
-          .eq('user_id', user?.userId ?? '');
+    var user = prefUtils.getUserInfo();
+    final response = await supabase.from('conversations').select().filter(
+        'users',
+        'cs',
+        jsonEncode([
+          {"user_id": user?.userId}
+        ]));
 
-      final List<ConversationModel> projects = response
-          .map<ConversationModel>((jsonModel) => ConversationModel.fromJson(
-              json: jsonModel, myUserId: user?.userId ?? ''))
-          .toList();
+    final List<ConversationModel> conversations = response
+        .map<ConversationModel>((jsonModel) => ConversationModel.fromJson(
+            json: jsonModel, myUserId: user?.userId ?? ''))
+        .toList();
 
-      return projects;
+    return conversations;
     } catch (e) {
       throw ServerException(message: UNEXPECTED_FAILURE_MESSAGE);
     }
@@ -44,21 +48,20 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   ) async {
     try {
       final UserModel? userOne = prefUtils.getUserInfo();
-      await supabase.from('conversations').insert([
-        {
-          "user_id": userOne?.userId,
-          "user_1": {
-            "username": userOne?.userName,
+      await supabase.from('conversations').insert({
+        "users": [
+          {
             "user_id": userOne?.userId,
+            "username": userOne?.userName,
             "profile_picture": userOne?.profilePicture,
           },
-          "user_2": {
-            "username": userTwo.userName,
+          {
             "user_id": userTwo.userId,
+            "username": userTwo.userName,
             "profile_picture": userTwo.profilePicture,
           },
-        }
-      ]);
+        ]
+      });
 
       return Future.value(unit);
     } catch (e) {

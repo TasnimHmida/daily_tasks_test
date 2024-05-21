@@ -215,11 +215,9 @@ class _ProfileWidgetState extends State<ProfileWidget> {
       if (pickedFile == null) return;
       setState(() {
         imageFile = File(pickedFile.path);
-        print("imageFileimageFile $imageFile");
         isEdit = true;
       });
     } catch (errorMsg) {
-      print("image error msg ${errorMsg.toString()}");
     }
   }
 }

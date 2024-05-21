@@ -4,25 +4,19 @@ import '../../../manage_user/data/models/user_model.dart';
 
 class ConversationEntity extends Equatable {
   final int? id;
-  final String? userId;
-  final UserModel? userOne;
-  final UserModel? userTwo;
+  final UserModel? contact;
   final DateTime? createdAt;
 
   const ConversationEntity(
     this.id,
-    this.userId,
-    this.userOne,
-    this.userTwo,
+    this.contact,
     this.createdAt,
   );
 
   @override
   List<Object?> get props => [
         id,
-        userId,
-        userOne,
-        userTwo,
+        contact,
         createdAt,
       ];
 }

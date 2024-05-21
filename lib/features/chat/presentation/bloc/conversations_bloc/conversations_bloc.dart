@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/error/failures.dart';
@@ -68,26 +67,26 @@ class ConversationsBloc extends Bloc<ConversationEvent, ConversationsState> {
           },
         );
       }
-      // if (event is GetUsersEvent) {
-      //   emit(state.copyWith(isLoading: true, error: '', success: false));
-      //
-      //   final failureOrDoneMessage = await getConversationsUseCase();
-      //   failureOrDoneMessage.fold(
-      //     (failure) {
-      //       emit(state.copyWith(
-      //         error: _mapFailureToMessage(failure),
-      //         isLoading: false,
-      //       ));
-      //     },
-      //     (conversations) {
-      //       emit(state.copyWith(
-      //           success: true,
-      //           error: '',
-      //           isLoading: false,
-      //           conversations: conversations));
-      //     },
-      //   );
-      // }
+      if (event is CreateConversationUsersEvent) {
+        emit(state.copyWith(isLoading: true, error: '', success: false));
+
+        final failureOrDoneMessage = await getAllUsersUseCase();
+        failureOrDoneMessage.fold(
+          (failure) {
+            emit(state.copyWith(
+              error: _mapFailureToMessage(failure),
+              isLoading: false,
+            ));
+          },
+          (users) {
+            emit(state.copyWith(
+                success: true,
+                error: '',
+                isLoading: false,
+                users: users));
+          },
+        );
+      }
     });
   }
 

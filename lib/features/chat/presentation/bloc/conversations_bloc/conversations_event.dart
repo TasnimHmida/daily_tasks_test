@@ -18,3 +18,4 @@ class CreateConversationEvent extends ConversationEvent {
       ];
 }
 class GetConversationsEvent extends ConversationEvent {}
+class CreateConversationUsersEvent extends ConversationEvent {}

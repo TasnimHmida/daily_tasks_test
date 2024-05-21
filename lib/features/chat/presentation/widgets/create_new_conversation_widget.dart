@@ -3,24 +3,26 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../../../core/app_theme.dart';
 import '../../../../core/widgets/main_button.dart';
+import '../../../manage_user/data/models/user_model.dart';
 import '../../data/models/conversation_model.dart';
-import '../pages/create_new_conversation_page.dart';
 
-class ConversationsWidget extends StatefulWidget {
-  final List<ConversationModel> conversations;
-  final Function() goBackToHomeScreenFunc;
+class CreateNewConversationWidget extends StatefulWidget {
+  final List<UserModel> users;
+  final Function(UserModel) createConversationFunc;
 
-  const ConversationsWidget({
+  const CreateNewConversationWidget({
     super.key,
-    required this.conversations,
-    required this.goBackToHomeScreenFunc,
+    required this.users,
+    required this.createConversationFunc,
   });
 
   @override
-  _ConversationsWidgetState createState() => _ConversationsWidgetState();
+  _CreateNewConversationWidgetState createState() =>
+      _CreateNewConversationWidgetState();
 }
 
-class _ConversationsWidgetState extends State<ConversationsWidget> {
+class _CreateNewConversationWidgetState
+    extends State<CreateNewConversationWidget> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -35,7 +37,7 @@ class _ConversationsWidgetState extends State<ConversationsWidget> {
             children: [
               InkWell(
                 onTap: () {
-                  widget.goBackToHomeScreenFunc();
+                  Navigator.of(context).pop();
                 },
                 child: SvgPicture.asset(
                   'assets/icons/arrow_back.svg',
@@ -43,7 +45,7 @@ class _ConversationsWidgetState extends State<ConversationsWidget> {
                 ),
               ),
               Text(
-                "Messages",
+                "New Message",
                 style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 20.sp,
@@ -51,24 +53,19 @@ class _ConversationsWidgetState extends State<ConversationsWidget> {
                   color: Colors.white,
                 ),
               ),
-              SizedBox(width: 20.w)
+              SvgPicture.asset(
+                'assets/icons/search_icon.svg',
+                color: Colors.white,
+                height: 24.h,
+              ),
             ],
           ),
-          SizedBox(height: 40.h),
-          MainButton(
-            buttonFunction: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return const CreateNewConversationPage();
-              }));
-            },
-            text: "Chat",
-            // isLoading: widget.isLoading
-          ),
+          SizedBox(height: 50.h),
           Expanded(
-            child: widget.conversations.isEmpty
+            child: widget.users.isEmpty
                 ? Center(
                     child: Text(
-                      'No conversations yet',
+                      'No users yet',
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 14.sp,
@@ -78,23 +75,14 @@ class _ConversationsWidgetState extends State<ConversationsWidget> {
                     ),
                   )
                 : ListView.separated(
-                    itemCount: widget.conversations.length,
+                    itemCount: widget.users.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
-                        onTap: () async {
-                          // final information = await Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //       builder: (context) => ProjectDetailsPage(
-                          //           project: widget.conversations[index])),
-                          // );
-                          // if (information != null) {
-                          //   widget.refreshFunc();
-                          // }
+                        onTap: () {
+                          widget.createConversationFunc(widget.users[index]);
                         },
-                        child: Container(
-                          height: 80.h,
-                          margin: EdgeInsets.symmetric(vertical: 10.h),
+                        child: SizedBox(
+                          height: 60.h,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -102,44 +90,30 @@ class _ConversationsWidgetState extends State<ConversationsWidget> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  widget.conversations[index].contact
-                                              ?.profilePicture !=
-                                          null
+                                  widget.users[index].profilePicture != null
                                       ? CircleAvatar(
-                                          radius: 25.r,
+                                          radius: 20.r,
                                           backgroundImage: NetworkImage(
-                                            widget.conversations[index].contact!
-                                                .profilePicture!,
+                                            widget.users[index].profilePicture!,
                                           ))
                                       : CircleAvatar(
-                                          radius: 25.r,
+                                          radius: 20.r,
                                           backgroundImage: const AssetImage(
                                             'assets/images/profile_image.png',
                                           ),
                                         ),
-                                  SizedBox(width: 20.w),
+                                  SizedBox(width: 15.w),
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        widget.conversations[index].contact
-                                                ?.userName ??
-                                            '',
+                                        widget.users[index].userName ?? '',
                                         style: TextStyle(
-                                            fontSize: 18.sp,
+                                            fontSize: 14.sp,
                                             fontFamily: 'Inter',
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.white),
-                                      ),
-                                      Text(
-                                        widget.conversations[index].createdAt
-                                            .toString(),
-                                        style: TextStyle(
-                                            fontSize: 12.sp,
-                                            fontFamily: 'Inter',
-                                            fontWeight: FontWeight.w400,
+                                            fontWeight: FontWeight.w600,
                                             color: Colors.white),
                                       ),
                                     ],
@@ -152,7 +126,7 @@ class _ConversationsWidgetState extends State<ConversationsWidget> {
                       );
                     },
                     separatorBuilder: (BuildContext context, int index) {
-                      return SizedBox(width: 10.w);
+                      return SizedBox(height: 5.h);
                     },
                   ),
           )

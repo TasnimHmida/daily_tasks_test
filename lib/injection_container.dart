@@ -62,7 +62,7 @@ Future<void> init() async {
   sl.registerFactory(
       () => ProfileBloc(updateUserUseCase: sl(), prefUtils: sl()));
   sl.registerFactory(
-      () => ConversationsBloc(createConversationUseCase: sl(), prefUtils: sl(), getConversationsUseCase: sl()));
+      () => ConversationsBloc(createConversationUseCase: sl(), prefUtils: sl(), getConversationsUseCase: sl(), getAllUsersUseCase: sl()));
 
   // UseCases
   sl.registerLazySingleton(() => LoginUseCase(repository: sl()));
