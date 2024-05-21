@@ -73,7 +73,6 @@ class _ConversationsWidgetState extends State<ConversationsWidget> {
               }
             },
             text: "Chat",
-            // isLoading: widget.isLoading
           ),
           Expanded(
             child: widget.conversations.isEmpty
