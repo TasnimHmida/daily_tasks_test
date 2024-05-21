@@ -19,7 +19,10 @@ import 'features/chat/data/repositories/chat_repository_impl.dart';
 import 'features/chat/domain/repositories/chat_repository.dart';
 import 'features/chat/domain/use_cases/create_conversation_usecase.dart';
 import 'features/chat/domain/use_cases/get_conversations_usecase.dart';
+import 'features/chat/domain/use_cases/get_messages_usecase.dart';
+import 'features/chat/domain/use_cases/send_message_usecase.dart';
 import 'features/chat/presentation/bloc/conversations_bloc/conversations_bloc.dart';
+import 'features/chat/presentation/bloc/messages_bloc/messages_bloc.dart';
 import 'features/manage_user/data/data_sources/user_remote_data_source.dart';
 import 'features/manage_user/data/repositories/user_repository_impl.dart';
 import 'features/manage_user/domain/repositories/user_repository.dart';
@@ -47,13 +50,15 @@ final sl = GetIt.instance;
 
 Future<void> init() async {
   // Bloc
-  sl.registerFactory(
-      () => CoreBloc(getAllProjectsUseCase: sl(), logoutUseCase: sl(), getUserUseCase: sl()));
+  sl.registerFactory(() => CoreBloc(
+      getAllProjectsUseCase: sl(), logoutUseCase: sl(), getUserUseCase: sl()));
   sl.registerFactory(() => LoginBloc(loginUseCase: sl()));
   sl.registerFactory(() => RegisterBloc(registerUseCase: sl()));
   sl.registerFactory(() => SplashBloc(getUserUseCase: sl()));
   sl.registerFactory(() => AddEditProjectBloc(
-      updateProjectUseCase: sl(), createProjectUseCase: sl(), getAllUsersUseCase: sl()));
+      updateProjectUseCase: sl(),
+      createProjectUseCase: sl(),
+      getAllUsersUseCase: sl()));
   sl.registerFactory(() => ProjectDetailsBloc(
       getProjectTasksUseCase: sl(),
       getProjectByIdUseCase: sl(),
@@ -61,8 +66,16 @@ Future<void> init() async {
       updateTaskUseCase: sl()));
   sl.registerFactory(
       () => ProfileBloc(updateUserUseCase: sl(), prefUtils: sl()));
-  sl.registerFactory(
-      () => ConversationsBloc(createConversationUseCase: sl(), prefUtils: sl(), getConversationsUseCase: sl(), getAllUsersUseCase: sl()));
+  sl.registerFactory(() => ConversationsBloc(
+      createConversationUseCase: sl(),
+      prefUtils: sl(),
+      getConversationsUseCase: sl(),
+      getAllUsersUseCase: sl()));
+  sl.registerFactory(() => MessagesBloc(
+        prefUtils: sl(),
+        sendMessageUseCase: sl(),
+        getMessagesUseCase: sl(), supabase: sl(),
+      ));
 
   // UseCases
   sl.registerLazySingleton(() => LoginUseCase(repository: sl()));
@@ -80,6 +93,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetAllUsersUseCase(repository: sl()));
   sl.registerLazySingleton(() => CreateConversationUseCase(repository: sl()));
   sl.registerLazySingleton(() => GetConversationsUseCase(repository: sl()));
+  sl.registerLazySingleton(() => SendMessageUseCase(repository: sl()));
+  sl.registerLazySingleton(() => GetMessagesUseCase(repository: sl()));
 
   // Repository
   sl.registerLazySingleton<AuthRepository>(
@@ -91,7 +106,7 @@ Future<void> init() async {
   sl.registerLazySingleton<UserRepository>(
       () => UserRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()));
   sl.registerLazySingleton<ChatRepository>(
-      () =>ChatRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()));
+      () => ChatRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()));
 // DataSources
   sl.registerLazySingleton<AuthRemoteDataSource>(
       () => AuthRemoteDataSourceImpl(supabase: sl(), prefUtils: sl()));

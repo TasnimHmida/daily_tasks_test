@@ -6,11 +6,13 @@ class ConversationModel extends ConversationEntity {
   const ConversationModel({
     int? id,
     UserModel? contact,
-    DateTime? createdAt,
+    DateTime? lastMessageDate,
+    String? lastMessage,
   }) : super(
           id,
           contact,
-          createdAt,
+          lastMessageDate,
+          lastMessage,
         );
 
   factory ConversationModel.fromJson(
@@ -21,7 +23,8 @@ class ConversationModel extends ConversationEntity {
     return ConversationModel(
       id: json['id'],
       contact: otherUser,
-      createdAt: DateTime.parse(json['created_at']),
+      lastMessage: json['last_message'],
+      lastMessageDate: DateTime.parse(json['last_message_date']),
     );
   }
 }

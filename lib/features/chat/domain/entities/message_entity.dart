@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 
 class MessageEntity extends Equatable {
-  final String? id;
-  final String? conversationId;
+  final int? id;
+  final int? conversationId;
   final String? userId;
   final String? content;
   final DateTime? createdAt;
@@ -10,8 +10,8 @@ class MessageEntity extends Equatable {
 
   const MessageEntity(
     this.id,
-    this.userId,
     this.conversationId,
+    this.userId,
     this.content,
     this.createdAt,
     this.isMine,
@@ -20,8 +20,8 @@ class MessageEntity extends Equatable {
   @override
   List<Object?> get props => [
         id,
-        userId,
         conversationId,
+        userId,
         content,
         createdAt,
         isMine,

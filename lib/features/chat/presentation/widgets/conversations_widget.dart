@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:timeago/timeago.dart';
 import '../../../../core/app_theme.dart';
 import '../../../../core/widgets/main_button.dart';
+import '../../../manage_user/data/models/user_model.dart';
 import '../../data/models/conversation_model.dart';
 import '../pages/create_new_conversation_page.dart';
+import '../pages/messages_page.dart';
 
 class ConversationsWidget extends StatefulWidget {
   final List<ConversationModel> conversations;
   final Function() goBackToHomeScreenFunc;
+  final Function() refreshFunc;
 
   const ConversationsWidget({
     super.key,
     required this.conversations,
     required this.goBackToHomeScreenFunc,
+    required this.refreshFunc,
   });
 
   @override
@@ -56,10 +61,16 @@ class _ConversationsWidgetState extends State<ConversationsWidget> {
           ),
           SizedBox(height: 40.h),
           MainButton(
-            buttonFunction: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return const CreateNewConversationPage();
-              }));
+            buttonFunction: () async {
+              final information = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        CreateNewConversationPage(conversations: widget.conversations)),
+              );
+              if (information != null) {
+                widget.refreshFunc();
+              }
             },
             text: "Chat",
             // isLoading: widget.isLoading
@@ -80,22 +91,27 @@ class _ConversationsWidgetState extends State<ConversationsWidget> {
                 : ListView.separated(
                     itemCount: widget.conversations.length,
                     itemBuilder: (context, index) {
-                      return GestureDetector(
+                      return InkWell(
                         onTap: () async {
-                          // final information = await Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //       builder: (context) => ProjectDetailsPage(
-                          //           project: widget.conversations[index])),
-                          // );
-                          // if (information != null) {
-                          //   widget.refreshFunc();
-                          // }
+                          final information = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    MessagesPage(
+                                        conversationId:
+                                        widget.conversations[index].id.toString(),
+                                        contact: widget.conversations[index].contact ??
+                                            const UserModel())),
+                          );
+                          if (information != null) {
+                            widget.refreshFunc();
+                          }
                         },
                         child: Container(
                           height: 80.h,
                           margin: EdgeInsets.symmetric(vertical: 10.h),
                           child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
@@ -134,8 +150,9 @@ class _ConversationsWidgetState extends State<ConversationsWidget> {
                                             color: Colors.white),
                                       ),
                                       Text(
-                                        widget.conversations[index].createdAt
-                                            .toString(),
+                                        widget.conversations[index]
+                                                .lastMessage ??
+                                            '',
                                         style: TextStyle(
                                             fontSize: 12.sp,
                                             fontFamily: 'Inter',
@@ -145,6 +162,22 @@ class _ConversationsWidgetState extends State<ConversationsWidget> {
                                     ],
                                   ),
                                 ],
+                              ),
+                              Padding(
+                                padding:
+                                    EdgeInsets.only(top: 20.h, right: 10.w),
+                                child: Text(
+                                  format(
+                                      widget.conversations[index]
+                                              .lastMessageDate ??
+                                          DateTime.now(),
+                                      locale: 'en_short'),
+                                  style: TextStyle(
+                                      fontSize: 12.sp,
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.white),
+                                ),
                               ),
                             ],
                           ),

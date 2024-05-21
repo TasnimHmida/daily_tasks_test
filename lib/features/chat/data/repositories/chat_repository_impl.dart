@@ -6,6 +6,7 @@ import '../../../manage_user/data/models/user_model.dart';
 import '../../domain/repositories/chat_repository.dart';
 import '../data_sources/chat_remote_data_source.dart';
 import '../models/conversation_model.dart';
+import '../models/message_model.dart';
 
 class ChatRepositoryImpl implements ChatRepository {
   final ChatRemoteDataSource remoteDataSource;
@@ -18,8 +19,7 @@ class ChatRepositoryImpl implements ChatRepository {
   Future<Either<Failure, List<ConversationModel>>> getConversations() async {
     if (await networkInfo.isConnected) {
       try {
-        final remoteResponse =
-            await remoteDataSource.getConversations();
+        final remoteResponse = await remoteDataSource.getConversations();
         return Right(remoteResponse);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
@@ -28,12 +28,43 @@ class ChatRepositoryImpl implements ChatRepository {
       return Left(OfflineFailure());
     }
   }
+
   @override
   Future<Either<Failure, Unit>> createConversation(UserModel userTwo) async {
     if (await networkInfo.isConnected) {
       try {
         final remoteResponse =
             await remoteDataSource.createConversation(userTwo);
+        return Right(remoteResponse);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      return Left(OfflineFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<MessageModel>>> getMessages(
+      String conversationId) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteResponse =
+            await remoteDataSource.getMessages(conversationId);
+        return Right(remoteResponse);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    } else {
+      return Left(OfflineFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> sendMessage(String content, String conversationId) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteResponse = await remoteDataSource.sendMessage(content, conversationId);
         return Right(remoteResponse);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));

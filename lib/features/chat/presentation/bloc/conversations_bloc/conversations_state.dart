@@ -4,6 +4,7 @@ class ConversationsState extends Equatable {
   final bool isLoading;
   final String error;
   final bool success;
+  final bool createConversationSuccess;
   final List<ConversationModel>? conversations;
   final List<UserModel>? users;
 
@@ -11,6 +12,7 @@ class ConversationsState extends Equatable {
     this.isLoading = false,
     this.error = "",
     this.success = false,
+    this.createConversationSuccess = false,
     this.conversations,
     this.users,
   });
@@ -19,6 +21,7 @@ class ConversationsState extends Equatable {
     bool? isLoading,
     String? error,
     bool? success,
+    bool? createConversationSuccess,
     List<ConversationModel>? conversations,
     List<UserModel>? users,
   }) {
@@ -26,6 +29,8 @@ class ConversationsState extends Equatable {
       isLoading: isLoading ?? this.isLoading,
       error: error ?? this.error,
       success: success ?? this.success,
+      createConversationSuccess:
+          createConversationSuccess ?? this.createConversationSuccess,
       conversations: conversations ?? this.conversations,
       users: users ?? this.users,
     );
@@ -36,6 +41,7 @@ class ConversationsState extends Equatable {
         isLoading,
         error,
         success,
+        createConversationSuccess,
         conversations,
         users,
       ];

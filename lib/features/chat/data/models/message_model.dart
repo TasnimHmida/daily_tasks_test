@@ -3,8 +3,8 @@ import '../../domain/entities/message_entity.dart';
 class MessageModel extends MessageEntity {
   @override
   const MessageModel({
-    String? id,
-    String? conversationId,
+    int? id,
+    int? conversationId,
     String? userId,
     String? content,
     DateTime? createdAt,

@@ -27,7 +27,7 @@ class ConversationsBloc extends Bloc<ConversationEvent, ConversationsState> {
   }) : super(const ConversationsState()) {
     on<ConversationEvent>((event, emit) async {
       if (event is CreateConversationEvent) {
-        emit(state.copyWith(isLoading: true, error: '', success: false));
+        emit(state.copyWith(error: '', createConversationSuccess: false));
 
         final failureOrDoneMessage =
             await createConversationUseCase(event.userTwo);
@@ -35,15 +35,10 @@ class ConversationsBloc extends Bloc<ConversationEvent, ConversationsState> {
           (failure) {
             emit(state.copyWith(
               error: _mapFailureToMessage(failure),
-              isLoading: false,
             ));
           },
           (_) {
-            emit(state.copyWith(
-              success: true,
-              error: '',
-              isLoading: false,
-            ));
+            emit(state.copyWith(error: '', createConversationSuccess: true));
           },
         );
       }
@@ -69,6 +64,7 @@ class ConversationsBloc extends Bloc<ConversationEvent, ConversationsState> {
       }
       if (event is CreateConversationUsersEvent) {
         emit(state.copyWith(isLoading: true, error: '', success: false));
+        UserModel? loggedUser = prefUtils.getUserInfo();
 
         final failureOrDoneMessage = await getAllUsersUseCase();
         failureOrDoneMessage.fold(
@@ -79,11 +75,26 @@ class ConversationsBloc extends Bloc<ConversationEvent, ConversationsState> {
             ));
           },
           (users) {
+            // Get the ID of the current user from SharedPreferences
+            final currentUserID = prefUtils.getUserInfo()?.userId;
+
+            // Extract the user IDs from the conversation models in the state
+            final existingUserIDs = event.conversations
+                ?.expand((conversation) => [conversation.contact?.userId]);
+
+            print(' event.conversations:: ${event.conversations}');
+            // Remove users that match the IDs of users in the conversation models
+            final filteredUsers = users.where(
+                (user) => !(existingUserIDs ?? []).contains(user.userId));
+
+            // Remove the user with the same ID as the current user
+            final filteredUsersExceptCurrentUser =
+                filteredUsers.where((user) => user.userId != currentUserID);
+
             emit(state.copyWith(
-                success: true,
                 error: '',
                 isLoading: false,
-                users: users));
+                users: filteredUsersExceptCurrentUser.toList()));
           },
         );
       }

@@ -10,6 +10,7 @@ const pickledBlueWood = Color(0xFF2C4653);
 const outerSpace = Color(0xFF263238);
 const lynch = Color(0xFF617D8A);
 const jungleMist = Color(0xFFBCCFD8);
+const silver = Color(0xFFB8B8B8);
 
 EdgeInsets pagePadding = EdgeInsets.symmetric(horizontal: 25.w, vertical: 20.h);
 EdgeInsets homePagePadding = EdgeInsets.fromLTRB(25.w, 20.h,25.w, 0);

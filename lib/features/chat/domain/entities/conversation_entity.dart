@@ -5,18 +5,21 @@ import '../../../manage_user/data/models/user_model.dart';
 class ConversationEntity extends Equatable {
   final int? id;
   final UserModel? contact;
-  final DateTime? createdAt;
+  final DateTime? lastMessageDate;
+  final String? lastMessage;
 
   const ConversationEntity(
     this.id,
     this.contact,
-    this.createdAt,
+    this.lastMessageDate,
+    this.lastMessage,
   );
 
   @override
   List<Object?> get props => [
         id,
         contact,
-        createdAt,
+        lastMessageDate,
+    lastMessage,
       ];
 }

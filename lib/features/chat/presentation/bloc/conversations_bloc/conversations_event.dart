@@ -18,4 +18,15 @@ class CreateConversationEvent extends ConversationEvent {
       ];
 }
 class GetConversationsEvent extends ConversationEvent {}
-class CreateConversationUsersEvent extends ConversationEvent {}
+class CreateConversationUsersEvent extends ConversationEvent {
+  final List<ConversationModel> conversations;
+  CreateConversationUsersEvent({
+    required this.conversations,
+  });
+
+  @override
+  List<Object> get props => [
+    conversations,
+  ];
+
+}

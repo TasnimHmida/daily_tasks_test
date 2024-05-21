@@ -4,13 +4,15 @@ import '../../../../core/app_theme.dart';
 import '../../../../core/utils/used_functions.dart';
 import 'package:daily_tasks_test/injection_container.dart' as di;
 import '../../../manage_user/data/models/user_model.dart';
+import '../../data/models/conversation_model.dart';
 import '../bloc/conversations_bloc/conversations_bloc.dart';
 import '../widgets/conversations_widget.dart';
 import '../widgets/create_new_conversation_widget.dart';
 
 class CreateNewConversationPage extends StatefulWidget {
+  final List<ConversationModel> conversations;
   const CreateNewConversationPage({
-    super.key,
+    super.key, required this.conversations,
   });
 
   @override
@@ -23,7 +25,7 @@ class _CreateNewConversationPageState extends State<CreateNewConversationPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          di.sl<ConversationsBloc>()..add(CreateConversationUsersEvent()),
+          di.sl<ConversationsBloc>()..add(CreateConversationUsersEvent(conversations: widget.conversations)),
       child: Scaffold(backgroundColor: ebonyClay, body: _buildBody()),
     );
   }
@@ -34,10 +36,11 @@ class _CreateNewConversationPageState extends State<CreateNewConversationPage> {
           listener: (context, state) {
         if (state.error.isNotEmpty) {
           showSnackBar(context, state.error, goldenRod.withOpacity(0.8));
-        } else if (state.success) {
-          print('success 💃🏻💃🏻💃🏻');
-          // showSnackBar(
-          //     context, 'Updated successfully', goldenRod.withOpacity(0.8));
+        }
+        if (state.createConversationSuccess) {
+          // BlocProvider.of<ConversationsBloc>(context)
+          //     .add(GetConversationsEvent());
+          Navigator.of(context).pop('refresh');
         }
       }, builder: (context, state) {
         if (state.isLoading) {
@@ -49,8 +52,7 @@ class _CreateNewConversationPageState extends State<CreateNewConversationPage> {
             createConversationFunc: (UserModel user) {
               BlocProvider.of<ConversationsBloc>(context)
                   .add(CreateConversationEvent(userTwo: user));
-            }
-            // isLoading: state.isLoading,
+            },
             );
       }),
     );
