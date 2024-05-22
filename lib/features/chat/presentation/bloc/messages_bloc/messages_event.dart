@@ -8,16 +8,19 @@ abstract class MessagesEvent extends Equatable {
 class SendMessageEvent extends MessagesEvent {
   final String messageContent;
   final String conversationId;
+  final String userId;
 
   SendMessageEvent({
     required this.messageContent,
     required this.conversationId,
+    required this.userId,
   });
 
   @override
   List<Object> get props => [
         messageContent,
         conversationId,
+    userId,
       ];
 }
 

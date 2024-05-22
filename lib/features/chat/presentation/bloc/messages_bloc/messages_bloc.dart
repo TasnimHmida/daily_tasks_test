@@ -6,6 +6,7 @@ import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 import '../../../../../core/error/failures.dart';
 import '../../../../../core/strings/failures.dart';
 import '../../../../../core/utils/pref_utils.dart';
+import '../../../../notifications/domain/use_cases/create_new_notification_usecase.dart';
 import '../../../data/models/message_model.dart';
 import '../../../domain/use_cases/get_messages_usecase.dart';
 import '../../../domain/use_cases/send_message_usecase.dart';
@@ -19,11 +20,13 @@ class MessagesBloc extends Bloc<MessagesEvent, MessagesState> {
   final GetMessagesUseCase getMessagesUseCase;
   final PrefUtils prefUtils;
   final SupabaseClient supabase;
+  final CreateNewNotificationUseCase createNewNotificationUseCase;
   StreamSubscription? _messageSubscription;
 
   MessagesBloc({
     required this.sendMessageUseCase,
     required this.getMessagesUseCase,
+    required this.createNewNotificationUseCase,
     required this.prefUtils,
     required this.supabase,
   }) : super(const MessagesState()) {
@@ -34,17 +37,28 @@ class MessagesBloc extends Bloc<MessagesEvent, MessagesState> {
         final failureOrDoneMessage = await sendMessageUseCase(
             event.messageContent, event.conversationId);
 
-        failureOrDoneMessage.fold(
-          (failure) {
+        await failureOrDoneMessage.fold(
+          (failure) async {
             emit(state.copyWith(
               error: _mapFailureToMessage(failure),
             ));
           },
-          (_) {
-            emit(state.copyWith(
-              success: true,
-              error: '',
-            ));
+          (_) async {
+            final failureOrDoneMessage = await createNewNotificationUseCase(event.userId,
+                '${prefUtils.getUserInfo()?.userName} sent you a new message');
+            failureOrDoneMessage.fold(
+                  (failure) async {
+                emit(state.copyWith(
+                  error: _mapFailureToMessage(failure),
+                ));
+              },
+                  (_) async {
+                emit(state.copyWith(
+                  success: true,
+                  error: '',
+                ));
+              },
+            );
           },
         );
       }
@@ -84,7 +98,10 @@ class MessagesBloc extends Bloc<MessagesEvent, MessagesState> {
             ));
           },
           (messages) {
-            emit(state.copyWith(error: '', success: false, messages: messages.reversed.toList()));
+            emit(state.copyWith(
+                error: '',
+                success: false,
+                messages: messages.reversed.toList()));
           },
         );
       }

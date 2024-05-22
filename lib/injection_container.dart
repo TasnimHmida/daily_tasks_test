@@ -28,6 +28,12 @@ import 'features/manage_user/data/repositories/user_repository_impl.dart';
 import 'features/manage_user/domain/repositories/user_repository.dart';
 import 'features/manage_user/domain/use_cases/get_all_users_usecase.dart';
 import 'features/manage_user/domain/use_cases/get_user_info_usecase.dart';
+import 'features/notifications/data/data_sources/notification_remote_data_source.dart';
+import 'features/notifications/data/repositories/notification_repository_impl.dart';
+import 'features/notifications/domain/repositories/notification_repository.dart';
+import 'features/notifications/domain/use_cases/create_new_notification_usecase.dart';
+import 'features/notifications/domain/use_cases/get_notifications_usecase.dart';
+import 'features/notifications/presentation/bloc/notifications_bloc/notifications_bloc.dart';
 import 'features/profile/data/data_sources/profile_remote_data_source.dart';
 import 'features/profile/data/repositories/profile_repository_impl.dart';
 import 'features/profile/domain/repositories/profile_repository.dart';
@@ -58,7 +64,9 @@ Future<void> init() async {
   sl.registerFactory(() => AddEditProjectBloc(
       updateProjectUseCase: sl(),
       createProjectUseCase: sl(),
-      getAllUsersUseCase: sl()));
+      getAllUsersUseCase: sl(),
+      prefUtils: sl(),
+      createNewNotificationUseCase: sl()));
   sl.registerFactory(() => ProjectDetailsBloc(
       getProjectTasksUseCase: sl(),
       getProjectByIdUseCase: sl(),
@@ -74,7 +82,13 @@ Future<void> init() async {
   sl.registerFactory(() => MessagesBloc(
         prefUtils: sl(),
         sendMessageUseCase: sl(),
-        getMessagesUseCase: sl(), supabase: sl(),
+        getMessagesUseCase: sl(),
+        supabase: sl(), createNewNotificationUseCase: sl(),
+      ));
+  sl.registerFactory(() => NotificationsBloc(
+        prefUtils: sl(),
+        createNewNotificationUseCase: sl(),
+        getNotificationsUseCase: sl(),
       ));
 
   // UseCases
@@ -95,6 +109,9 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetConversationsUseCase(repository: sl()));
   sl.registerLazySingleton(() => SendMessageUseCase(repository: sl()));
   sl.registerLazySingleton(() => GetMessagesUseCase(repository: sl()));
+  sl.registerLazySingleton(
+      () => CreateNewNotificationUseCase(repository: sl()));
+  sl.registerLazySingleton(() => GetNotificationsUseCase(repository: sl()));
 
   // Repository
   sl.registerLazySingleton<AuthRepository>(
@@ -107,6 +124,8 @@ Future<void> init() async {
       () => UserRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()));
   sl.registerLazySingleton<ChatRepository>(
       () => ChatRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()));
+  sl.registerLazySingleton<NotificationsRepository>(() =>
+      NotificationsRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()));
 // DataSources
   sl.registerLazySingleton<AuthRemoteDataSource>(
       () => AuthRemoteDataSourceImpl(supabase: sl(), prefUtils: sl()));
@@ -118,6 +137,8 @@ Future<void> init() async {
       () => UserRemoteDataSourceImpl(supabase: sl(), prefUtils: sl()));
   sl.registerLazySingleton<ChatRemoteDataSource>(
       () => ChatRemoteDataSourceImpl(supabase: sl(), prefUtils: sl()));
+  sl.registerLazySingleton<NotificationsRemoteDataSource>(
+      () => NotificationsRemoteDataSourceImpl(supabase: sl(), prefUtils: sl()));
   //! Core
   sl.registerLazySingleton(() => InternetConnectionChecker());
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
