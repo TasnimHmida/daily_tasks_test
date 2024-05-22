@@ -43,7 +43,7 @@ class _ConversationsPageState extends State<ConversationsPage> {
           color: goldenRod,
           onRefresh: () => _onRefresh(context),
           child: ConversationsWidget(
-              conversations: state.conversations ?? [],
+              conversations: (state.conversations ?? []).reversed.toList(),
               goBackToHomeScreenFunc: widget.goBackToHomeScreenFunc,
               refreshFunc: () {
                 BlocProvider.of<ConversationsBloc>(context)

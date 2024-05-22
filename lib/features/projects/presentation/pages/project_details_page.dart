@@ -39,7 +39,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
         }
       },
       builder: (context, state) {
-        if (state.isLoading || state.isTasksLoading || state.project == null) {
+        if (state.isLoading || state.project == null) {
           return const Center(
               child: CircularProgressIndicator(
                   backgroundColor: lynch, color: goldenRod));
@@ -68,6 +68,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                 BlocProvider.of<ProjectDetailsBloc>(context)
                     .add(UpdateTaskEvent(task: task, percentage: percentage));
               },
+                isTasksLoading: state.isTasksLoading
             ),
           ),
         );

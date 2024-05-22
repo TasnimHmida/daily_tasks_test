@@ -1,4 +1,3 @@
-import 'package:daily_tasks_test/features/projects/presentation/widgets/search_box.dart';
 import 'package:daily_tasks_test/features/projects/presentation/widgets/task_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,20 +6,17 @@ import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import '../../../../core/app_theme.dart';
 import '../../../../core/utils/used_functions.dart';
-import '../../../../core/widgets/input_field.dart';
 import '../../../../core/widgets/main_button.dart';
-import '../../../manage_user/data/models/user_model.dart';
 import '../../data/models/project_model.dart';
 import '../../data/models/task_model.dart';
 import '../pages/add_or_edit_project_page.dart';
 import 'add_task_popup.dart';
-import 'completed_task_card.dart';
-import 'ongoing_task_card.dart';
 
 class ProjectDetailsWidget extends StatefulWidget {
   final ProjectModel project;
   final List<TaskModel> tasks;
   final Function() refreshFunc;
+  final bool isTasksLoading;
   final Function(TaskModel, double) addTaskFunc;
   final Function(TaskModel, double) updateTaskFunc;
 
@@ -31,6 +27,7 @@ class ProjectDetailsWidget extends StatefulWidget {
     required this.refreshFunc,
     required this.addTaskFunc,
     required this.updateTaskFunc,
+    required this.isTasksLoading,
   });
 
   @override
@@ -101,8 +98,8 @@ class _ProjectDetailsWidgetState extends State<ProjectDetailsWidget> {
                   return AddTaskPopup(
                     addTaskFunc: (TaskModel task) {
                       tasks.add(task);
-                      _updateProjectProgress();
                       widget.addTaskFunc(task, projectProgress);
+                      _updateProjectProgress();
                       Navigator.of(context).pop();
                     },
                     projectId: widget.project.id ?? 0,
@@ -235,7 +232,9 @@ class _ProjectDetailsWidgetState extends State<ProjectDetailsWidget> {
                               SizedBox(
                                 height: 25.h,
                                 width: 80.w,
-                                child: Stack(children: buildImages(widget.project.members ?? [])),
+                                child: Stack(
+                                    children: buildImages(
+                                        widget.project.members ?? [])),
                               ),
                             ])
                       ]),
@@ -307,40 +306,46 @@ class _ProjectDetailsWidgetState extends State<ProjectDetailsWidget> {
                 ),
                 SizedBox(height: 15.h),
                 Expanded(
-                  child: tasks.isEmpty
-                      ? Center(
-                          child: Text(
-                          'No tasks to this project yet.',
-                          style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w300,
-                            color: Colors.white,
-                          ),
-                        ))
-                      : ListView.separated(
-                          itemCount: tasks.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: EdgeInsets.only(
-                                  bottom:
-                                      index == tasks.length - 1 ? 200.h : 0),
-                              child: TaskLine(
-                                  task: tasks[index],
-                                  updateTaskFunc: (TaskModel task) {
-                                    setState(() {
-                                      tasks[index] = task;
-                                    });
-                                    _updateProjectProgress();
-                                    widget.updateTaskFunc(
-                                        task, projectProgress);
-                                  }),
-                            );
-                          },
-                          separatorBuilder: (BuildContext context, int index) {
-                            return SizedBox(height: 15.h);
-                          },
-                        ),
+                  child: widget.isTasksLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                              backgroundColor: lynch, color: goldenRod))
+                      : tasks.isEmpty
+                          ? Center(
+                              child: Text(
+                              'No tasks to this project yet.',
+                              style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w300,
+                                color: Colors.white,
+                              ),
+                            ))
+                          : ListView.separated(
+                              itemCount: tasks.length,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom: index == tasks.length - 1
+                                          ? 200.h
+                                          : 0),
+                                  child: TaskLine(
+                                      task: tasks[index],
+                                      updateTaskFunc: (TaskModel task) {
+                                        setState(() {
+                                          tasks[index] = task;
+                                        });
+                                        _updateProjectProgress();
+                                        widget.updateTaskFunc(
+                                            task, projectProgress);
+                                      }),
+                                );
+                              },
+                              separatorBuilder:
+                                  (BuildContext context, int index) {
+                                return SizedBox(height: 15.h);
+                              },
+                            ),
                 ),
               ],
             ),

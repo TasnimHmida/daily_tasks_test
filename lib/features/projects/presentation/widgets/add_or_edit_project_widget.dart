@@ -1,4 +1,3 @@
-import 'package:daily_tasks_test/features/projects/presentation/widgets/search_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -10,9 +9,7 @@ import '../../../../core/widgets/input_field.dart';
 import '../../../../core/widgets/main_button.dart';
 import '../../../manage_user/data/models/user_model.dart';
 import '../../data/models/project_model.dart';
-import 'completed_task_card.dart';
 import 'member_selection_dialog.dart';
-import 'ongoing_task_card.dart';
 
 class AddOrEditProjectWidget extends StatefulWidget {
   final Function() returnNavBarFunc;
