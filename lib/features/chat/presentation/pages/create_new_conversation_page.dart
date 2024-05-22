@@ -38,8 +38,6 @@ class _CreateNewConversationPageState extends State<CreateNewConversationPage> {
           showSnackBar(context, state.error, goldenRod.withOpacity(0.8));
         }
         if (state.createConversationSuccess) {
-          // BlocProvider.of<ConversationsBloc>(context)
-          //     .add(GetConversationsEvent());
           Navigator.of(context).pop('refresh');
         }
       }, builder: (context, state) {
