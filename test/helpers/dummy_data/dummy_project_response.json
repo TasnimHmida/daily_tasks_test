@@ -1,0 +1,12 @@
+{
+  "id": 1,
+  "user_id": "26f82a26-876a-42a8-aadf-94c383ff2158",
+  "name": "project name",
+  "details": "project details",
+  "time": "15:45:00",
+  "date": "2024-05-16",
+  "members": {
+    "26f82a26-876a-42a8-aadf-94c383ff2158": "https://nyjnhphuwlhwjconeudl.supabase.co/storage/v1/object/public/profile_pictures/26f82a26-876a-42a8-aadf-94c383ff2158/profile_pictures/b1389c7a-add2-44ea-b94c-da91c81b1bc7"
+  },
+  "completed_percentage": 0
+}

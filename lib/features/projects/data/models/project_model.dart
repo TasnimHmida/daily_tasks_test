@@ -25,21 +25,15 @@ class ProjectModel extends ProjectEntity {
 
   factory ProjectModel.fromJson(Map<String, dynamic> json) {
     final Map<String, dynamic>? membersJson = json['members'];
-    // Initialize an empty list to store UserModel objects
     List<UserModel> membersList = [];
 
-    // Check if membersJson is not null
     if (membersJson != null) {
-      // Iterate over each key-value pair in membersJson
       membersJson.forEach((memberId, memberPicture) {
-        // Create a new UserModel object using memberId and memberPicture
         UserModel member = UserModel(
           userId: memberId,
           profilePicture: memberPicture,
-          // Add any other properties you have in UserModel
         );
 
-        // Add the UserModel object to the membersList
         membersList.add(member);
       });
     }

@@ -235,7 +235,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                                                               ongoingProjects
                                                                       .length -
                                                                   1
-                                                          ? 60.h
+                                                          ? 150.h
                                                           : 0),
                                                   child: OngoingTaskCard(
                                                       project: ongoingProjects[

@@ -37,7 +37,7 @@ import 'features/notifications/presentation/bloc/notifications_bloc/notification
 import 'features/profile/data/data_sources/profile_remote_data_source.dart';
 import 'features/profile/data/repositories/profile_repository_impl.dart';
 import 'features/profile/domain/repositories/profile_repository.dart';
-import 'features/profile/domain/use_cases/update_task_usecase.dart';
+import 'features/profile/domain/use_cases/update_user_usecase.dart';
 import 'features/profile/presentation/bloc/profile_bloc/profile_bloc.dart';
 import 'features/projects/data/data_sources/projects_remote_data_source.dart';
 import 'features/projects/data/repositories/projects_repository_impl.dart';

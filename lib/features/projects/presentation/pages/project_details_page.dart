@@ -33,9 +33,6 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
       listener: (context, state) {
         if (state.error.isNotEmpty) {
           showSnackBar(context, state.error, goldenRod.withOpacity(0.8));
-        } else if (state.success) {
-          // widget.returnNavBarFunc();
-          // widget.refreshFunc();
         }
       },
       builder: (context, state) {

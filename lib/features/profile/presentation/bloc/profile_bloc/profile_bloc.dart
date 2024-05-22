@@ -5,7 +5,7 @@ import '../../../../../core/error/failures.dart';
 import '../../../../../core/strings/failures.dart';
 import '../../../../../core/utils/pref_utils.dart';
 import '../../../../manage_user/data/models/user_model.dart';
-import '../../../domain/use_cases/update_task_usecase.dart';
+import '../../../domain/use_cases/update_user_usecase.dart';
 part 'profile_event.dart';
 part 'profile_state.dart';
 
