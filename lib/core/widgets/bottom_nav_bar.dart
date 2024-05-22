@@ -8,6 +8,7 @@ import '../../features/chat/presentation/widgets/messages_widget.dart';
 import '../../features/chat/presentation/pages/conversations_page.dart';
 import '../../features/manage_user/data/models/user_model.dart';
 import '../../features/authentication/presentation/pages/login_page.dart';
+import '../../features/notifications/presentation/pages/notifications_page.dart';
 import '../../features/projects/presentation/pages/add_or_edit_project_page.dart';
 import '../../features/projects/presentation/pages/calendar_page.dart';
 import '../../features/projects/presentation/pages/home_page.dart';
@@ -161,7 +162,13 @@ class _BottomNavBar extends State<BottomNavBar> {
                         }
                       },
                     )),
-          const Center(child: Text('notifications screen'))
+         NotificationsPage(
+            goBackToHomeScreenFunc: () {
+              setState(() {
+                _currentIndex = 0;
+              });
+            },
+          ),
         ];
         return GestureDetector(
             onTap: () {

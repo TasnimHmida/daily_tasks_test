@@ -52,7 +52,8 @@ class _MessagesPageState extends State<MessagesPage> {
           sendMessageFunc: (String content) {
             BlocProvider.of<MessagesBloc>(context).add(SendMessageEvent(
                 messageContent: content,
-                conversationId: widget.conversationId));
+                conversationId: widget.conversationId,
+                userId: widget.contact.userId ?? ''));
           },
           // isLoading: state.isLoading,
         );
