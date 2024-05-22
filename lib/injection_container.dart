@@ -83,12 +83,14 @@ Future<void> init() async {
         prefUtils: sl(),
         sendMessageUseCase: sl(),
         getMessagesUseCase: sl(),
-        supabase: sl(), createNewNotificationUseCase: sl(),
+        supabase: sl(),
+        createNewNotificationUseCase: sl(),
       ));
   sl.registerFactory(() => NotificationsBloc(
         prefUtils: sl(),
         createNewNotificationUseCase: sl(),
         getNotificationsUseCase: sl(),
+        supabase: sl(),
       ));
 
   // UseCases

@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 import '../../../../../core/error/failures.dart';
 import '../../../../../core/strings/failures.dart';
 import '../../../../../core/utils/pref_utils.dart';
@@ -16,11 +19,14 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
   final CreateNewNotificationUseCase createNewNotificationUseCase;
   final GetNotificationsUseCase getNotificationsUseCase;
   final PrefUtils prefUtils;
+  final SupabaseClient supabase;
+  StreamSubscription? _messageSubscription;
 
   NotificationsBloc({
     required this.createNewNotificationUseCase,
     required this.getNotificationsUseCase,
     required this.prefUtils,
+    required this.supabase,
   }) : super(const NotificationsState()) {
     on<NotificationsEvent>((event, emit) async {
       if (event is CreateNewNotificationEvent) {
@@ -59,6 +65,21 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
           },
         );
       }
+      supabase
+          .channel('public:notifications')
+          .onPostgresChanges(
+              event: PostgresChangeEvent.all,
+              schema: 'public',
+              table: 'notifications',
+              filter: PostgresChangeFilter(
+                column: 'user_id',
+                type: PostgresChangeFilterType.eq,
+                value: prefUtils.getUserInfo()?.userId,
+              ),
+              callback: (payload) {
+                add(GetNotificationsEvent());
+              })
+          .subscribe();
     });
   }
 

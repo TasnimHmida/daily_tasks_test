@@ -19,8 +19,8 @@ class MessagesBloc extends Bloc<MessagesEvent, MessagesState> {
   final SendMessageUseCase sendMessageUseCase;
   final GetMessagesUseCase getMessagesUseCase;
   final PrefUtils prefUtils;
-  final SupabaseClient supabase;
   final CreateNewNotificationUseCase createNewNotificationUseCase;
+  final SupabaseClient supabase;
   StreamSubscription? _messageSubscription;
 
   MessagesBloc({
@@ -113,7 +113,7 @@ class MessagesBloc extends Bloc<MessagesEvent, MessagesState> {
             event: PostgresChangeEvent.all,
             schema: 'public',
             table: 'messages',
-            callback: (payload) {
+        callback: (payload) {
               add(RefreshMessagesEvent(conversationId: state.conversationId));
             })
         .subscribe();
