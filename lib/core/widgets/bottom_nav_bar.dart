@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import '../../features/chat/presentation/widgets/messages_widget.dart';
+import '../../features/chat/presentation/pages/conversations_page.dart';
 import '../../features/manage_user/data/models/user_model.dart';
 import '../../features/authentication/presentation/pages/login_page.dart';
 import '../../features/projects/presentation/pages/add_or_edit_project_page.dart';
@@ -107,7 +109,13 @@ class _BottomNavBar extends State<BottomNavBar> {
                         BlocProvider.of<CoreBloc>(context).add(LogoutEvent());
                       },
                     )),
-          const Center(child: Text('chat screen')),
+          ConversationsPage(
+            goBackToHomeScreenFunc: () {
+              setState(() {
+                _currentIndex = 0;
+              });
+            },
+          ),
           const Scaffold(
             backgroundColor: outerSpace,
             body: Center(
