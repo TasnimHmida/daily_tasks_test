@@ -1,6 +1,7 @@
 import 'package:daily_tasks_test/features/authentication/presentation/pages/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:messagera/messagera.dart';
 import '../../../../core/app_theme.dart';
 import '../../../../core/utils/used_functions.dart';
 import '../../../../core/widgets/bottom_nav_bar.dart';
@@ -23,6 +24,8 @@ class _LoginPageState extends State<LoginPage> {
         child: Scaffold(
           backgroundColor: ebonyClay,
           body: _buildBody(),
+          floatingActionButton: Messagera(websiteId: 'afdb866b-326f-0fb6-b',),
+
         ));
   }
 
